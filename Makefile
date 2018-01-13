@@ -1,6 +1,7 @@
 compileargs = -Wall -Wextra -Wpedantic
 linkargs = -lGL -lglut
-objects = out/main.o out/debugutil.o out/glut_janitor.o out/render.o
+objects = out/main.o out/debugutil.o out/glut_janitor.o out/render.o \
+          out/tga.o out/level.o
 
 shadowclad : $(objects)
 	gcc -o out/shadowclad $(objects) $(linkargs)
@@ -19,3 +20,9 @@ out/glut_janitor.o : glut_janitor.c
 
 out/render.o : render.c render.h typedefs.h
 	gcc -c -o out/render.o render.c $(compileargs)
+
+out/tga.o : tga.c tga.h
+	gcc -c -o out/tga.o tga.c $(compileargs)
+
+out/level.o : level.c level.h tga.h
+	gcc -c -o out/level.o level.c $(compileargs)
