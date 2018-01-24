@@ -14,9 +14,10 @@ typedef struct {
 	unsigned int obstacle;
 } Block;
 
-const GLuint BLOCK_EMPTY = 0x000000FF;
-const GLuint BLOCK_WALL01 = 0xFF0000FF;
+const GLuint BLOCK_EMPTY;
+const GLuint BLOCK_WALL01;
 
+void init_blocks();
 Block* get_block_at(GLushort x, GLushort y);
 void set_level_image(TGAimage* image);
 

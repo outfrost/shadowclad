@@ -4,6 +4,9 @@
 #include "level.h"
 #include "tga.h"
 
+const GLuint BLOCK_EMPTY = 0x000000FF;
+const GLuint BLOCK_WALL01 = 0xFF0000FF;
+
 TGAimage* level_image = NULL;
 
 Block** blocks;

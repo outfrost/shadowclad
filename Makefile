@@ -1,7 +1,7 @@
 compileargs = -Wall -Wextra -Wpedantic
-linkargs = -lGL -lglut -Lout -l3ds
+linkargs = -lGL -lglut -l3ds
 objects = out/main.o out/debugutil.o out/glut_janitor.o out/render.o \
-          out/tga.o out/level.o out/lib3ds.so
+          out/tga.o out/level.o
 
 shadowclad : $(objects)
 	gcc -o out/shadowclad $(objects) $(linkargs)
@@ -26,6 +26,3 @@ out/tga.o : tga.c tga.h
 
 out/level.o : level.c level.h tga.h lib/lib3ds.h
 	gcc -c -o out/level.o level.c $(compileargs)
-
-out/lib3ds.so : lib/lib3ds.so.2.0.0 lib/lib3ds.h
-	cp lib/lib3ds.so.2.0.0 out/lib3ds.so

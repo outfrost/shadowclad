@@ -18,12 +18,12 @@ void render_scene() {
 }
 
 void draw_axes() {
-	point3f x_axis_start = { -AXIS_RADIUS, 0.0f, 0.0f };
-	point3f x_axis_end = { AXIS_RADIUS, 0.0f, 0.0f };
-	point3f y_axis_start = { 0.0f, -AXIS_RADIUS, 0.0f };
-	point3f y_axis_end = { 0.0f, AXIS_RADIUS, 0.0f };
-	point3f z_axis_start = { 0.0f, 0.0f, -AXIS_RADIUS };
-	point3f z_axis_end = { 0.0f, 0.0f, AXIS_RADIUS };
+	Point3f x_axis_start = { -AXIS_RADIUS, 0.0f, 0.0f };
+	Point3f x_axis_end = { AXIS_RADIUS, 0.0f, 0.0f };
+	Point3f y_axis_start = { 0.0f, -AXIS_RADIUS, 0.0f };
+	Point3f y_axis_end = { 0.0f, AXIS_RADIUS, 0.0f };
+	Point3f z_axis_start = { 0.0f, 0.0f, -AXIS_RADIUS };
+	Point3f z_axis_end = { 0.0f, 0.0f, AXIS_RADIUS };
 	
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_LINES);
@@ -42,4 +42,8 @@ void draw_axes() {
 	glVertex3fv(z_axis_start);
 	glVertex3fv(z_axis_end);
 	glEnd();
+}
+
+void test_draw_wall() {
+	
 }
