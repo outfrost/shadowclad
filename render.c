@@ -11,6 +11,8 @@ void render_scene() {
 	
 	draw_axes();
 	
+	test_draw_wall();
+	
 	glFlush();
 	glutSwapBuffers();
 }

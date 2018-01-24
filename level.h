@@ -3,14 +3,21 @@
 
 #include <GL/gl.h>
 
+#include "lib/lib3ds.h"
 #include "tga.h"
 
-typedef GLuint Block;
+typedef struct {
+	GLuint type;
+	Lib3dsMesh* mesh;
+	Lib3dsMaterial** materials;
+	int material_count;
+	unsigned int obstacle;
+} Block;
 
-const Block BLOCK_EMPTY = 0;
-const Block BLOCK_WALL01 = 1;
+const GLuint BLOCK_EMPTY = 0x000000FF;
+const GLuint BLOCK_WALL01 = 0xFF0000FF;
 
-Block get_block(GLushort x, GLushort y);
-void set_image(TGAimage* image);
+Block* get_block_at(GLushort x, GLushort y);
+void set_level_image(TGAimage* image);
 
 #endif
