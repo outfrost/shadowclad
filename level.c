@@ -17,7 +17,7 @@ void init_blocks() {
 	
 	Lib3dsFile* model_file;
 	
-	model_file = lib3ds_file_open("assets/wall01.3ds");
+	model_file = lib3ds_file_load("assets/wall01.3ds");
 	Block* wall01block = malloc(sizeof(Block));
 	(*wall01block).type = BLOCK_WALL01;
 	(*wall01block).mesh = (*model_file).meshes[0];
