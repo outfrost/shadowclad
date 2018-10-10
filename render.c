@@ -18,11 +18,11 @@ void render_scene() {
 }
 
 void draw_axes() {
-	Point3f x_axis_start = { -AXIS_RADIUS, 0.0f, 0.0f };
+	Point3f x_axis_start = { 0.0f, 0.0f, 0.0f };
 	Point3f x_axis_end = { AXIS_RADIUS, 0.0f, 0.0f };
-	Point3f y_axis_start = { 0.0f, -AXIS_RADIUS, 0.0f };
+	Point3f y_axis_start = { 0.0f, 0.0f, 0.0f };
 	Point3f y_axis_end = { 0.0f, AXIS_RADIUS, 0.0f };
-	Point3f z_axis_start = { 0.0f, 0.0f, -AXIS_RADIUS };
+	Point3f z_axis_start = { 0.0f, 0.0f, 0.0f };
 	Point3f z_axis_end = { 0.0f, 0.0f, AXIS_RADIUS };
 	
 	glColor3f(1.0f, 0.0f, 0.0f);
