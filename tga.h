@@ -1,5 +1,5 @@
-#ifndef TGA_H
-#define TGA_H
+#ifndef TGA_H_
+#define TGA_H_
 
 #include <GL/gl.h>
 

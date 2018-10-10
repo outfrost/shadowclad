@@ -1,5 +1,5 @@
-#ifndef LEVEL_H
-#define LEVEL_H
+#ifndef LEVEL_H_
+#define LEVEL_H_
 
 #include <GL/gl.h>
 
