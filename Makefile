@@ -1,5 +1,5 @@
 compileargs = -Wall -Wextra -Wpedantic
-linkargs = -lGL -lglut
+linkargs = -L/usr/local/lib -lGL -lglut -lassimp
 objects = out/main.o out/debugutil.o out/glut_janitor.o out/render.o \
           out/tga.o out/level.o
 
@@ -7,7 +7,7 @@ shadowclad : $(objects)
 	gcc -o out/shadowclad $(objects) $(linkargs)
 
 run : shadowclad
-	out/shadowclad
+	LD_LIBRARY_PATH=/usr/local/lib out/shadowclad
 
 out/main.o : main.c debugutil.h glut_janitor.h render.h
 	gcc -c -o out/main.o main.c $(compileargs)

@@ -3,6 +3,7 @@
 #include "debugutil.h"
 #include "glut_janitor.h"
 #include "render.h"
+#include "level.h"
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -21,6 +22,8 @@ int main(int argc, char** argv) {
 	//glutMotionFunc(mouse_motion_event);
 	
 	init_render();
+	
+	import_model("out/assets/wall01.3ds");
 	
 	glutMainLoop();
 	return 0;
