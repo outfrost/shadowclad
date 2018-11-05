@@ -23,24 +23,11 @@ void set_image(TGAimage* image) {
 	level_image = image;
 }
 
-void import_model(const char* path) {
+const struct aiScene* import_model(const char* path) {
 	const struct aiScene* scene = aiImportFile(path, 0u);
 	if (scene == NULL) {
-		printf("We have nothing.\n");
-		return;
+		fprintf(stderr, "Asset import failed at file %s\n", path); // TODO factor logging the heck outta here
 	}
-	printf("mFlags = %u\nmRootNode = %p\nmNumMeshes = %u\nmMeshes = %p\nmNumMaterials = %u\nmMaterials = %p\nmNumAnimations = %u\nmAnimations = %p\nmNumTextures = %u\nmTextures = %p\nmNumLights = %u\nmLights = %p\n",
-			(*scene).mFlags,
-			(*scene).mRootNode,
-			(*scene).mNumMeshes,
-			(*scene).mMeshes,
-			(*scene).mNumMaterials,
-			(*scene).mMaterials,
-			(*scene).mNumAnimations,
-			(*scene).mAnimations,
-			(*scene).mNumTextures,
-			(*scene).mTextures,
-			(*scene).mNumLights,
-			(*scene).mLights);
-	aiReleaseImport(scene);
+	return scene;
+	// TODO aiReleaseImport(scene);
 }

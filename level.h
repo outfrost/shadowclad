@@ -12,5 +12,6 @@ const Block BLOCK_WALL01;
 
 Block get_block(GLushort x, GLushort y);
 void set_image(TGAimage* image);
+const struct aiScene* import_model(const char* path);
 
 #endif

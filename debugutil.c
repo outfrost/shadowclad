@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assimp/scene.h>
 
 char * get_gl_info() {
 	const char * gl_version = (const char *) glGetString(GL_VERSION);
@@ -21,4 +22,35 @@ char * get_gl_info() {
 			gl_renderer);
 	
 	return gl_info;
+}
+
+void print_struct_aiScene(FILE* stream, const struct aiScene* scene) {
+	if (scene == NULL) {
+		fprintf(stream, "NULL");
+		return;
+	}
+	fprintf(stream, "{ mFlags = %u, mRootNode = %p, mNumMeshes = %u, mMeshes = %p, mNumMaterials = %u, mMaterials = %p, mNumAnimations = %u, mAnimations = %p, mNumTextures = %u, mTextures = %p, mNumLights = %u, mLights = %p }",
+			(*scene).mFlags,
+			(void*) (*scene).mRootNode,
+			(*scene).mNumMeshes,
+			(void*) (*scene).mMeshes,
+			(*scene).mNumMaterials,
+			(void*) (*scene).mMaterials,
+			(*scene).mNumAnimations,
+			(void*) (*scene).mAnimations,
+			(*scene).mNumTextures,
+			(void*) (*scene).mTextures,
+			(*scene).mNumLights,
+			(void*) (*scene).mLights);
+}
+
+void print_struct_aiNode(FILE* stream, const struct aiNode* node) {
+	if (node == NULL) {
+		fprintf(stream, "NULL");
+		return;
+	}
+	fprintf(stream, "{ mName = %s, mNumMeshes = %u, mMeshes = %p }",
+			(*node).mName.data,
+			(*node).mNumMeshes,
+			(void*) (*node).mMeshes);
 }
