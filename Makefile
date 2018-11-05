@@ -1,28 +1,58 @@
-compileargs = -Wall -Wextra -Wpedantic
-linkargs = -L/usr/local/lib -lGL -lglut -lassimp
-objects = out/main.o out/debugutil.o out/glut_janitor.o out/render.o \
-          out/tga.o out/level.o
+compileargs ::= -g -Wall -Wextra -Wpedantic
+linkargs ::=
+libraries ::= -L/usr/local/lib -lGL -lglut -lassimp
+# Prefix all object file names with the compilation directory
+objects ::= $(addprefix out/, \
+              main.o debugutil.o glut_janitor.o render.o \
+              tga.o level.o)
 
-shadowclad : $(objects)
-	gcc -o out/shadowclad $(objects) $(linkargs)
+# Set executable extension for the platform
+ifeq ($(OS),Windows_NT)
+	binext ::= .exe
+else
+	binext ::=
+endif
+binary ::= out/shadowclad$(binext)
 
-run : shadowclad
-	LD_LIBRARY_PATH=/usr/local/lib out/shadowclad
+# Default target: build executable
+$(binary) : $(objects) | out
+	@echo "###### Linking executable..."
+	$(CC) $(linkargs) -o $(binary) $(objects) $(libraries)
 
-out/main.o : main.c debugutil.h glut_janitor.h render.h
-	gcc -c -o out/main.o main.c $(compileargs)
+# Alias for default target
+shadowclad : $(binary)
+.PHONY : shadowclad
 
-out/debugutil.o : debugutil.c
-	gcc -c -o out/debugutil.o debugutil.c $(compileargs)
+# Build and run
+run : $(binary)
+	@echo
+	LD_LIBRARY_PATH=/usr/local/lib $(binary)
+.PHONY : run
 
-out/glut_janitor.o : glut_janitor.c
-	gcc -c -o out/glut_janitor.o glut_janitor.c $(compileargs)
+# Create compilation directory
+out :
+	mkdir out/
 
-out/render.o : render.c render.h typedefs.h
-	gcc -c -o out/render.o render.c $(compileargs)
+# Alias for 'out'
+init : out
+.PHONY : init
 
-out/tga.o : tga.c tga.h
-	gcc -c -o out/tga.o tga.c $(compileargs)
+# Build each compilation unit
 
-out/level.o : level.c level.h tga.h
-	gcc -c -o out/level.o level.c $(compileargs)
+out/main.o : main.c debugutil.h glut_janitor.h render.h level.h | out
+	$(CC) $(compileargs) -c -o out/main.o main.c
+
+out/debugutil.o : debugutil.c | out
+	$(CC) $(compileargs) -c -o out/debugutil.o debugutil.c
+
+out/glut_janitor.o : glut_janitor.c | out
+	$(CC) $(compileargs) -c -o out/glut_janitor.o glut_janitor.c
+
+out/render.o : render.c render.h typedefs.h | out
+	$(CC) $(compileargs) -c -o out/render.o render.c
+
+out/tga.o : tga.c tga.h | out
+	$(CC) $(compileargs) -c -o out/tga.o tga.c
+
+out/level.o : level.c level.h tga.h | out
+	$(CC) $(compileargs) -c -o out/level.o level.c
