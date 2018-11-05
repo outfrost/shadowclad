@@ -23,8 +23,14 @@ int main(int argc, char** argv) {
 	
 	init_render();
 	
-	import_model("out/assets/wall01.3ds");
-	
+	model = import_model("out/assets/wall01.3ds");
+	/*
+	fprintf(stderr, "*model = ");
+	print_struct_aiScene(stderr, model);
+	fprintf(stderr, "\n*(*model).mRootNode = ");
+	print_struct_aiNode(stderr, (*model).mRootNode);
+	fprintf(stderr, "\n");
+	*/
 	glutMainLoop();
 	return 0;
 }
