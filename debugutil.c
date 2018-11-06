@@ -4,27 +4,27 @@
 #include <stdio.h>
 #include <assimp/scene.h>
 
-char * get_gl_info() {
-	const char * gl_version = (const char *) glGetString(GL_VERSION);
-	const char * gl_sl_version = (const char *) glGetString(GL_SHADING_LANGUAGE_VERSION);
-	const char * gl_renderer = (const char *) glGetString(GL_RENDERER);
+char* getGlInfoString() {
+	const char* glVersion = (const char*) glGetString(GL_VERSION);
+	const char* glslVersion = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+	const char* glRenderer = (const char*) glGetString(GL_RENDERER);
 	
-	size_t gl_info_length = strlen("OpenGL  - GLSL  - ")
-				+ strlen(gl_version)
-				+ strlen(gl_sl_version)
-				+ strlen(gl_renderer);
+	size_t glInfoLength = strlen("OpenGL  - GLSL  - ")
+	                      + strlen(glVersion)
+	                      + strlen(glslVersion)
+	                      + strlen(glRenderer);
 	
-	char * gl_info = malloc(gl_info_length + sizeof(char));
-	sprintf(gl_info,
+	char* glInfoString = malloc(glInfoLength + sizeof(char));
+	sprintf(glInfoString,
 		    "OpenGL %s - GLSL %s - %s",
-			gl_version,
-			gl_sl_version,
-			gl_renderer);
+			glVersion,
+			glslVersion,
+			glRenderer);
 	
-	return gl_info;
+	return glInfoString;
 }
 
-void print_struct_aiScene(FILE* stream, const struct aiScene* scene) {
+void dumpScene(FILE* stream, const struct aiScene* scene) {
 	if (scene == NULL) {
 		fprintf(stream, "NULL");
 		return;
@@ -44,7 +44,7 @@ void print_struct_aiScene(FILE* stream, const struct aiScene* scene) {
 			(void*) (*scene).mLights);
 }
 
-void print_struct_aiNode(FILE* stream, const struct aiNode* node) {
+void dumpNode(FILE* stream, const struct aiNode* node) {
 	if (node == NULL) {
 		fprintf(stream, "NULL");
 		return;

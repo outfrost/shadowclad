@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow(NULL);
 	
-	glutSetWindowTitle(get_gl_info());
+	glutSetWindowTitle(getGlInfoString());
 	
 	glutDisplayFunc(render_scene);
 	glutReshapeFunc(resize_stage);
