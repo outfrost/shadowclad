@@ -5,28 +5,28 @@
 
 #pragma pack(push, 1)
 typedef struct {
-	GLubyte id_length;
-	GLbyte color_map_type;
-	GLbyte image_type;
-	GLushort color_map_start;
-	GLushort color_map_length;
-	GLubyte color_map_bpp;
-	GLushort x_origin;
-	GLushort y_origin;
-	GLushort image_width;
-	GLushort image_height;
-	GLubyte image_bpp;
-	GLbyte image_descriptor;
-} TGAheader;
+	GLubyte idLength;
+	GLbyte colorMapType;
+	GLbyte imageType;
+	GLushort colorMapStart;
+	GLushort colorMapLength;
+	GLubyte colorMapBpp;
+	GLushort originX;
+	GLushort originY;
+	GLushort imageWidth;
+	GLushort imageHeight;
+	GLubyte imageBpp;
+	GLbyte imageDescriptor;
+} TgaHeader;
 #pragma pack(pop)
 
 typedef struct {
-	TGAheader header;
-	GLenum image_format;
-	GLint image_components;
+	TgaHeader header;
+	GLenum imageFormat;
+	GLint imageComponents;
 	GLbyte* bytes;
-} TGAimage;
+} TgaImage;
 
-TGAimage* read_tga(const char* path);
+TgaImage* readTga(const char* path);
 
 #endif

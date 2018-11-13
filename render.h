@@ -1,10 +1,10 @@
 #ifndef RENDER_H_
 #define RENDER_H_
 
-const struct aiScene* model;
+const struct aiScene* model; // TODO remove
 
-void render_scene();
-void draw_axes();
-void draw_model_recursive(const struct aiScene* model, const struct aiNode* node);
+void renderScene();
+void drawAxes();
+void drawModelRecursive(const struct aiScene* model, const struct aiNode* node);
 
 #endif

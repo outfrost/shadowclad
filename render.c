@@ -6,45 +6,45 @@
 
 const float AXIS_RADIUS = 5.0f;
 
-void render_scene() {
+void renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
-	draw_axes();
-	draw_model_recursive(model, (*model).mRootNode);
+	drawAxes();
+	drawModelRecursive(model, (*model).mRootNode);
 	
 	glFlush();
 	glutSwapBuffers();
 }
 
-void draw_axes() {
-	point3f x_axis_start = { 0.0f, 0.0f, 0.0f };
-	point3f x_axis_end = { AXIS_RADIUS, 0.0f, 0.0f };
-	point3f y_axis_start = { 0.0f, 0.0f, 0.0f };
-	point3f y_axis_end = { 0.0f, AXIS_RADIUS, 0.0f };
-	point3f z_axis_start = { 0.0f, 0.0f, 0.0f };
-	point3f z_axis_end = { 0.0f, 0.0f, AXIS_RADIUS };
+void drawAxes() {
+	point3f xAxisStart = { 0.0f, 0.0f, 0.0f };
+	point3f xAxisEnd = { AXIS_RADIUS, 0.0f, 0.0f };
+	point3f yAxisStart = { 0.0f, 0.0f, 0.0f };
+	point3f yAxisEnd = { 0.0f, AXIS_RADIUS, 0.0f };
+	point3f zAxisStart = { 0.0f, 0.0f, 0.0f };
+	point3f zAxisEnd = { 0.0f, 0.0f, AXIS_RADIUS };
 	
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_LINES);
-	glVertex3fv(x_axis_start);
-	glVertex3fv(x_axis_end);
+	glVertex3fv(xAxisStart);
+	glVertex3fv(xAxisEnd);
 	glEnd();
 	
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_LINES);
-	glVertex3fv(y_axis_start);
-	glVertex3fv(y_axis_end);
+	glVertex3fv(yAxisStart);
+	glVertex3fv(yAxisEnd);
 	glEnd();
 	
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glBegin(GL_LINES);
-	glVertex3fv(z_axis_start);
-	glVertex3fv(z_axis_end);
+	glVertex3fv(zAxisStart);
+	glVertex3fv(zAxisEnd);
 	glEnd();
 }
 
-void draw_model_recursive(const struct aiScene* model, const struct aiNode* node) {
+void drawModelRecursive(const struct aiScene* model, const struct aiNode* node) {
 	if (((*model).mFlags & AI_SCENE_FLAGS_INCOMPLETE) == AI_SCENE_FLAGS_INCOMPLETE) {
 		return;
 	}
@@ -54,15 +54,15 @@ void draw_model_recursive(const struct aiScene* model, const struct aiNode* node
 		for (int k = 0; k < (*mesh).mNumFaces; ++k) {
 			const struct aiFace face = (*mesh).mFaces[k];
 			
-			GLenum face_mode;
-			switch(face.mNumIndices) {
-				case 1: face_mode = GL_POINTS; break;
-				case 2: face_mode = GL_LINES; break;
-				case 3: face_mode = GL_TRIANGLES; break;
-				default: face_mode = GL_POLYGON; break;
+			GLenum faceMode;
+			switch (face.mNumIndices) {
+				case 1: faceMode = GL_POINTS; break;
+				case 2: faceMode = GL_LINES; break;
+				case 3: faceMode = GL_TRIANGLES; break;
+				default: faceMode = GL_POLYGON; break;
 			}
 			
-			glBegin(face_mode);
+			glBegin(faceMode);
 			
 			glColor3f(1.0f, 1.0f, 1.0f);
 			for (int l = 0; l < face.mNumIndices; ++l) {
@@ -74,6 +74,6 @@ void draw_model_recursive(const struct aiScene* model, const struct aiNode* node
 	}
 	
 	for (int i = 0; i < (*node).mNumChildren; ++i) {
-		draw_model_recursive(model, (*node).mChildren[i]);
+		drawModelRecursive(model, (*node).mChildren[i]);
 	}
 }

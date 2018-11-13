@@ -1,11 +1,11 @@
 #include <GL/gl.h>
 
-void init_render() {
+void initRender() {
 	// Set the clear colour to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void resize_stage(GLsizei width, GLsizei height) {
+void resizeStage(GLsizei width, GLsizei height) {
 	if (height == 0)
 		height = 1;
 	
@@ -16,9 +16,9 @@ void resize_stage(GLsizei width, GLsizei height) {
 	// Reset the projection matrix
 	glLoadIdentity();
 	
-	GLfloat aspect_ratio = (GLfloat)width / (GLfloat)height;
+	GLfloat aspectRatio = (GLfloat) width / (GLfloat) height;
 	
-	glOrtho(-10.0f, 10.0f, -10.0f/aspect_ratio, 10.0f/aspect_ratio, 128.0, -128.0);
+	glOrtho(-10.0, 10.0, -10.0/aspectRatio, 10.0/aspectRatio, 128.0, -128.0);
 	
 	glRotatef(45.0f, 1.0f, 0.0f, 0.0f);
 	glRotatef(45.0f, 0.0f, 1.0f, 0.0f);

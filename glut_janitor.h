@@ -3,7 +3,7 @@
 
 #include <GL/gl.h>
 
-void init_render();
-void resize_stage(GLsizei width, GLsizei height);
+void initRender();
+void resizeStage(GLsizei width, GLsizei height);
 
 #endif

@@ -5,63 +5,64 @@
 
 #include "tga.h"
 
-TGAimage* read_tga(const char* path) {
-	FILE* tga_file = fopen(path, "rb");
-	if (tga_file == NULL) {
+TgaImage* readTga(const char* path) {
+	FILE* tgaFile = fopen(path, "rb");
+	if (tgaFile == NULL) {
 		return NULL;
 	}
 	
-	TGAheader header;
+	TgaHeader header;
 	
-	if (fread(&header, sizeof(TGAheader), 1, tga_file) != 1) {
-		fclose(tga_file);
+	if (fread(&header, sizeof(TgaHeader), 1, tgaFile) != 1) {
+		fclose(tgaFile);
 		return NULL;
 	}
 	
-	GLenum image_format;
-	GLint image_components;
+	GLenum imageFormat;
+	GLint imageComponents;
 	
-	if (header.image_bpp == 32) {
-		image_format = GL_BGRA_EXT;
-		image_components = GL_RGBA8;
-	}
-	else if (header.image_bpp == 24) {
-		image_format = GL_BGR_EXT;
-		image_components = GL_RGB8;
-	}
-	else if (header.image_bpp == 8) {
-		image_format = GL_LUMINANCE;
-		image_components = GL_LUMINANCE8;
-	}
-	else {
-		fclose(tga_file);
-		return NULL;
+	switch (header.imageBpp) {
+		case 32:
+			imageFormat = GL_BGRA_EXT;
+			imageComponents = GL_RGBA8;
+			break;
+		case 24:
+			imageFormat = GL_BGR_EXT;
+			imageComponents = GL_RGB8;
+			break;
+		case 8:
+			imageFormat = GL_LUMINANCE;
+			imageComponents = GL_LUMINANCE8;
+			break;
+		default:
+			fclose(tgaFile);
+			return NULL;
 	}
 	
-	unsigned long image_size = header.image_width * header.image_height * (header.image_bpp >> 3);
+	unsigned long imageSize = header.imageWidth * header.imageHeight * (header.imageBpp >> 3);
 	
-	GLbyte* bytes = malloc(image_size * sizeof(GLbyte));
+	GLbyte* bytes = malloc(imageSize * sizeof(GLbyte));
 	if (bytes == NULL) {
-		fclose(tga_file);
+		fclose(tgaFile);
 		return NULL;
 	}
 	
-	if (fread(bytes, image_size, 1, tga_file) != 1) {
+	if (fread(bytes, imageSize, 1, tgaFile) != 1) {
 		free(bytes);
-		fclose(tga_file);
+		fclose(tgaFile);
 		return NULL;
 	}
 	
-	fclose(tga_file);
+	fclose(tgaFile);
 	
-	TGAimage* image = malloc(sizeof(TGAimage));
+	TgaImage* image = malloc(sizeof(TgaImage));
 	if (image == NULL) {
 		return NULL;
 	}
 	
 	(*image).header = header;
-	(*image).image_format = image_format;
-	(*image).image_components = image_components;
+	(*image).imageFormat = imageFormat;
+	(*image).imageComponents = imageComponents;
 	(*image).bytes = bytes;
 	
 	return image;
