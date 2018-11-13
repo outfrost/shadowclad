@@ -1,8 +1,9 @@
 #include <GL/gl.h>
+#include <assimp/scene.h>
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <assimp/scene.h>
 
 char* getGlInfoString() {
 	const char* glVersion = (const char*) glGetString(GL_VERSION);

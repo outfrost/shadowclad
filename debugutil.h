@@ -1,8 +1,9 @@
 #ifndef DEBUGUTIL_H_
 #define DEBUGUTIL_H_
 
-#include <stdio.h>
 #include <assimp/scene.h>
+
+#include <stdio.h>
 
 char* getGlInfoString();
 void dumpScene(FILE* stream, const struct aiScene* scene);

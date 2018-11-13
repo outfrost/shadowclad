@@ -1,8 +1,9 @@
 #include <GL/gl.h>
-#include <stdlib.h>
-#include <stdio.h> // TODO remove
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
+
+#include <stdlib.h>
+#include <stdio.h> // TODO remove
 
 #include "level.h"
 #include "tga.h"
