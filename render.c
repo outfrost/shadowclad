@@ -3,6 +3,7 @@
 
 #include "render.h"
 #include "typedefs.h"
+#include "performance.h"
 
 const float AXIS_RADIUS = 5.0f;
 
@@ -15,6 +16,8 @@ void renderScene() {
 	
 	glFlush();
 	glutSwapBuffers();
+	frameRendered();
+	glutPostRedisplay();
 }
 
 void drawAxes() {

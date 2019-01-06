@@ -4,6 +4,7 @@
 #include "glut_janitor.h"
 #include "render.h"
 #include "level.h"
+#include "performance.h"
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -22,6 +23,7 @@ int main(int argc, char** argv) {
 	//glutMotionFunc(mouse_motion_event);
 	
 	initRender();
+	initPerformanceMetering();
 	
 	model = importModel("out/assets/wall01.3ds");
 	/*

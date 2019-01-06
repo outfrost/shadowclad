@@ -4,7 +4,7 @@ libraries ::= -L/usr/local/lib -lGL -lglut -lassimp
 # Prefix all object file names with the compilation directory
 objects ::= $(addprefix out/, \
               main.o debugutil.o glut_janitor.o render.o \
-              tga.o level.o)
+              tga.o level.o performance.o)
 
 # Set executable extension for the platform
 ifeq ($(OS),Windows_NT)
@@ -56,3 +56,6 @@ out/tga.o : tga.c tga.h | out
 
 out/level.o : level.c level.h tga.h | out
 	$(CC) $(compileargs) -c -o out/level.o level.c
+
+out/performance.o : performance.c | out
+	$(CC) $(compileargs) -c -o out/performance.o performance.c
