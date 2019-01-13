@@ -24,8 +24,8 @@ int main(int argc, char** argv) {
 	
 	initRender();
 	initPerformanceMetering();
+	initLevel();
 	
-	model = importModel("out/assets/wall01.3ds");
 	/*
 	fprintf(stderr, "*model = ");
 	print_struct_aiScene(stderr, model);

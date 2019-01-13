@@ -1,17 +1,18 @@
 #ifndef LEVEL_H_
 #define LEVEL_H_
 
-#include <GL/gl.h>
+#include <stdint.h>
+
+#include "assimp_types.h"
 
 #include "tga.h"
 
-typedef GLuint Block;
+typedef uint32_t Block;
 
-const Block BLOCK_EMPTY;
-const Block BLOCK_WALL01;
+const AiScene* levelScene;
 
-Block getBlock(GLushort x, GLushort y);
+void initLevel();
 void setImage(TgaImage* image);
-const struct aiScene* importModel(const char* path);
+const AiScene* importScene(const char* path);
 
 #endif

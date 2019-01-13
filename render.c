@@ -1,6 +1,8 @@
 #include <GL/glut.h>
-#include <assimp/scene.h>
 
+#include "assimp_types.h"
+
+#include "level.h"
 #include "render.h"
 #include "typedefs.h"
 #include "performance.h"
@@ -19,7 +21,7 @@ void renderScene() {
 	glEnable(GL_LIGHTING);
 	
 	glEnable(GL_LIGHT0);
-	drawModelRecursive(model, (*model).mRootNode);
+	drawModelRecursive(levelScene, levelScene->mRootNode);
 	glDisable(GL_LIGHT0);
 	
 	glFlush();
@@ -55,15 +57,15 @@ void drawAxes() {
 	glEnd();
 }
 
-void drawModelRecursive(const struct aiScene* model, const struct aiNode* node) {
+void drawModelRecursive(const AiScene* model, const AiNode* node) {
 	if (((*model).mFlags & AI_SCENE_FLAGS_INCOMPLETE) == AI_SCENE_FLAGS_INCOMPLETE) {
 		return;
 	}
 	
 	for (int i = 0; i < (*node).mNumMeshes; ++i) {
-		const struct aiMesh* mesh = (*model).mMeshes[(*node).mMeshes[i]];
+		const AiMesh* mesh = (*model).mMeshes[(*node).mMeshes[i]];
 		for (int k = 0; k < (*mesh).mNumFaces; ++k) {
-			const struct aiFace face = (*mesh).mFaces[k];
+			const AiFace face = (*mesh).mFaces[k];
 			
 			GLenum faceMode;
 			switch (face.mNumIndices) {
