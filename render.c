@@ -21,7 +21,7 @@ void renderScene() {
 	glEnable(GL_LIGHTING);
 	
 	glEnable(GL_LIGHT0);
-	drawModelRecursive(levelScene, levelScene->mRootNode);
+	drawSceneRecursive(levelScene, levelScene->mRootNode);
 	glDisable(GL_LIGHT0);
 	
 	glFlush();
@@ -57,13 +57,13 @@ void drawAxes() {
 	glEnd();
 }
 
-void drawModelRecursive(const AiScene* model, const AiNode* node) {
-	if (((*model).mFlags & AI_SCENE_FLAGS_INCOMPLETE) == AI_SCENE_FLAGS_INCOMPLETE) {
+void drawSceneRecursive(const AiScene* scene, const AiNode* node) {
+	if (((*scene).mFlags & AI_SCENE_FLAGS_INCOMPLETE) == AI_SCENE_FLAGS_INCOMPLETE) {
 		return;
 	}
 	
 	for (int i = 0; i < (*node).mNumMeshes; ++i) {
-		const AiMesh* mesh = (*model).mMeshes[(*node).mMeshes[i]];
+		const AiMesh* mesh = (*scene).mMeshes[(*node).mMeshes[i]];
 		for (int k = 0; k < (*mesh).mNumFaces; ++k) {
 			const AiFace face = (*mesh).mFaces[k];
 			
@@ -87,6 +87,6 @@ void drawModelRecursive(const AiScene* model, const AiNode* node) {
 	}
 	
 	for (int i = 0; i < (*node).mNumChildren; ++i) {
-		drawModelRecursive(model, (*node).mChildren[i]);
+		drawSceneRecursive(scene, (*node).mChildren[i]);
 	}
 }
