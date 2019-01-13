@@ -11,8 +11,16 @@ void renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_CULL_FACE);
+	
+	glDisable(GL_LIGHTING);
 	drawAxes();
+	glEnable(GL_LIGHTING);
+	
+	glEnable(GL_LIGHT0);
 	drawModelRecursive(model, (*model).mRootNode);
+	glDisable(GL_LIGHT0);
 	
 	glFlush();
 	glutSwapBuffers();
