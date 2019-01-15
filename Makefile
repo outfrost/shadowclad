@@ -39,22 +39,22 @@ init : out
 
 # Build each compilation unit
 
-out/main.o : main.c debugutil.h glut_janitor.h render.h level.h | out
+out/main.o : main.c debugutil.h glut_janitor.h render.h level.h performance.h | out
 	$(CC) $(compileargs) -c -o out/main.o main.c
 
-out/debugutil.o : debugutil.c | out
+out/debugutil.o : debugutil.c assimp_types.h | out
 	$(CC) $(compileargs) -c -o out/debugutil.o debugutil.c
 
 out/glut_janitor.o : glut_janitor.c | out
 	$(CC) $(compileargs) -c -o out/glut_janitor.o glut_janitor.c
 
-out/render.o : render.c render.h typedefs.h | out
+out/render.o : render.c render.h level.h typedefs.h performance.h | out
 	$(CC) $(compileargs) -c -o out/render.o render.c
 
 out/tga.o : tga.c tga.h | out
 	$(CC) $(compileargs) -c -o out/tga.o tga.c
 
-out/level.o : level.c level.h tga.h | out
+out/level.o : level.c level.h assimp_types.h tga.h | out
 	$(CC) $(compileargs) -c -o out/level.o level.c
 
 out/performance.o : performance.c | out
