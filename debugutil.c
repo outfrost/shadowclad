@@ -1,9 +1,9 @@
 #include <GL/gl.h>
-#include <assimp/scene.h>
-
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "assimp_types.h"
 
 char* getGlInfoString() {
 	const char* glVersion = (const char*) glGetString(GL_VERSION);
@@ -25,7 +25,7 @@ char* getGlInfoString() {
 	return glInfoString;
 }
 
-void dumpScene(FILE* stream, const struct aiScene* scene) {
+void dumpScene(FILE* stream, const AiScene* scene) {
 	if (scene == NULL) {
 		fprintf(stream, "NULL");
 		return;
@@ -45,7 +45,7 @@ void dumpScene(FILE* stream, const struct aiScene* scene) {
 			(void*) (*scene).mLights);
 }
 
-void dumpNode(FILE* stream, const struct aiNode* node) {
+void dumpNode(FILE* stream, const AiNode* node) {
 	if (node == NULL) {
 		fprintf(stream, "NULL");
 		return;

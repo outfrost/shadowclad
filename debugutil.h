@@ -1,12 +1,12 @@
 #ifndef DEBUGUTIL_H_
 #define DEBUGUTIL_H_
 
-#include <assimp/scene.h>
-
 #include <stdio.h>
 
+#include "assimp_types.h"
+
 char* getGlInfoString();
-void dumpScene(FILE* stream, const struct aiScene* scene);
-void dumpNode(FILE* stream, const struct aiNode* node);
+void dumpScene(FILE* stream, const AiScene* scene);
+void dumpNode(FILE* stream, const AiNode* node);
 
 #endif

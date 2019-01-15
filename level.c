@@ -24,7 +24,7 @@ void setImage(TgaImage* image) {
 }
 
 const AiScene* importScene(const char* path) {
-	const struct aiScene* scene = aiImportFile(path, 0u);
+	const AiScene* scene = aiImportFile(path, 0u);
 	if (scene == NULL) {
 		fprintf(stderr, "Asset import failed at file %s\n", path); // TODO factor logging the heck outta here
 	}

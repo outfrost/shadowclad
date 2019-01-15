@@ -1,11 +1,9 @@
 #include <GL/glut.h>
 
-#include "assimp_types.h"
-
 #include "level.h"
-#include "render.h"
 #include "typedefs.h"
 #include "performance.h"
+#include "render.h"
 
 const float AXIS_RADIUS = 5.0f;
 
