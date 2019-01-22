@@ -1,6 +1,6 @@
 compileargs ::= -g -Wall -Wextra -Wpedantic
 linkargs ::=
-libraries ::= -L/usr/local/lib -lGL -lglut -lassimp
+libraries ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp
 # Prefix all object file names with the compilation directory
 objects ::= $(addprefix out/, \
               main.o debugutil.o glut_janitor.o render.o \
