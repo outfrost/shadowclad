@@ -1,10 +1,11 @@
-compileargs ::= -g -Wall -Wextra -Wpedantic
-linkargs ::=
-libraries ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp
+CFLAGS ::= -g -Wall -Wextra -Wpedantic -Wstrict-prototypes $(CFLAGS)
+LDFLAGS ::= $(LDFLAGS)
+LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
+
 # Prefix all object file names with the compilation directory
 objects ::= $(addprefix out/, \
-              main.o debugutil.o glut_janitor.o render.o \
-              tga.o level.o performance.o)
+              main.o debugutil.o level.o performance.o \
+              render.o tga.o ui.o)
 
 # Set executable extension for the platform
 ifeq ($(OS),Windows_NT)
@@ -17,7 +18,7 @@ binary ::= out/shadowclad$(binext)
 # Default target: build executable
 $(binary) : $(objects) | out
 	@echo "###### Linking executable..."
-	$(CC) $(linkargs) -o $(binary) $(objects) $(libraries)
+	$(CC) $(LDFLAGS) -o $(binary) $(objects) $(LOADLIBES) $(LDLIBS)
 
 # Alias for default target
 shadowclad : $(binary)
@@ -37,25 +38,19 @@ out :
 init : out
 .PHONY : init
 
-# Build each compilation unit
+# Generate dependencies
+out/%.make : %.c Makefile | out
+	$(CPP) -MM -MT out/$*.o -MF $@ $(CPPFLAGS) $<
 
-out/main.o : main.c debugutil.h glut_janitor.h render.h level.h performance.h | out
-	$(CC) $(compileargs) -c -o out/main.o main.c
+# Include generated rules
+-include $(addsuffix .make, $(basename $(objects)))
 
-out/debugutil.o : debugutil.c assimp_types.h | out
-	$(CC) $(compileargs) -c -o out/debugutil.o debugutil.c
+# Build compilation units
+out/%.o : %.c out/%.make | out
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-out/glut_janitor.o : glut_janitor.c | out
-	$(CC) $(compileargs) -c -o out/glut_janitor.o glut_janitor.c
-
-out/render.o : render.c render.h level.h typedefs.h performance.h | out
-	$(CC) $(compileargs) -c -o out/render.o render.c
-
-out/tga.o : tga.c tga.h | out
-	$(CC) $(compileargs) -c -o out/tga.o tga.c
-
-out/level.o : level.c level.h assimp_types.h tga.h | out
-	$(CC) $(compileargs) -c -o out/level.o level.c
-
-out/performance.o : performance.c | out
-	$(CC) $(compileargs) -c -o out/performance.o performance.c
+# Delete build output
+clean : out
+	rm -f $(binary) out/*.o out/*.make
+	rm -d out/
+.PHONY : clean
