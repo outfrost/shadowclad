@@ -1,6 +1,5 @@
 #include <GL/gl.h>
 #include <assimp/cimport.h>
-
 #include <stdio.h> // TODO remove
 
 #include "level.h"

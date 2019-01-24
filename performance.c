@@ -1,6 +1,6 @@
-#include <time.h>
-#include <stdio.h> // TODO remove
 #include <stdbool.h>
+#include <stdio.h> // TODO remove
+#include <time.h>
 
 typedef struct timespec Timepoint;
 

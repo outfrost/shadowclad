@@ -1,7 +1,7 @@
 #include <GL/gl.h>
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "assimp_types.h"
 

@@ -1,11 +1,29 @@
 #include <GL/glut.h>
 
 #include "level.h"
-#include "typedefs.h"
 #include "performance.h"
 #include "render.h"
+#include "typedefs.h"
 
 const float AXIS_RADIUS = 5.0f;
+
+void initRender() {
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	
+	GLfloat light0_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
+	GLfloat light0_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat light0_position[] = {5.0f, 10.0f, 10.0f, 1.0f};
+	
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
+	glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
+	
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.05f);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.001f);
+}
 
 void renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

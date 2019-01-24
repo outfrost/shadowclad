@@ -3,8 +3,9 @@
 
 #include "assimp_types.h"
 
-void renderScene();
-void drawAxes();
+void initRender(void);
+void renderScene(void);
+void drawAxes(void);
 void drawSceneRecursive(const AiScene* scene, const AiNode* node);
 
 #endif

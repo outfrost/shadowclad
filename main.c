@@ -3,10 +3,10 @@
 #include <stdio.h>
 
 #include "debugutil.h"
-#include "glut_janitor.h"
-#include "render.h"
 #include "level.h"
 #include "performance.h"
+#include "render.h"
+#include "ui.h"
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
