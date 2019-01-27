@@ -11,7 +11,7 @@ typedef uint32_t Block;
 
 const AiScene* levelScene;
 
-void initLevel(void);
+void initLevel();
 void setImage(TgaImage* image);
 const AiScene* importScene(const char* path);
 
