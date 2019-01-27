@@ -2,6 +2,8 @@
 #include <stdio.h> // TODO remove
 #include <time.h>
 
+#include "logger.h"
+
 typedef struct timespec Timepoint;
 
 static Timepoint lastDisplayTime;
@@ -10,7 +12,7 @@ static bool meteringEnabled = false;
 
 void initPerformanceMetering() {
 	if (clock_gettime(CLOCK_MONOTONIC, &lastDisplayTime) != 0) {
-		fprintf(stderr, "Clock read failed, performance metering unavailable\n");
+		logWarning("Clock read failed, performance metering unavailable");
 	}
 	else {
 		meteringEnabled = true;
@@ -23,7 +25,7 @@ void frameRendered() {
 		Timepoint now;
 		
 		if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) {
-			fprintf(stderr, "Clock read failed, stopping performance metering\n");
+			logWarning("Clock read failed, stopping performance metering");
 			meteringEnabled = false;
 			return;
 		}
@@ -34,6 +36,7 @@ void frameRendered() {
 		if (fullSeconds > 0) {
 			float seconds = (now.tv_nsec - lastDisplayTime.tv_nsec) / 1000000000.0f;
 			seconds += (float) (now.tv_sec - lastDisplayTime.tv_sec);
+			// This goes to STDOUT because it's, uh, temporary
 			printf("frametime avg %.1f ms; fps avg %.f\n", (seconds / frames) * 1000.0f, (frames / seconds));
 			lastDisplayTime = now;
 			frames = 0;

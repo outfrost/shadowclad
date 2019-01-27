@@ -1,8 +1,8 @@
 #include <GL/gl.h>
 #include <assimp/cimport.h>
-#include <stdio.h> // TODO remove
 
 #include "level.h"
+#include "logger.h"
 
 const AiScene* levelScene = NULL;
 
@@ -25,7 +25,7 @@ void setImage(TgaImage* image) {
 const AiScene* importScene(const char* path) {
 	const AiScene* scene = aiImportFile(path, 0u);
 	if (scene == NULL) {
-		fprintf(stderr, "Asset import failed at file %s\n", path); // TODO factor logging the heck outta here
+		logError("Asset import failed (file: %s)", path);
 	}
 	return scene;
 	// TODO aiReleaseImport(scene);

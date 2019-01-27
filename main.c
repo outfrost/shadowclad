@@ -1,9 +1,9 @@
 #include <GL/glxew.h>
 #include <GL/glut.h>
-#include <stdio.h>
 
 #include "debugutil.h"
 #include "level.h"
+#include "logger.h"
 #include "performance.h"
 #include "render.h"
 #include "ui.h"
@@ -17,14 +17,19 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow(NULL);
 	
-	glutSetWindowTitle(getGlInfoString());
+	// glutSetWindowTitle(getGlInfoString());
+	glutSetWindowTitle("shadowclad");
+	
+	logInfo("OpenGL %s", (const char*) glGetString(GL_VERSION));
+	logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
+	logInfo("%s", (const char*) glGetString(GL_RENDERER));
 	
 	GLenum glewInitStatus = glewInit();
 	if (glewInitStatus != GLEW_OK) {
-		fprintf(stderr, "GLEW init failed: %s\n", glewGetErrorString(glewInitStatus));
+		logError("GLEW init failed: %s", (const char*) glewGetErrorString(glewInitStatus));
 		return 1;
 	}
-	printf("GLEW %s\n", glewGetString(GLEW_VERSION));
+	logInfo("GLEW %s", (const char*) glewGetString(GLEW_VERSION));
 	
 	if (GLXEW_EXT_swap_control) {
 		Display* display = glXGetCurrentDisplay();
@@ -33,15 +38,16 @@ int main(int argc, char** argv) {
 			glXSwapIntervalEXT(display, drawable, 1);
 		}
 		else {
-			fprintf(stderr, "Drawable is not here\n");
+			logWarning("Drawable is not here ¯\\_(ツ)_/¯");
+			logWarning("Could not enable vsync (GLX_EXT_swap_control)");
 		}
 	}
 	else if (GLXEW_MESA_swap_control) {
 		glXSwapIntervalMESA(1);
-		printf("Swap interval %d\n", glXGetSwapIntervalMESA());
+		log("Vsync enabled with GLX_MESA_swap_control, swap interval %d", glXGetSwapIntervalMESA());
 	}
 	else {
-		fprintf(stderr, "Could not enable vsync\n");
+		logWarning("Could not enable vsync (extensions not supported)");
 	}
 	
 	glutDisplayFunc(renderScene);
@@ -54,13 +60,6 @@ int main(int argc, char** argv) {
 	initPerformanceMetering();
 	initLevel();
 	
-	/*
-	fprintf(stderr, "*model = ");
-	print_struct_aiScene(stderr, model);
-	fprintf(stderr, "\n*(*model).mRootNode = ");
-	print_struct_aiNode(stderr, (*model).mRootNode);
-	fprintf(stderr, "\n");
-	*/
 	glutMainLoop();
 	return 0;
 }

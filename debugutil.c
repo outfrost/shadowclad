@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "assimp_types.h"
+//#include "assimp_types.h"
 
 char* getGlInfoString() {
 	const char* glVersion = (const char*) glGetString(GL_VERSION);
@@ -24,7 +24,7 @@ char* getGlInfoString() {
 	
 	return glInfoString;
 }
-
+/*
 void dumpScene(FILE* stream, const AiScene* scene) {
 	if (scene == NULL) {
 		fprintf(stream, "NULL");
@@ -55,3 +55,4 @@ void dumpNode(FILE* stream, const AiNode* node) {
 			(*node).mNumMeshes,
 			(void*) (*node).mMeshes);
 }
+*/
