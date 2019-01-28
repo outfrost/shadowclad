@@ -4,7 +4,7 @@ LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 
 # Prefix all object file names with the compilation directory
 objects ::= $(addprefix out/, \
-              main.o debugutil.o level.o logger.o \
+              main.o level.o logger.o \
               performance.o render.o tga.o ui.o)
 
 # Set executable extension for the platform

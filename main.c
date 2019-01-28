@@ -1,7 +1,7 @@
 #include <GL/glxew.h>
 #include <GL/glut.h>
 
-#include "debugutil.h"
+//#include "debugutil.h"
 #include "level.h"
 #include "logger.h"
 #include "performance.h"
