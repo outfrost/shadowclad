@@ -5,14 +5,20 @@
 #include "level.h"
 #include "logger.h"
 
-BlockGrid levelGrid;
-
 static Block blockEmpty = { .type = BLOCKTYPE_SPACE,
                             .sceneData = NULL,
                             .textureIds = NULL };
 static Block blockWall01 = { .type = BLOCKTYPE_OBSTACLE,
                              .sceneData = NULL,
                              .textureIds = NULL };
+
+static Block* testBlocks[9] = { &blockWall01, &blockWall01, &blockWall01,
+                                &blockEmpty, &blockEmpty, &blockEmpty,
+                                &blockWall01, &blockEmpty, &blockWall01 };
+
+BlockGrid levelGrid = { .width = 3,
+                        .depth = 3,
+                        .blocks = testBlocks };
 
 //static TgaImage* levelImage = NULL;
 
@@ -78,6 +84,8 @@ const AiScene* importScene(const char* path) {
 	}
 	else if ((scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) == AI_SCENE_FLAGS_INCOMPLETE) {
 		logError("Incomplete scene imported from %s", path);
+		aiReleaseImport(scene);
+		scene = NULL;
 	}
 	return scene;
 	// TODO aiReleaseImport(scene);

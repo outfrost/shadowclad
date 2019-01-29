@@ -22,14 +22,20 @@ typedef struct {
 
 typedef struct {
 	int width;
-	int height;
-	Block* blocks;
+	int depth;
+	Block** blocks;
 } BlockGrid;
+
+#define BLOCKGRID_CELL_SIZE 2.5f
 
 BlockGrid levelGrid;
 
 void initLevel();
 void buildLevelFromImage(TgaImage* image);
 const AiScene* importScene(const char* path);
+
+static inline Block* getBlockFromGrid(BlockGrid grid, int x, int z) {
+	return grid.blocks[(z * grid.width) + x];
+}
 
 #endif

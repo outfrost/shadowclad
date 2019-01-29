@@ -7,6 +7,7 @@ typedef struct aiScene AiScene;
 typedef struct aiNode AiNode;
 typedef struct aiMesh AiMesh;
 typedef struct aiFace AiFace;
+typedef struct aiVector3D AiVector3D;
 typedef struct aiString AiString;
 
 #endif
