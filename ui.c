@@ -13,7 +13,7 @@ void resizeStage(GLsizei width, GLsizei height) {
 	
 	GLfloat aspectRatio = (GLfloat) width / (GLfloat) height;
 	
-	glOrtho(-8.0, 8.0, -8.0/aspectRatio, 8.0/aspectRatio, 128.0, -128.0);
+	glOrtho(-8.0, 8.0, -8.0/aspectRatio, 8.0/aspectRatio, -128.0, 128.0);
 	
 	glRotatef(45.0f, 1.0f, 0.0f, 0.0f);
 	glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
