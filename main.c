@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 	}
 	else if (GLXEW_MESA_swap_control) {
 		glXSwapIntervalMESA(1);
-		log("Vsync enabled with GLX_MESA_swap_control, swap interval %d", glXGetSwapIntervalMESA());
+		logDebug("Vsync enabled with GLX_MESA_swap_control, swap interval %d", glXGetSwapIntervalMESA());
 	}
 	else {
 		logWarning("Could not enable vsync (extensions not supported)");
