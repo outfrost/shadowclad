@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 	//glutMotionFunc(mouse_motion_event);
 	
 	initRender();
-	initPerformanceMetering();
+	//initPerformanceMetering();
 	initLevel();
 	
 	glutMainLoop();
