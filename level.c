@@ -70,13 +70,44 @@ void initLevel() {
 		
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	
+	buildLevelFromImage(readTga("out/assets/level01.tga"));
 }
 
 void buildLevelFromImage(TgaImage* image) {
+	if (image == NULL) {
+		logError("Null image received, cannot build level");
+		return;
+	}
+	
 	if (image->header.imageBpp != 32) {
 		logError("Invalid level image format (%d bpp)", image->header.imageBpp);
 		return;
 	}
+	
+	BlockGrid newGrid = { .width = image->header.imageWidth,
+	                      .depth = image->header.imageHeight,
+	                      .blocks = malloc(image->header.imageWidth
+	                                       * image->header.imageHeight
+	                                       * sizeof(Block*)) };
+	
+	for (int z = 0; z < newGrid.depth; ++z) {
+		for (int x = 0; x < newGrid.width; ++x) {
+			uint32_t pixelColorARGB = ((uint32_t*) image->bytes)[(z * newGrid.width) + x];
+			Block* block;
+			switch (pixelColorARGB) {
+				case 0xFFFF0000:
+					block = &blockWall01;
+					break;
+				default:
+					block = &blockEmpty;
+					break;
+			}
+			setBlockInGrid(newGrid, x, z, block);
+		}
+	}
+	
+	levelGrid = newGrid;
 }
 
 const AiScene* importScene(const char* path) {

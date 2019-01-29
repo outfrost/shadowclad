@@ -38,4 +38,8 @@ static inline Block* getBlockFromGrid(BlockGrid grid, int x, int z) {
 	return grid.blocks[(z * grid.width) + x];
 }
 
+static inline void setBlockInGrid(BlockGrid grid, int x, int z, Block* block) {
+	grid.blocks[(z * grid.width) + x] = block;
+}
+
 #endif
