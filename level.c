@@ -1,5 +1,6 @@
 #include <GL/gl.h>
 #include <assimp/cimport.h>
+#include <assimp/postprocess.h>
 #include <stdlib.h>
 
 #include "level.h"
@@ -78,7 +79,7 @@ void buildLevelFromImage(TgaImage* image) {
 }
 
 const AiScene* importScene(const char* path) {
-	const AiScene* scene = aiImportFile(path, 0u);
+	const AiScene* scene = aiImportFile(path, aiProcess_PreTransformVertices);
 	if (scene == NULL) {
 		logError("Failed to import asset from %s", path);
 	}
