@@ -1,4 +1,4 @@
-CFLAGS ::= -g -Wall -Wextra -Wpedantic $(CFLAGS)
+CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
 LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 
