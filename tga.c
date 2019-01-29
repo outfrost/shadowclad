@@ -21,11 +21,11 @@ TgaImage* readTga(const char* path) {
 	
 	switch (header.imageBpp) {
 		case 32:
-			imageFormat = GL_BGRA_EXT;
+			imageFormat = GL_BGRA;
 			imageComponents = GL_RGBA8;
 			break;
 		case 24:
-			imageFormat = GL_BGR_EXT;
+			imageFormat = GL_BGR;
 			imageComponents = GL_RGB8;
 			break;
 		case 8:

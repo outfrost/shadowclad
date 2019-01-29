@@ -37,7 +37,7 @@ void renderScene() {
 	glEnable(GL_LIGHTING);
 	
 	glEnable(GL_LIGHT0);
-	drawSceneRecursive(levelScene, levelScene->mRootNode);
+//	drawSceneRecursive(levelScene, levelScene->mRootNode);
 	glDisable(GL_LIGHT0);
 	
 	glFlush();
