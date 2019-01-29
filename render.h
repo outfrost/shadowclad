@@ -5,7 +5,5 @@
 
 void initRender();
 void renderScene();
-void drawAxes();
-void drawSceneRecursive(const AiScene* scene, const AiNode* node);
 
 #endif

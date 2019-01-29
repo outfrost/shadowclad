@@ -1,13 +1,15 @@
 #include <GL/glut.h>
 #include <stdbool.h>
 
+#include "assimp_types.h"
+
 #include "level.h"
 #include "performance.h"
-#include "render.h"
 #include "typedefs.h"
 
 const float AXIS_RADIUS = 5.0f;
 
+static void drawAxes();
 static void renderBlockGrid(const BlockGrid grid);
 static void drawBlock(const Block* block);
 
@@ -43,7 +45,6 @@ void renderScene() {
 	
 	glEnable(GL_LIGHT0);
 	glEnable(GL_TEXTURE_2D);
-//	drawSceneRecursive(levelScene, levelScene->mRootNode);
 	renderBlockGrid(levelGrid);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHT0);
@@ -54,7 +55,7 @@ void renderScene() {
 	glutPostRedisplay();
 }
 
-void drawAxes() {
+static void drawAxes() {
 	point3f xAxisStart = { 0.0f, 0.0f, 0.0f };
 	point3f xAxisEnd = { AXIS_RADIUS, 0.0f, 0.0f };
 	point3f yAxisStart = { 0.0f, 0.0f, 0.0f };
@@ -136,39 +137,4 @@ static void drawBlock(const Block* block) {
 		}
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void drawSceneRecursive(const AiScene* scene, const AiNode* node) {
-	if (((*scene).mFlags & AI_SCENE_FLAGS_INCOMPLETE) == AI_SCENE_FLAGS_INCOMPLETE) {
-		return;
-	}
-	
-	for (int i = 0; i < (*node).mNumMeshes; ++i) {
-		const AiMesh* mesh = (*scene).mMeshes[(*node).mMeshes[i]];
-		
-		for (int k = 0; k < (*mesh).mNumFaces; ++k) {
-			const AiFace face = (*mesh).mFaces[k];
-			
-			GLenum faceMode;
-			switch (face.mNumIndices) {
-				case 1: faceMode = GL_POINTS; break;
-				case 2: faceMode = GL_LINES; break;
-				case 3: faceMode = GL_TRIANGLES; break;
-				default: faceMode = GL_POLYGON; break;
-			}
-			
-			glBegin(faceMode);
-			
-			glColor3f(1.0f, 1.0f, 1.0f);
-			for (int l = 0; l < face.mNumIndices; ++l) {
-				glVertex3fv((const GLfloat*) &(*mesh).mVertices[face.mIndices[l]]);
-			}
-			
-			glEnd();
-		}
-	}
-	
-	for (int i = 0; i < (*node).mNumChildren; ++i) {
-		drawSceneRecursive(scene, (*node).mChildren[i]);
-	}
 }
