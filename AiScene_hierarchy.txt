@@ -1,8 +1,43 @@
 AiScene
+	
 	mFlags : unsigned int
 	mRootNode : AiNode*
+		
+		mName : AiString
+		mTransformation : AiMatrix4x4
+		mParent : AiNode*
+		mNumChildren : unsigned int
+		mChildren : AiNode**
+		mNumMeshes : unsigned int
+		mMeshes : unsigned int*
+		mMetaData : AiMetadata*
+		
 	mNumMeshes : unsigned int
 	mMeshes : AiMesh**
+		
+		mPrimitiveTypes : unsigned int
+		mNumVertices : unsigned int
+		mNumFaces : unsigned int
+		mVertices : AiVector3D*
+		mNormals : AiVector3D*
+		mTangents : AiVector3D*
+		mBitangents : AiVector3D*
+		mColors : AiColor4D[AI_MAX_NUMBER_OF_COLOR_SETS]*
+		mTextureCoords : AiVector3D[AI_MAX_NUMBER_OF_TEXTURECOORDS]*
+		mNumUVComponents : unsigned int[AI_MAX_NUMBER_OF_TEXTURECOORDS]
+		mFaces : AiFace*
+			
+			mNumIndices : unsigned int
+			mIndices : unsigned int*
+			
+		mNumBones : unsigned int
+		mBones : AiBone**
+		mMaterialIndex : unsigned int
+		nName : AiString
+		mNumAnimMeshes : unsigned int
+		mAnimMeshes : AiAnimMesh**
+		mMethod : unsigned int
+		
 	mNumMaterials : unsigned int
 	mMaterials : AiMaterial**
 	mNumAnimations : unsigned int
@@ -14,7 +49,9 @@ AiScene
 	mNumCameras : unsigned int
 	mCameras : AiCamera**
 
+
 AiNode
+	
 	mName : AiString
 	mTransformation : AiMatrix4x4
 	mParent : AiNode*
@@ -24,7 +61,9 @@ AiNode
 	mMeshes : unsigned int*
 	mMetaData : AiMetadata*
 
+
 AiMesh
+	
 	mPrimitiveTypes : unsigned int
 	mNumVertices : unsigned int
 	mNumFaces : unsigned int
@@ -36,6 +75,10 @@ AiMesh
 	mTextureCoords : AiVector3D[AI_MAX_NUMBER_OF_TEXTURECOORDS]*
 	mNumUVComponents : unsigned int[AI_MAX_NUMBER_OF_TEXTURECOORDS]
 	mFaces : AiFace*
+		
+		mNumIndices : unsigned int
+		mIndices : unsigned int*
+		
 	mNumBones : unsigned int
 	mBones : AiBone**
 	mMaterialIndex : unsigned int
@@ -44,18 +87,25 @@ AiMesh
 	mAnimMeshes : AiAnimMesh**
 	mMethod : unsigned int
 
+
 AiFace
+	
 	mNumIndices : unsigned int
 	mIndices : unsigned int*
 
+
 enum AiPrimitiveType
+	
 	aiPrimitiveType_POINT
 	aiPrimitiveType_LINE
 	aiPrimitiveType_TRIANGLE
 	aiPrimitiveType_POLYGON
 
+
 AiTexture
+	
 	mWidth : unsigned int
 	mHeight : unsigned int
 	achFormatHint : char[9]
 	pcData : AiTexel*
+	
