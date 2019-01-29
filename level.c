@@ -36,6 +36,7 @@ void initLevel() {
 		
 		for (unsigned int i = 0; i < numTextures; ++i) {
 			glBindTexture(GL_TEXTURE_2D, blockWall01.textureIds[i]);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			
 			AiString originalTexturePath;
 			if (aiGetMaterialTexture(sceneData->mMaterials[sceneData->mMeshes[i]->mMaterialIndex],
