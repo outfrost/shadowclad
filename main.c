@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	// glutInitContextVersion(4,5); TODO establish correct context
 	
-	glutInitWindowSize(800, 600);
+	glutInitWindowSize(1280, 720);
 	
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow(NULL);
