@@ -18,8 +18,8 @@ void initRender() {
 	
 	GLfloat light0_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	GLfloat light0_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat light0_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat light0_position[] = {5.0f, 2.0f, 5.0f, 1.0f};
+	GLfloat light0_specular[] = {0.96f, 0.98f, 1.0f, 1.0f};
+	GLfloat light0_position[] = {5.0f, 10.0f, 5.0f, 0.0f}; // (w == 0.0f) == directional
 	
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
