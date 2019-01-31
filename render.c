@@ -13,6 +13,8 @@ static void drawAxes();
 static void renderBlockGrid(const BlockGrid grid);
 static void drawBlock(const Block* block);
 
+
+
 void initRender() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	

@@ -5,6 +5,8 @@
 
 LogLevel logLevel = LOGLEVEL_DEBUG;
 
+
+
 void logMessage(LogLevel msgLevel, const char* file, int line, const char* message, ...) {
 	if (msgLevel > logLevel) {
 		return;

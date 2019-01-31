@@ -1,10 +1,10 @@
 #include <GL/gl.h>
-#include <assimp/cimport.h>
-#include <assimp/postprocess.h>
 #include <stdlib.h>
 
+#include "asset.h"
 #include "level.h"
 #include "logger.h"
+#include "player.h"
 
 static Block blockEmpty = { .type = BLOCKTYPE_SPACE,
                             .sceneData = NULL,
@@ -21,9 +21,12 @@ BlockGrid levelGrid = { .width = 3,
                         .depth = 3,
                         .blocks = testBlocks };
 
-//static TgaImage* levelImage = NULL;
+#define DEFAULT_PLAYER_SPAWN_POS { -BLOCKGRID_CELL_SIZE, 0.0f, -BLOCKGRID_CELL_SIZE }
+AiVector3D playerSpawnPos = DEFAULT_PLAYER_SPAWN_POS;
 
 static const char* replaceFileExtension(const AiString path, const char* ext);
+
+
 
 void initLevel() {
 	const AiScene* sceneData = importScene("out/assets/wall01.3ds");
@@ -90,6 +93,7 @@ void buildLevelFromImage(TgaImage* image) {
 	                      .blocks = malloc(image->header.imageWidth
 	                                       * image->header.imageHeight
 	                                       * sizeof(Block*)) };
+	playerSpawnPos = (AiVector3D) DEFAULT_PLAYER_SPAWN_POS;
 	
 	for (int z = 0; z < newGrid.depth; ++z) {
 		for (int x = 0; x < newGrid.width; ++x) {
@@ -98,6 +102,10 @@ void buildLevelFromImage(TgaImage* image) {
 			switch (pixelColorARGB) {
 				case 0xFFFF0000:
 					block = &blockWall01;
+					break;
+				case 0xFF00FFFF:
+					block = &blockEmpty;
+					playerSpawnPos = (AiVector3D) { x * BLOCKGRID_CELL_SIZE, 0.0f, z * BLOCKGRID_CELL_SIZE };
 					break;
 				default:
 					block = &blockEmpty;
@@ -108,20 +116,7 @@ void buildLevelFromImage(TgaImage* image) {
 	}
 	
 	levelGrid = newGrid;
-}
-
-const AiScene* importScene(const char* path) {
-	const AiScene* scene = aiImportFile(path, aiProcess_PreTransformVertices);
-	if (scene == NULL) {
-		logError("Failed to import asset from %s", path);
-	}
-	else if ((scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) == AI_SCENE_FLAGS_INCOMPLETE) {
-		logError("Incomplete scene imported from %s", path);
-		aiReleaseImport(scene);
-		scene = NULL;
-	}
-	return scene;
-	// TODO aiReleaseImport(scene);
+	spawnPlayer();
 }
 
 /** BUGS

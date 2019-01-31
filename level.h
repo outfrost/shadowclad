@@ -29,10 +29,10 @@ typedef struct {
 #define BLOCKGRID_CELL_SIZE 2.5f
 
 BlockGrid levelGrid;
+AiVector3D playerSpawnPos;
 
 void initLevel();
 void buildLevelFromImage(TgaImage* image);
-const AiScene* importScene(const char* path);
 
 static inline Block* getBlockFromGrid(BlockGrid grid, int x, int z) {
 	return grid.blocks[(z * grid.width) + x];

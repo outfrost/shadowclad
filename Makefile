@@ -4,8 +4,8 @@ LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 
 # Prefix all object file names with the compilation directory
 objects ::= $(addprefix out/, \
-              main.o level.o logger.o \
-              performance.o render.o tga.o ui.o)
+              main.o asset.o level.o logger.o \
+              performance.o player.o render.o tga.o ui.o)
 
 # Set executable extension for the platform
 ifeq ($(OS),Windows_NT)

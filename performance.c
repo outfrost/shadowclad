@@ -14,6 +14,8 @@ static Timepoint lastDisplayTime;
 static int frames = 0;
 static bool meteringEnabled = false;
 
+
+
 void initPerformanceMetering() {
 	if (clock_gettime(CLOCK_MONOTONIC, &lastDisplayTime) != 0) {
 		logWarning("Clock read failed, performance metering unavailable");

@@ -1,7 +1,6 @@
 #include <GL/glxew.h>
 #include <GL/glut.h>
 
-//#include "debugutil.h"
 #include "level.h"
 #include "logger.h"
 #include "performance.h"
@@ -17,7 +16,6 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow(NULL);
 	
-	// glutSetWindowTitle(getGlInfoString());
 	glutSetWindowTitle("shadowclad");
 	
 	logInfo("OpenGL %s", (const char*) glGetString(GL_VERSION));
