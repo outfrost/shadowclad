@@ -11,7 +11,7 @@ static AiVector3D playerPos;
 
 
 void initPlayer() {
-	playerCharacter.sceneData = importScene("out/assets/playercharacter.3ds");
+	playerCharacter.sceneData = importScene("assets/playercharacter.3ds");
 	// TODO import textures
 }
 

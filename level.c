@@ -29,7 +29,7 @@ static const char* replaceFileExtension(const AiString path, const char* ext);
 
 
 void initLevel() {
-	const AiScene* sceneData = importScene("out/assets/wall01.3ds");
+	const AiScene* sceneData = importScene("assets/wall01.3ds");
 	blockWall01.sceneData = sceneData;
 	if (sceneData != NULL) {
 		const unsigned int numTextures = sceneData->mNumMeshes;
@@ -49,8 +49,8 @@ void initLevel() {
 			                         NULL, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
 				const char* textureFile = replaceFileExtension(originalTexturePath, ".tga");
 				size_t textureFileLength = strlen(textureFile);
-				char* texturePath = malloc(strlen("out/assets/") + textureFileLength + 1);
-				strcpy(texturePath, "out/assets/");
+				char* texturePath = malloc(strlen("assets/") + textureFileLength + 1);
+				strcpy(texturePath, "assets/");
 				strncat(texturePath, textureFile, textureFileLength);
 				TgaImage* textureImage = readTga(texturePath);
 				if (textureImage == NULL) {
@@ -74,7 +74,7 @@ void initLevel() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
-	buildLevelFromImage(readTga("out/assets/level01.tga"));
+	buildLevelFromImage(readTga("assets/level01.tga"));
 }
 
 void buildLevelFromImage(TgaImage* image) {
