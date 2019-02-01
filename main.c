@@ -14,9 +14,7 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(1280, 720);
 	
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutCreateWindow(NULL);
-	
-	glutSetWindowTitle("shadowclad");
+	glutCreateWindow("shadowclad");
 	
 	logInfo("OpenGL %s", (const char*) glGetString(GL_VERSION));
 	logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
