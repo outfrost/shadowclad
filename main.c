@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
 	initRender();
 	//initPerformanceMetering();
 	initLevel();
+	initPlayer();
 	
 	glutMainLoop();
 	return 0;

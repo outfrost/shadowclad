@@ -7,7 +7,10 @@
 
 typedef struct {
 	const Asset3D* asset3D;
-} PlayerCharacter;
+} Character;
+
+Character playerCharacter;
+Vector3D playerPos;
 
 void spawnPlayer();
 

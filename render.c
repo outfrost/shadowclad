@@ -3,13 +3,19 @@
 
 #include "level.h"
 #include "performance.h"
+#include "player.h"
 #include "typedefs.h"
 
 const float AXIS_RADIUS = 5.0f;
 
+static void setupCamera();
+static void moveCameraTo(const Vector3D pos);
 static void drawAxes();
 static void renderBlockGrid(const BlockGrid grid);
-static void drawBlock(const Block* block);
+static void renderCharacter(const Character* character, const Vector3D pos);
+static void drawAsset3D(const Asset3D* asset3D);
+
+float viewportAspectRatio = 1.0f;
 
 
 
@@ -33,11 +39,13 @@ void initRender() {
 
 void renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
 	
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
+	
+	setupCamera();
+	moveCameraTo(playerPos);
 	
 	glDisable(GL_LIGHTING);
 	drawAxes();
@@ -46,6 +54,7 @@ void renderScene() {
 	glEnable(GL_LIGHT0);
 	glEnable(GL_TEXTURE_2D);
 	renderBlockGrid(levelGrid);
+	renderCharacter(&playerCharacter, playerPos);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHT0);
 	
@@ -55,7 +64,26 @@ void renderScene() {
 	glutPostRedisplay();
 }
 
+static void setupCamera() {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-16.0,
+	        16.0,
+	        -16.0/viewportAspectRatio,
+	        16.0/viewportAspectRatio,
+	        -128.0,
+	        128.0);
+	glRotatef(45.0f, 1.0f, 0.0f, 0.0f);
+	glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
+}
+
+static void moveCameraTo(const Vector3D pos) {
+	glMatrixMode(GL_PROJECTION);
+	glTranslatef(-pos.x, -pos.y, -pos.z);
+}
+
 static void drawAxes() {
+	glMatrixMode(GL_MODELVIEW);
 	// X axis
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_LINES);
@@ -82,21 +110,28 @@ static void renderBlockGrid(const BlockGrid grid) {
 		glLoadIdentity();
 		glTranslatef(0.0f, 0.0f, z * BLOCKGRID_CELL_SIZE);
 		for (int x = 0; x < grid.width; ++x) {
-			drawBlock(getBlockFromGrid(grid, x, z));
+			drawAsset3D(getBlockFromGrid(grid, x, z)->asset3D);
 			glTranslatef(BLOCKGRID_CELL_SIZE, 0.0f, 0.0f);
 		}
 	}
 	glLoadIdentity();
 }
 
-static void drawBlock(const Block* block) {
-	if (block->asset3D == NULL) {
+static void renderCharacter(const Character* character, const Vector3D pos) {
+	glMatrixMode(GL_MODELVIEW);
+	glTranslatef(pos.x, pos.y, pos.z);
+	drawAsset3D(character->asset3D);
+	glLoadIdentity();
+}
+
+static void drawAsset3D(const Asset3D* asset3D) {
+	if (asset3D == NULL) {
 		return;
 	}
 	
+	glMatrixMode(GL_MODELVIEW);
 	glColor3f(0.5f, 1.0f, 0.0f);
 	
-	const Asset3D* asset3D = block->asset3D;
 	for (int meshIndex = 0; meshIndex < asset3D->numMeshes; ++meshIndex) {
 		const Mesh mesh = asset3D->meshes[meshIndex];
 		glBindTexture(GL_TEXTURE_2D,
