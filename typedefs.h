@@ -1,6 +1,10 @@
 #ifndef TYPEDEFS_H_
 #define TYPEDEFS_H_
 
-typedef float point3f[3];
+typedef struct {
+	float x;
+	float y;
+	float z;
+} Vector3D;
 
 #endif

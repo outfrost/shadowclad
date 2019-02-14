@@ -3,11 +3,10 @@
 
 #include <GL/gl.h>
 
-#include "assimp_types.h"
+#include "asset.h"
 
 typedef struct {
-	const AiScene* sceneData;
-	GLuint* textureIds;
+	const Asset3D* asset3D;
 } PlayerCharacter;
 
 void spawnPlayer();

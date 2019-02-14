@@ -1,17 +1,15 @@
-#include "asset.h"
 #include "level.h"
 #include "logger.h"
 #include "player.h"
 
-PlayerCharacter playerCharacter = { .sceneData = NULL,
-                                    .textureIds = NULL };
+PlayerCharacter playerCharacter = { .asset3D = NULL };
 
-static AiVector3D playerPos;
+static Vector3D playerPos;
 
 
 
 void initPlayer() {
-	playerCharacter.sceneData = importScene("assets/playercharacter.3ds");
+	playerCharacter.asset3D = importAsset("assets/playercharacter.3ds");
 	// TODO import textures
 }
 

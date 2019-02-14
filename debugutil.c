@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//#include "assimp_types.h"
-
 char* getGlInfoString() {
 	const char* glVersion = (const char*) glGetString(GL_VERSION);
 	const char* glslVersion = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
@@ -24,35 +22,3 @@ char* getGlInfoString() {
 	
 	return glInfoString;
 }
-/*
-void dumpScene(FILE* stream, const AiScene* scene) {
-	if (scene == NULL) {
-		fprintf(stream, "NULL");
-		return;
-	}
-	fprintf(stream, "{ mFlags = %u, mRootNode = %p, mNumMeshes = %u, mMeshes = %p, mNumMaterials = %u, mMaterials = %p, mNumAnimations = %u, mAnimations = %p, mNumTextures = %u, mTextures = %p, mNumLights = %u, mLights = %p }",
-			(*scene).mFlags,
-			(void*) (*scene).mRootNode,
-			(*scene).mNumMeshes,
-			(void*) (*scene).mMeshes,
-			(*scene).mNumMaterials,
-			(void*) (*scene).mMaterials,
-			(*scene).mNumAnimations,
-			(void*) (*scene).mAnimations,
-			(*scene).mNumTextures,
-			(void*) (*scene).mTextures,
-			(*scene).mNumLights,
-			(void*) (*scene).mLights);
-}
-
-void dumpNode(FILE* stream, const AiNode* node) {
-	if (node == NULL) {
-		fprintf(stream, "NULL");
-		return;
-	}
-	fprintf(stream, "{ mName = %s, mNumMeshes = %u, mMeshes = %p }",
-			(*node).mName.data,
-			(*node).mNumMeshes,
-			(void*) (*node).mMeshes);
-}
-*/

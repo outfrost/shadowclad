@@ -3,8 +3,7 @@
 
 #include <stdint.h>
 
-#include "assimp_types.h"
-
+#include "asset.h"
 #include "tga.h"
 
 typedef enum {
@@ -16,8 +15,7 @@ typedef enum {
 
 typedef struct {
 	const BlockType type;
-	const AiScene* sceneData;
-	GLuint* textureIds;
+	const Asset3D* asset3D;
 } Block;
 
 typedef struct {
@@ -29,7 +27,7 @@ typedef struct {
 #define BLOCKGRID_CELL_SIZE 2.5f
 
 BlockGrid levelGrid;
-AiVector3D playerSpawnPos;
+Vector3D playerSpawnPos;
 
 void initLevel();
 void buildLevelFromImage(TgaImage* image);

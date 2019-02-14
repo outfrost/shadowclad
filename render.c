@@ -1,8 +1,6 @@
 #include <GL/glut.h>
 #include <stdbool.h>
 
-#include "assimp_types.h"
-
 #include "level.h"
 #include "performance.h"
 #include "typedefs.h"
@@ -58,29 +56,23 @@ void renderScene() {
 }
 
 static void drawAxes() {
-	point3f xAxisStart = { 0.0f, 0.0f, 0.0f };
-	point3f xAxisEnd = { AXIS_RADIUS, 0.0f, 0.0f };
-	point3f yAxisStart = { 0.0f, 0.0f, 0.0f };
-	point3f yAxisEnd = { 0.0f, AXIS_RADIUS, 0.0f };
-	point3f zAxisStart = { 0.0f, 0.0f, 0.0f };
-	point3f zAxisEnd = { 0.0f, 0.0f, AXIS_RADIUS };
-	
+	// X axis
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_LINES);
-	glVertex3fv(xAxisStart);
-	glVertex3fv(xAxisEnd);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(AXIS_RADIUS, 0.0f, 0.0f);
 	glEnd();
-	
+	// Y axis
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_LINES);
-	glVertex3fv(yAxisStart);
-	glVertex3fv(yAxisEnd);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, AXIS_RADIUS, 0.0f);
 	glEnd();
-	
+	// Z axis
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glBegin(GL_LINES);
-	glVertex3fv(zAxisStart);
-	glVertex3fv(zAxisEnd);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, AXIS_RADIUS);
 	glEnd();
 }
 
@@ -98,23 +90,25 @@ static void renderBlockGrid(const BlockGrid grid) {
 }
 
 static void drawBlock(const Block* block) {
-	if (block->sceneData == NULL) {
+	if (block->asset3D == NULL) {
 		return;
 	}
 	
 	glColor3f(0.5f, 1.0f, 0.0f);
 	
-	for (int i = 0; i < block->sceneData->mNumMeshes; ++i) {
-		glBindTexture(GL_TEXTURE_2D, block->textureIds[i]);
-		const AiMesh* mesh = block->sceneData->mMeshes[i];
-		bool hasNormals = mesh->mNormals != NULL;
-		bool hasTextureCoords = mesh->mTextureCoords[0] != NULL;
+	const Asset3D* asset3D = block->asset3D;
+	for (int meshIndex = 0; meshIndex < asset3D->numMeshes; ++meshIndex) {
+		const Mesh mesh = asset3D->meshes[meshIndex];
+		glBindTexture(GL_TEXTURE_2D,
+		              asset3D->materials[mesh.materialIndex].textureId);
+		bool hasNormals = mesh.normals != NULL;
+		bool hasTextureCoords = mesh.textureCoords != NULL;
 		
-		for (int k = 0; k < mesh->mNumFaces; ++k) {
-			const AiFace face = mesh->mFaces[k];
+		for (int faceIndex = 0; faceIndex < mesh.numFaces; ++faceIndex) {
+			const Face face = mesh.faces[faceIndex];
 			
 			GLenum faceMode;
-			switch (face.mNumIndices) {
+			switch (face.numIndices) {
 				case 1: faceMode = GL_POINTS; break;
 				case 2: faceMode = GL_LINES; break;
 				case 3: faceMode = GL_TRIANGLES; break;
@@ -123,16 +117,18 @@ static void drawBlock(const Block* block) {
 			
 			glBegin(faceMode);
 			
-			for (int l = 0; l < face.mNumIndices; ++l) {
-				unsigned int vertexIndex = face.mIndices[l];
+			for (int i = 0; i < face.numIndices; ++i) {
+				unsigned int vertIndex = face.indices[i];
 				if (hasNormals) {
 					if (hasTextureCoords) {
-						AiVector3D coords = mesh->mTextureCoords[0][vertexIndex];
+						Vector3D coords = mesh.textureCoords[vertIndex];
 						glTexCoord2f(coords.x, coords.y);
 					}
-					glNormal3fv(&mesh->mNormals[vertexIndex].x);
+					Vector3D normal = mesh.normals[vertIndex];
+					glNormal3f(normal.x, normal.y, normal.z);
 				}
-				glVertex3fv((const GLfloat*) &mesh->mVertices[vertexIndex]);
+				Vector3D vertex = mesh.vertices[vertIndex];
+				glVertex3f(vertex.x, vertex.y, vertex.z);
 			}
 			
 			glEnd();
