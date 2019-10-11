@@ -1,5 +1,5 @@
-# Build output
-out/
+# Build directory
+/target/
 
 # GNU nano
 *.swp
