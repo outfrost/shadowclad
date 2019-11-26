@@ -11,9 +11,6 @@ LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 # Paths
 # ######
 
-vpath %.c $(SRCDIR)
-vpath %.h $(SRCDIR)
-
 sources ::= main.c \
             asset.c \
             level.c \
@@ -24,8 +21,10 @@ sources ::= main.c \
             tga.c \
             ui.c
 
-objects ::= $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(sources)))
-depfiles ::= $(addprefix $(BUILDDIR)/, $(addsuffix .mk, $(sources)))
+srcfiles ::= $(addprefix $(SRCDIR)/, $(sources))
+
+objects ::= $(addprefix $(BUILDDIR)/, $(addsuffix .o, $(srcfiles)))
+depfiles ::= $(addprefix $(BUILDDIR)/, $(addsuffix .mk, $(srcfiles)))
 
 # Set executable name for the platform
 # TODO Base this on target platform instead of host OS
@@ -41,21 +40,24 @@ binary ::= $(BUILDDIR)/shadowclad #$(binext)
 # ######
 
 # Default rule: build executable
-$(binary): $(objects) | $(BUILDDIR)
+$(binary): $(objects)
+	@mkdir -p $(@D)
 	@echo "###### Linking executable..."
 	$(CC) $(LDFLAGS) -o $(binary) $^ $(LOADLIBES) $(LDLIBS)
 
 # Build C translation units
-$(BUILDDIR)/%.c.o: %.c $(BUILDDIR)/%.c.mk | $(BUILDDIR)
+$(objects): $(BUILDDIR)/%.c.o: %.c $(BUILDDIR)/%.c.mk
+	@mkdir -p $(@D)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 # ######
 # Setup
 # ######
 
-# Create build directory
-$(BUILDDIR):
+# Initialise build environment
+init:
 	mkdir -p $(BUILDDIR)
+.PHONY: init
 
 # ######
 # Aliases
@@ -64,12 +66,8 @@ $(BUILDDIR):
 # Build and run
 run: $(binary)
 	@echo
-	LD_LIBRARY_PATH=/usr/local/lib $(binary)
+	@LD_LIBRARY_PATH=/usr/local/lib $(binary)
 .PHONY: run
-
-# Initialise build environment
-init: $(BUILDDIR)
-.PHONY: init
 
 # Build executable
 shadowclad: $(binary)
@@ -80,9 +78,12 @@ shadowclad: $(binary)
 # ######
 
 # Generate C prerequisite makefiles
-$(BUILDDIR)/%.c.mk: %.c Makefile | $(BUILDDIR)
+$(depfiles): $(BUILDDIR)/%.c.mk: %.c Makefile
+	@mkdir -p $(@D)
 	@echo "Generating prerequisites for $<"
 	@$(CPP) -MM -MT $(BUILDDIR)/$*.c.o -MF $@ $(CPPFLAGS) $<
+# Give the same prerequisites to the prerequisite makefile,
+# so that it is regenerated whenever any of said prerequisites change
 	@sed -E -i 's|^([^\s:]+)([ :])|\1 $@\2|' $@
 
 # Include generated C prerequisites
