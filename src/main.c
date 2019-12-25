@@ -4,6 +4,7 @@
 #include "level.h"
 #include "logger.h"
 #include "performance.h"
+#include "player.h"
 #include "render.h"
 #include "ui.h"
 

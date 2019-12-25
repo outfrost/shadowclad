@@ -12,6 +12,7 @@ typedef struct {
 Character playerCharacter;
 Vector3D playerPos;
 
+void initPlayer();
 void spawnPlayer();
 
 #endif

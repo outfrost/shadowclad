@@ -132,14 +132,14 @@ static void drawAsset3D(const Asset3D* asset3D) {
 	glMatrixMode(GL_MODELVIEW);
 	glColor3f(0.5f, 1.0f, 0.0f);
 	
-	for (int meshIndex = 0; meshIndex < asset3D->numMeshes; ++meshIndex) {
+	for (size_t meshIndex = 0; meshIndex < asset3D->numMeshes; ++meshIndex) {
 		const Mesh mesh = asset3D->meshes[meshIndex];
 		glBindTexture(GL_TEXTURE_2D,
 		              asset3D->materials[mesh.materialIndex].textureId);
 		bool hasNormals = mesh.normals != NULL;
 		bool hasTextureCoords = mesh.textureCoords != NULL;
 		
-		for (int faceIndex = 0; faceIndex < mesh.numFaces; ++faceIndex) {
+		for (size_t faceIndex = 0; faceIndex < mesh.numFaces; ++faceIndex) {
 			const Face face = mesh.faces[faceIndex];
 			
 			GLenum faceMode;
@@ -152,7 +152,7 @@ static void drawAsset3D(const Asset3D* asset3D) {
 			
 			glBegin(faceMode);
 			
-			for (int i = 0; i < face.numIndices; ++i) {
+			for (size_t i = 0; i < face.numIndices; ++i) {
 				unsigned int vertIndex = face.indices[i];
 				if (hasNormals) {
 					if (hasTextureCoords) {
