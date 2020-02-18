@@ -53,12 +53,10 @@ const Asset3D* importAsset(const char* path) {
 			}
 		}
 		
-		if (aiMesh->mTextureCoords != NULL) {
-			mesh.textureCoords = malloc(numVertices * sizeof(Vector3D));
-			for (unsigned int texcIndex = 0; texcIndex < numVertices; ++texcIndex) {
-				mesh.textureCoords[texcIndex] = convertAiVector3D(
-						aiMesh->mTextureCoords[0][texcIndex]);
-			}
+		mesh.textureCoords = malloc(numVertices * sizeof(Vector3D));
+		for (unsigned int texcIndex = 0; texcIndex < numVertices; ++texcIndex) {
+			mesh.textureCoords[texcIndex] = convertAiVector3D(
+					aiMesh->mTextureCoords[0][texcIndex]);
 		}
 		
 		for (unsigned int faceIndex = 0; faceIndex < numFaces; ++faceIndex) {
