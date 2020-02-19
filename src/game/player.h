@@ -3,7 +3,7 @@
 
 #include <GL/gl.h>
 
-#include "asset.h"
+#include "engine/asset.h"
 
 typedef struct {
 	const Asset3D* asset3D;

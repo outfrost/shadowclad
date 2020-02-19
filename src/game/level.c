@@ -1,8 +1,9 @@
 #include <GL/gl.h>
 #include <stdlib.h>
 
+#include "engine/logger.h"
+
 #include "level.h"
-#include "logger.h"
 #include "player.h"
 
 static Block blockEmpty = { .type = BLOCKTYPE_SPACE,

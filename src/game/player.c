@@ -1,5 +1,6 @@
+#include "engine/logger.h"
+
 #include "level.h"
-#include "logger.h"
 #include "player.h"
 
 Character playerCharacter = { .asset3D = NULL };

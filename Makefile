@@ -3,6 +3,7 @@ PLATFORM ?= x86_64-linux-gnu
 BUILDDIR ?= target/$(PLATFORM)
 SRCDIR ?= src
 
+CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
 CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
 LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
@@ -12,14 +13,14 @@ LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 # ######
 
 sources ::= main.c \
-            asset.c \
-            level.c \
-            logger.c \
-            performance.c \
-            player.c \
-            render.c \
-            tga.c \
-            ui.c
+            engine/asset.c \
+            engine/logger.c \
+            engine/performance.c \
+            engine/render.c \
+            engine/tga.c \
+            engine/ui.c \
+            game/level.c \
+            game/player.c
 
 srcfiles ::= $(addprefix $(SRCDIR)/, $(sources))
 

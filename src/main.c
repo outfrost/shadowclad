@@ -1,12 +1,13 @@
 #include <GL/glxew.h>
 #include <GL/glut.h>
 
-#include "level.h"
-#include "logger.h"
-#include "performance.h"
-#include "player.h"
-#include "render.h"
-#include "ui.h"
+#include "engine/logger.h"
+#include "engine/performance.h"
+#include "engine/render.h"
+#include "engine/ui.h"
+
+#include "game/level.h"
+#include "game/player.h"
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);

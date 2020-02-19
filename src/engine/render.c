@@ -1,9 +1,10 @@
 #include <GL/glut.h>
 #include <stdbool.h>
 
-#include "level.h"
+#include "game/level.h"
+#include "game/player.h"
+
 #include "performance.h"
-#include "player.h"
 #include "typedefs.h"
 
 const float AXIS_RADIUS = 5.0f;

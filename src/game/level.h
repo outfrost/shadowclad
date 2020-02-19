@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#include "asset.h"
-#include "tga.h"
+#include "engine/asset.h"
+#include "engine/tga.h"
 
 typedef enum {
 	BLOCKTYPE_SPACE,
