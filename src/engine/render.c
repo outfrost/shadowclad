@@ -4,8 +4,8 @@
 #include "game/level.h"
 #include "game/player.h"
 
+#include "geometry.h"
 #include "performance.h"
-#include "typedefs.h"
 
 const float AXIS_RADIUS = 5.0f;
 

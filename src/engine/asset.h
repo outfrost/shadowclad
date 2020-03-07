@@ -5,7 +5,7 @@
 
 #include "assimp_types.h"
 
-#include "typedefs.h"
+#include "geometry.h"
 
 typedef struct Asset3D Asset3D;
 typedef struct Mesh Mesh;
