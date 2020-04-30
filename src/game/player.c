@@ -3,12 +3,12 @@
 #include "level.h"
 #include "player.h"
 
-Character playerCharacter = { .asset3D = NULL };
+Character playerCharacter = { .solid = NULL };
 
 
 
 void initPlayer() {
-	playerCharacter.asset3D = importAsset("assets/playercharacter.3ds");
+	playerCharacter.solid = importSolid("assets/playercharacter.3ds");
 }
 
 void spawnPlayer() {

@@ -15,7 +15,7 @@ typedef enum {
 
 typedef struct {
 	const BlockType type;
-	const Asset3D* asset3D;
+	const Solid* solid;
 } Block;
 
 typedef struct {

@@ -7,9 +7,9 @@
 #include "player.h"
 
 static Block blockEmpty = { .type = BLOCKTYPE_SPACE,
-                            .asset3D = NULL };
+                            .solid = NULL };
 static Block blockWall01 = { .type = BLOCKTYPE_OBSTACLE,
-                             .asset3D = NULL };
+                             .solid = NULL };
 
 static Block* testBlocks[9] = { &blockWall01, &blockWall01, &blockWall01,
                                 &blockEmpty, &blockEmpty, &blockEmpty,
@@ -25,7 +25,7 @@ Vector3D playerSpawnPos = DEFAULT_PLAYER_SPAWN_POS;
 
 
 void initLevel() {
-	blockWall01.asset3D = importAsset("assets/wall01.3ds");
+	blockWall01.solid = importSolid("assets/wall01.3ds");
 	
 	buildLevelFromImage(readTga("assets/level01.tga"));
 }

@@ -13,7 +13,7 @@ static const char* replaceFileExtension(const AiString path, const char* ext);
 
 
 
-const Asset3D* importAsset(const char* path) {
+const Solid* importSolid(const char* path) {
 	const AiScene* scene = importScene(path);
 	if (scene == NULL) {
 		return NULL;
@@ -24,11 +24,11 @@ const Asset3D* importAsset(const char* path) {
 
 	// TODO Consider assets with some arrays empty, and prevent zero mallocs
 	
-	Asset3D* asset = malloc(sizeof(Asset3D));
-	asset->numMeshes = numMeshes;
-	asset->meshes = malloc(numMeshes * sizeof(Mesh));
-	asset->numMaterials = numMaterials;
-	asset->materials = malloc(numMaterials * sizeof(Material));
+	Solid* solid = malloc(sizeof(Solid));
+	solid->numMeshes = numMeshes;
+	solid->meshes = malloc(numMeshes * sizeof(Mesh));
+	solid->numMaterials = numMaterials;
+	solid->materials = malloc(numMaterials * sizeof(Material));
 	
 	for (unsigned int meshIndex = 0; meshIndex < numMeshes; ++meshIndex) {
 		const AiMesh* aiMesh = scene->mMeshes[meshIndex];
@@ -76,7 +76,7 @@ const Asset3D* importAsset(const char* path) {
 			mesh.faces[faceIndex] = face;
 		}
 		
-		asset->meshes[meshIndex] = mesh;
+		solid->meshes[meshIndex] = mesh;
 	}
 	
 	GLuint* textureIds = malloc(numMaterials * sizeof(GLuint));
@@ -119,12 +119,12 @@ const Asset3D* importAsset(const char* path) {
 			}
 		}
 		
-		asset->materials[matIndex] = material;
+		solid->materials[matIndex] = material;
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
 	aiReleaseImport(scene);
-	return asset;
+	return solid;
 }
 
 static const AiScene* importScene(const char* path) {

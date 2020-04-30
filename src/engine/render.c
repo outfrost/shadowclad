@@ -14,7 +14,7 @@ static void moveCameraTo(const Vector3D pos);
 static void drawAxes();
 static void renderBlockGrid(const BlockGrid grid);
 static void renderCharacter(const Character* character, const Vector3D pos);
-static void drawAsset3D(const Asset3D* asset3D);
+static void drawSolid(const Solid* solid);
 
 float viewportAspectRatio = 1.0f;
 
@@ -111,7 +111,7 @@ static void renderBlockGrid(const BlockGrid grid) {
 		glLoadIdentity();
 		glTranslatef(0.0f, 0.0f, z * BLOCKGRID_CELL_SIZE);
 		for (size_t x = 0; x < grid.width; ++x) {
-			drawAsset3D(getBlockFromGrid(grid, x, z)->asset3D);
+			drawSolid(getBlockFromGrid(grid, x, z)->solid);
 			glTranslatef(BLOCKGRID_CELL_SIZE, 0.0f, 0.0f);
 		}
 	}
@@ -121,22 +121,22 @@ static void renderBlockGrid(const BlockGrid grid) {
 static void renderCharacter(const Character* character, const Vector3D pos) {
 	glMatrixMode(GL_MODELVIEW);
 	glTranslatef(pos.x, pos.y, pos.z);
-	drawAsset3D(character->asset3D);
+	drawSolid(character->solid);
 	glLoadIdentity();
 }
 
-static void drawAsset3D(const Asset3D* asset3D) {
-	if (asset3D == NULL) {
+static void drawSolid(const Solid* solid) {
+	if (solid == NULL) {
 		return;
 	}
 	
 	glMatrixMode(GL_MODELVIEW);
 	glColor3f(0.5f, 1.0f, 0.0f);
 	
-	for (size_t meshIndex = 0; meshIndex < asset3D->numMeshes; ++meshIndex) {
-		const Mesh mesh = asset3D->meshes[meshIndex];
+	for (size_t meshIndex = 0; meshIndex < solid->numMeshes; ++meshIndex) {
+		const Mesh mesh = solid->meshes[meshIndex];
 		glBindTexture(GL_TEXTURE_2D,
-		              asset3D->materials[mesh.materialIndex].textureId);
+		              solid->materials[mesh.materialIndex].textureId);
 		bool hasNormals = mesh.normals != NULL;
 		bool hasTextureCoords = mesh.textureCoords != NULL;
 		

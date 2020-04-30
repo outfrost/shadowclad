@@ -7,12 +7,12 @@
 
 #include "geometry.h"
 
-typedef struct Asset3D Asset3D;
+typedef struct Solid Solid;
 typedef struct Mesh Mesh;
 typedef struct Face Face;
 typedef struct Material Material;
 
-struct Asset3D {
+struct Solid {
 	size_t numMeshes;
 	Mesh* meshes;
 	size_t numMaterials;
@@ -38,6 +38,6 @@ struct Material {
 	GLuint textureId;
 };
 
-const Asset3D* importAsset(const char* path);
+const Solid* importSolid(const char* path);
 
 #endif

@@ -6,7 +6,7 @@
 #include "engine/asset.h"
 
 typedef struct {
-	const Asset3D* asset3D;
+	const Solid* solid;
 } Character;
 
 Character playerCharacter;
