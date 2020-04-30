@@ -19,8 +19,8 @@ typedef struct {
 } Block;
 
 typedef struct {
-	int width;
-	int depth;
+	size_t width;
+	size_t depth;
 	Block** blocks;
 } BlockGrid;
 
@@ -32,11 +32,11 @@ Vector3D playerSpawnPos;
 void initLevel();
 void buildLevelFromImage(TgaImage* image);
 
-static inline Block* getBlockFromGrid(BlockGrid grid, int x, int z) {
+static inline Block* getBlockFromGrid(BlockGrid grid, size_t x, size_t z) {
 	return grid.blocks[(z * grid.width) + x];
 }
 
-static inline void setBlockInGrid(BlockGrid grid, int x, int z, Block* block) {
+static inline void setBlockInGrid(BlockGrid grid, size_t x, size_t z, Block* block) {
 	grid.blocks[(z * grid.width) + x] = block;
 }
 

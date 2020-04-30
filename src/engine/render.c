@@ -107,10 +107,10 @@ static void drawAxes() {
 
 static void renderBlockGrid(const BlockGrid grid) {
 	glMatrixMode(GL_MODELVIEW);
-	for (int z = 0; z < grid.depth; ++z) {
+	for (size_t z = 0; z < grid.depth; ++z) {
 		glLoadIdentity();
 		glTranslatef(0.0f, 0.0f, z * BLOCKGRID_CELL_SIZE);
-		for (int x = 0; x < grid.width; ++x) {
+		for (size_t x = 0; x < grid.width; ++x) {
 			drawAsset3D(getBlockFromGrid(grid, x, z)->asset3D);
 			glTranslatef(BLOCKGRID_CELL_SIZE, 0.0f, 0.0f);
 		}
@@ -154,7 +154,7 @@ static void drawAsset3D(const Asset3D* asset3D) {
 			glBegin(faceMode);
 			
 			for (size_t i = 0; i < face.numIndices; ++i) {
-				unsigned int vertIndex = face.indices[i];
+				size_t vertIndex = face.indices[i];
 				if (hasNormals) {
 					if (hasTextureCoords) {
 						Vector3D coords = mesh.textureCoords[vertIndex];

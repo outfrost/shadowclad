@@ -1,9 +1,9 @@
 #ifndef ASSET_H_
 #define ASSET_H_
 
-#include <GL/gl.h>
+#include <stddef.h>
 
-#include "assimp_types.h"
+#include <GL/gl.h>
 
 #include "geometry.h"
 
@@ -13,25 +13,25 @@ typedef struct Face Face;
 typedef struct Material Material;
 
 struct Asset3D {
-	unsigned int numMeshes;
+	size_t numMeshes;
 	Mesh* meshes;
-	unsigned int numMaterials;
+	size_t numMaterials;
 	Material* materials;
 };
 
 struct Mesh {
-	unsigned int numVertices;
+	size_t numVertices;
 	Vector3D* vertices;
 	Vector3D* normals;
 	Vector3D* textureCoords;
-	unsigned int numFaces;
+	size_t numFaces;
 	Face* faces;
-	unsigned int materialIndex;
+	size_t materialIndex;
 };
 
 struct Face {
-	unsigned int numIndices;
-	unsigned int* indices;
+	size_t numIndices;
+	size_t* indices;
 };
 
 struct Material {

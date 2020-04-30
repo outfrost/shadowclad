@@ -3,6 +3,7 @@
 #include <assimp/postprocess.h>
 
 #include "asset.h"
+#include "assimp_types.h"
 #include "logger.h"
 #include "tga.h"
 
@@ -20,6 +21,8 @@ const Asset3D* importAsset(const char* path) {
 	
 	const unsigned int numMeshes = scene->mNumMeshes;
 	const unsigned int numMaterials = scene->mNumMaterials;
+
+	// TODO Consider assets with some arrays empty, and prevent zero mallocs
 	
 	Asset3D* asset = malloc(sizeof(Asset3D));
 	asset->numMeshes = numMeshes;
@@ -64,8 +67,7 @@ const Asset3D* importAsset(const char* path) {
 			const unsigned int numIndices = aiFace.mNumIndices;
 			
 			Face face = { .numIndices = numIndices,
-			              .indices = malloc(numIndices
-			                                * sizeof(unsigned int)) };
+			              .indices = malloc(numIndices * sizeof(size_t)) };
 			
 			for (unsigned int i = 0; i < numIndices; ++i) {
 				face.indices[i] = aiFace.mIndices[i];
@@ -92,11 +94,11 @@ const Asset3D* importAsset(const char* path) {
 		                         0,
 		                         &originalTexturePath,
 		                         NULL, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-			const char* textureFile = replaceFileExtension(originalTexturePath, ".tga");
-			const size_t textureFileLength = strlen(textureFile);
-			char* texturePath = malloc(strlen("assets/") + textureFileLength + 1);
+			const char* textureFilename = replaceFileExtension(originalTexturePath, ".tga");
+			const size_t textureFilenameLength = strlen(textureFilename);
+			char* texturePath = malloc(strlen("assets/") + textureFilenameLength + 1);
 			strcpy(texturePath, "assets/");
-			strncat(texturePath, textureFile, textureFileLength);
+			strncat(texturePath, textureFilename, textureFilenameLength);
 			
 			TgaImage* textureImage = readTga(texturePath);
 			if (textureImage == NULL) {
@@ -130,7 +132,7 @@ static const AiScene* importScene(const char* path) {
 	if (scene == NULL) {
 		logError("Failed to import asset from %s", path);
 	}
-	else if ((scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) == AI_SCENE_FLAGS_INCOMPLETE) {
+	else if (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
 		logError("Incomplete scene imported from %s", path);
 		aiReleaseImport(scene);
 		scene = NULL;
@@ -144,7 +146,8 @@ static Vector3D convertAiVector3D(AiVector3D vect) {
 	                    .z = vect.z };
 }
 
-/** BUGS
+/**
+ * BUGS
  * The following function will not work properly with texture
  * file names (excluding directory part) beginning with '.'
  */

@@ -48,10 +48,10 @@ void buildLevelFromImage(TgaImage* image) {
 	                                       * sizeof(Block*)) };
 	playerSpawnPos = (Vector3D) DEFAULT_PLAYER_SPAWN_POS;
 	
-	for (int row = 0; row < newGrid.depth; ++row) {
-		for (int x = 0; x < newGrid.width; ++x) {
+	for (size_t row = 0; row < newGrid.depth; ++row) {
+		for (size_t x = 0; x < newGrid.width; ++x) {
 			// Flip the image vertically due to (0, 0) being bottom left
-			int z = newGrid.depth - row - 1;
+			size_t z = newGrid.depth - row - 1;
 			
 			uint32_t pixelColorARGB = ((uint32_t*) image->bytes)[(row * newGrid.width) + x];
 			Block* block;
