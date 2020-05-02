@@ -7,7 +7,7 @@ LogLevel logLevel = LOGLEVEL_DEBUG;
 
 
 
-void logMessage(LogLevel msgLevel, const char* file, int line, const char* message, ...) {
+void logMessage(LogLevel msgLevel, const char* func, const char* message, ...) {
 	if (msgLevel > logLevel) {
 		return;
 	}
@@ -15,26 +15,26 @@ void logMessage(LogLevel msgLevel, const char* file, int line, const char* messa
 	const char* msgLevelString;
 	switch (msgLevel) {
 		case LOGLEVEL_ERROR:
-			msgLevelString = "error: ";
+			msgLevelString = "ERROR ";
 			break;
 		case LOGLEVEL_WARNING:
-			msgLevelString = "warning: ";
+			msgLevelString = "WARNING ";
 			break;
 		case LOGLEVEL_INFO:
 			msgLevelString = "";
 			break;
 		case LOGLEVEL_DEBUG:
-			msgLevelString = "debug: ";
+			msgLevelString = "DEBUG ";
 			break;
 		default:
-			msgLevelString = "(invalid message level!) ";
+			msgLevelString = "(invalid message level) ";
 			break;
 	}
 	
 	va_list args;
 	va_start(args, message);
 	
-	fprintf(stderr, "%s:%i: %s", file, line, msgLevelString);
+	fprintf(stderr, "%s %s:: ", func, msgLevelString);
 	vfprintf(stderr, message, args);
 	fputc('\n', stderr);
 	

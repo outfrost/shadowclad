@@ -16,6 +16,7 @@ static const char* replaceFileExtension(const AiString path, const char* ext);
 const Solid* importSolid(const char* path) {
 	const AiScene* scene = importScene(path);
 	if (scene == NULL) {
+		logError("Failed to import solid from %s", path);
 		return NULL;
 	}
 	
@@ -102,7 +103,7 @@ const Solid* importSolid(const char* path) {
 			
 			TgaImage* textureImage = readTga(texturePath);
 			if (textureImage == NULL) {
-				logError("Asset texture file not found: %s", texturePath);
+				logError("Importing solid from %s: Cannot read texture file %s", path, texturePath);
 			}
 			else {
 				glTexImage2D(GL_TEXTURE_2D,
@@ -129,10 +130,7 @@ const Solid* importSolid(const char* path) {
 
 static const AiScene* importScene(const char* path) {
 	const AiScene* scene = aiImportFile(path, aiProcess_PreTransformVertices);
-	if (scene == NULL) {
-		logError("Failed to import asset from %s", path);
-	}
-	else if (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
+	if (scene != NULL && scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
 		logError("Incomplete scene imported from %s", path);
 		aiReleaseImport(scene);
 		scene = NULL;
