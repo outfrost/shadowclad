@@ -1,20 +1,20 @@
 #include <stdlib.h>
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 #include "asset.h"
-#include "assimp_types.h"
 #include "logger.h"
 #include "tga.h"
 
-static const AiScene* importScene(const char* path);
-static Vector3D convertAiVector3D(AiVector3D vect);
-static const char* replaceFileExtension(const AiString path, const char* ext);
+static const struct aiScene* importScene(const char* path);
+static Vector3D convertAiVector3D(struct aiVector3D vect);
+static const char* replaceFileExtension(const struct aiString path, const char* ext);
 
 
 
 const Solid* importSolid(const char* path) {
-	const AiScene* scene = importScene(path);
+	const struct aiScene* scene = importScene(path);
 	if (scene == NULL) {
 		logError("Failed to import solid from %s", path);
 		return NULL;
@@ -32,7 +32,7 @@ const Solid* importSolid(const char* path) {
 	solid->materials = malloc(numMaterials * sizeof(Material));
 	
 	for (unsigned int meshIndex = 0; meshIndex < numMeshes; ++meshIndex) {
-		const AiMesh* aiMesh = scene->mMeshes[meshIndex];
+		const struct aiMesh* aiMesh = scene->mMeshes[meshIndex];
 		const unsigned int numVertices = aiMesh->mNumVertices;
 		const unsigned int numFaces = aiMesh->mNumFaces;
 		
@@ -64,7 +64,7 @@ const Solid* importSolid(const char* path) {
 		}
 		
 		for (unsigned int faceIndex = 0; faceIndex < numFaces; ++faceIndex) {
-			const AiFace aiFace = aiMesh->mFaces[faceIndex];
+			const struct aiFace aiFace = aiMesh->mFaces[faceIndex];
 			const unsigned int numIndices = aiFace.mNumIndices;
 			
 			Face face = { .numIndices = numIndices,
@@ -89,7 +89,7 @@ const Solid* importSolid(const char* path) {
 		glBindTexture(GL_TEXTURE_2D, material.textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		
-		AiString originalTexturePath;
+		struct aiString originalTexturePath;
 		if (aiGetMaterialTexture(scene->mMaterials[matIndex],
 		                         aiTextureType_DIFFUSE,
 		                         0,
@@ -128,8 +128,8 @@ const Solid* importSolid(const char* path) {
 	return solid;
 }
 
-static const AiScene* importScene(const char* path) {
-	const AiScene* scene = aiImportFile(path, aiProcess_PreTransformVertices);
+static const struct aiScene* importScene(const char* path) {
+	const struct aiScene* scene = aiImportFile(path, aiProcess_PreTransformVertices);
 	if (scene != NULL && scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
 		logError("Incomplete scene imported from %s", path);
 		aiReleaseImport(scene);
@@ -138,7 +138,7 @@ static const AiScene* importScene(const char* path) {
 	return scene;
 }
 
-static Vector3D convertAiVector3D(AiVector3D vect) {
+static Vector3D convertAiVector3D(struct aiVector3D vect) {
 	return (Vector3D) { .x = vect.x,
 	                    .y = vect.y,
 	                    .z = vect.z };
@@ -149,7 +149,7 @@ static Vector3D convertAiVector3D(AiVector3D vect) {
  * The following function will not work properly with texture
  * file names (excluding directory part) beginning with '.'
  */
-static const char* replaceFileExtension(const AiString path, const char* ext) {
+static const char* replaceFileExtension(const struct aiString path, const char* ext) {
 		size_t lengthToCopy = path.length;
 		
 		char* lastDotSubstr = strrchr(path.data, '.');
