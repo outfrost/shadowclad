@@ -6,7 +6,7 @@ SRCDIR ?= src
 CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
 CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
-LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
+LDLIBS ::= -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 
 # ######
 # Paths
@@ -69,7 +69,7 @@ init:
 # Build and run
 run: $(binary)
 	@echo
-	@LD_LIBRARY_PATH=/usr/local/lib $(binary)
+	@$(binary)
 .PHONY: run
 
 # Build executable
