@@ -4,7 +4,7 @@ BUILDDIR ?= target/$(PLATFORM)
 SRCDIR ?= src
 
 CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
-CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic $(CFLAGS)
+CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
 LDLIBS ::= -L/usr/local/lib -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 
@@ -43,13 +43,14 @@ binary ::= $(BUILDDIR)/shadowclad #$(binext)
 # Default rule: build executable
 $(binary): $(objects)
 	@mkdir -p $(@D)
-	@echo "###### Linking executable..."
-	$(CC) $(LDFLAGS) -o $(binary) $^ $(LOADLIBES) $(LDLIBS)
+	@echo "Linking executable"
+	@$(CC) $(LDFLAGS) -o $(binary) $^ $(LOADLIBES) $(LDLIBS)
 
 # Build C translation units
 $(objects): $(BUILDDIR)/%.c.o: %.c $(BUILDDIR)/%.c.mk
 	@mkdir -p $(@D)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+	@echo "Building $@"
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 # ######
 # Setup
@@ -57,7 +58,8 @@ $(objects): $(BUILDDIR)/%.c.o: %.c $(BUILDDIR)/%.c.mk
 
 # Initialise build environment
 init:
-	mkdir -p $(BUILDDIR)
+	@echo "Creating build directory $(BUILDDIR)"
+	@mkdir -p $(BUILDDIR)
 .PHONY: init
 
 # ######
@@ -98,5 +100,6 @@ include $(foreach depfile, $(depfiles), $(shell [ -r "$(depfile)" ] && echo "$(d
 # ######
 
 clean:
-	rm -rf $(BUILDDIR)
+	@echo "Removing $(BUILDDIR)"
+	@rm -rf $(BUILDDIR)
 .PHONY: clean
