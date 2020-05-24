@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "engine/logger.h"
+#include "engine/scene.h"
 
 #include "level.h"
 #include "player.h"
@@ -28,6 +29,21 @@ void initLevel() {
 	blockWall01.solid = importSolid("assets/wall01.3ds");
 	
 	buildLevelFromImage(readTga("assets/level01.tga"));
+	
+	Scene* levelScene = newScene();
+	
+	for (size_t z = 0; z < levelGrid.depth; ++z) {
+		for (size_t x = 0; x < levelGrid.depth; ++x) {
+			Scene* blockScene = newScene();
+			translate(&blockScene->transform, (Vector3D) { .x = x * BLOCKGRID_CELL_SIZE,
+			                                               .y = 0.0f,
+			                                               .z = z * BLOCKGRID_CELL_SIZE });
+			blockScene->solid = getBlockFromGrid(levelGrid, x, z)->solid;
+			insertChildScene(levelScene, blockScene);
+		}
+	}
+
+	currentScene = levelScene;
 }
 
 void buildLevelFromImage(TgaImage* image) {

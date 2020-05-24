@@ -6,6 +6,7 @@
 
 #include "geometry.h"
 #include "performance.h"
+#include "scene.h"
 
 const float AXIS_RADIUS = 5.0f;
 
@@ -17,8 +18,6 @@ static void renderCharacter(const Character* character, const Vector3D pos);
 static void drawSolid(const Solid* solid);
 
 float viewportAspectRatio = 1.0f;
-
-
 
 void initRender() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -37,6 +36,55 @@ void initRender() {
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.05f);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.005f);
 }
+
+
+
+void renderSceneNew(const Scene*);
+
+void renderFrame() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	
+	setupCamera();
+	moveCameraTo(playerPos);
+	
+	renderSceneNew(currentScene);
+	
+	glFlush();
+	glutSwapBuffers();
+	frameRendered();
+	glutPostRedisplay();
+}
+
+void renderSceneNew(const Scene* scene) {
+	if (!scene) {
+		return;
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf((const GLfloat*) &scene->transform);
+
+	glDisable(GL_LIGHTING);
+	drawAxes();
+	glEnable(GL_LIGHTING);
+
+	if (scene->solid) {
+		glEnable(GL_LIGHT0);
+		glEnable(GL_TEXTURE_2D);
+		drawSolid(scene->solid);
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_LIGHT0);
+	}
+
+	for (size_t i = 0; i < scene->numChildren; ++i) {
+		renderSceneNew(scene->children[i]);
+	}
+}
+
+
 
 void renderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

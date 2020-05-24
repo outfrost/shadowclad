@@ -17,6 +17,7 @@ sources ::= main.c \
             engine/logger.c \
             engine/performance.c \
             engine/render.c \
+            engine/scene.c \
             engine/tga.c \
             engine/ui.c \
             game/level.c \

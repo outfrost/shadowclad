@@ -48,7 +48,11 @@ int main(int argc, char** argv) {
 		logWarning("Could not enable vsync (extensions not supported)");
 	}
 	
-	glutDisplayFunc(renderScene);
+	GLint maxModelviewStackDepth;
+	glGetIntegerv(GL_MAX_MODELVIEW_STACK_DEPTH, &maxModelviewStackDepth);
+	logDebug("GL_MAX_MODELVIEW_STACK_DEPTH: %d", maxModelviewStackDepth);
+	
+	glutDisplayFunc(renderFrame);
 	glutReshapeFunc(resizeStage);
 	//glutKeyboardFunc(key_pressed);
 	//glutMouseFunc(mouse_button_event);
