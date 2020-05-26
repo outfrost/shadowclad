@@ -33,7 +33,7 @@ void initLevel() {
 	Scene* levelScene = newScene();
 	
 	for (size_t z = 0; z < levelGrid.depth; ++z) {
-		for (size_t x = 0; x < levelGrid.depth; ++x) {
+		for (size_t x = 0; x < levelGrid.width; ++x) {
 			Scene* blockScene = newScene();
 			translate(&blockScene->transform, (Vector3D) { .x = x * BLOCKGRID_CELL_SIZE,
 			                                               .y = 0.0f,
