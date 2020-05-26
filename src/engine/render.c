@@ -65,7 +65,7 @@ void renderSceneNew(const Scene* scene) {
 	}
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf((const GLfloat*) &scene->transform);
+	glLoadTransposeMatrixf((const GLfloat*) &scene->transform);
 
 	glDisable(GL_LIGHTING);
 	drawAxes();
