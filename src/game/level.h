@@ -27,9 +27,9 @@ typedef struct {
 #define BLOCKGRID_CELL_SIZE 2.5f
 
 BlockGrid levelGrid;
-Vector3D playerSpawnPos;
 
 void initLevel();
+void startLevel();
 void buildLevelFromImage(TgaImage* image);
 
 static inline Block* getBlockFromGrid(BlockGrid grid, size_t x, size_t z) {

@@ -4,9 +4,9 @@
 #include "scene.h"
 
 float viewportAspectRatio;
+const Scene* cameraAnchor;
 
 void initRender();
 void renderFrame();
-void renderScene();
 
 #endif

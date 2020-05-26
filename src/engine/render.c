@@ -1,23 +1,22 @@
 #include <GL/glut.h>
 #include <stdbool.h>
 
-#include "game/level.h"
-#include "game/player.h"
-
 #include "geometry.h"
 #include "performance.h"
 #include "scene.h"
 
-const float AXIS_RADIUS = 5.0f;
+float viewportAspectRatio = 1.0f;
+const Scene* cameraAnchor;
 
+static const float AXIS_RADIUS = 5.0f;
+
+static void renderScene(const Scene*);
 static void setupCamera();
-static void moveCameraTo(const Vector3D pos);
+static void moveCameraTo(const Scene* scene);
 static void drawAxes();
-static void renderBlockGrid(const BlockGrid grid);
-static void renderCharacter(const Character* character, const Vector3D pos);
 static void drawSolid(const Solid* solid);
 
-float viewportAspectRatio = 1.0f;
+
 
 void initRender() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -37,29 +36,25 @@ void initRender() {
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.005f);
 }
 
-
-
-void renderSceneNew(const Scene*);
-
 void renderFrame() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	
+
 	setupCamera();
-	moveCameraTo(playerPos);
-	
-	renderSceneNew(currentScene);
-	
+	moveCameraTo(cameraAnchor);
+
+	renderScene(currentScene);
+
 	glFlush();
 	glutSwapBuffers();
 	frameRendered();
 	glutPostRedisplay();
 }
 
-void renderSceneNew(const Scene* scene) {
+void renderScene(const Scene* scene) {
 	if (!scene) {
 		return;
 	}
@@ -80,37 +75,8 @@ void renderSceneNew(const Scene* scene) {
 	}
 
 	for (size_t i = 0; i < scene->numChildren; ++i) {
-		renderSceneNew(scene->children[i]);
+		renderScene(scene->children[i]);
 	}
-}
-
-
-
-void renderScene() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	glEnable(GL_NORMALIZE);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	
-	setupCamera();
-	moveCameraTo(playerPos);
-	
-	glDisable(GL_LIGHTING);
-	drawAxes();
-	glEnable(GL_LIGHTING);
-	
-	glEnable(GL_LIGHT0);
-	glEnable(GL_TEXTURE_2D);
-	renderBlockGrid(levelGrid);
-	renderCharacter(&playerCharacter, playerPos);
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_LIGHT0);
-	
-	glFlush();
-	glutSwapBuffers();
-	frameRendered();
-	glutPostRedisplay();
 }
 
 static void setupCamera() {
@@ -126,8 +92,10 @@ static void setupCamera() {
 	glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
 }
 
-static void moveCameraTo(const Vector3D pos) {
+static void moveCameraTo(const Scene* anchor) {
 	glMatrixMode(GL_PROJECTION);
+	// TODO This needs to account for parent nodes as well
+	Vector3D pos = translationOf(anchor->transform);
 	glTranslatef(-pos.x, -pos.y, -pos.z);
 }
 
@@ -151,26 +119,6 @@ static void drawAxes() {
 	glVertex3f(0.0f, 0.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, AXIS_RADIUS);
 	glEnd();
-}
-
-static void renderBlockGrid(const BlockGrid grid) {
-	glMatrixMode(GL_MODELVIEW);
-	for (size_t z = 0; z < grid.depth; ++z) {
-		glLoadIdentity();
-		glTranslatef(0.0f, 0.0f, z * BLOCKGRID_CELL_SIZE);
-		for (size_t x = 0; x < grid.width; ++x) {
-			drawSolid(getBlockFromGrid(grid, x, z)->solid);
-			glTranslatef(BLOCKGRID_CELL_SIZE, 0.0f, 0.0f);
-		}
-	}
-	glLoadIdentity();
-}
-
-static void renderCharacter(const Character* character, const Vector3D pos) {
-	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(pos.x, pos.y, pos.z);
-	drawSolid(character->solid);
-	glLoadIdentity();
 }
 
 static void drawSolid(const Solid* solid) {

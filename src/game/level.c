@@ -7,31 +7,29 @@
 #include "level.h"
 #include "player.h"
 
+BlockGrid levelGrid;
+
 static Block blockEmpty = { .type = BLOCKTYPE_SPACE,
                             .solid = NULL };
 static Block blockWall01 = { .type = BLOCKTYPE_OBSTACLE,
                              .solid = NULL };
 
-static Block* testBlocks[9] = { &blockWall01, &blockWall01, &blockWall01,
-                                &blockEmpty, &blockEmpty, &blockEmpty,
-                                &blockWall01, &blockEmpty, &blockWall01 };
-
-BlockGrid levelGrid = { .width = 3,
-                        .depth = 3,
-                        .blocks = testBlocks };
-
-#define DEFAULT_PLAYER_SPAWN_POS { -BLOCKGRID_CELL_SIZE, 0.0f, -BLOCKGRID_CELL_SIZE }
-Vector3D playerSpawnPos = DEFAULT_PLAYER_SPAWN_POS;
+static Transform playerSpawnTransform;
 
 
 
 void initLevel() {
+	playerSpawnTransform = identity();
+	translate(&playerSpawnTransform, (Vector3D) { .x = -BLOCKGRID_CELL_SIZE,
+	                                              .y = 0.0f,
+	                                              .z = -BLOCKGRID_CELL_SIZE });
+
 	blockWall01.solid = importSolid("assets/wall01.3ds");
-	
+
 	buildLevelFromImage(readTga("assets/level01.tga"));
-	
+
 	Scene* levelScene = newScene();
-	
+
 	for (size_t z = 0; z < levelGrid.depth; ++z) {
 		for (size_t x = 0; x < levelGrid.width; ++x) {
 			Scene* blockScene = newScene();
@@ -44,6 +42,10 @@ void initLevel() {
 	}
 
 	currentScene = levelScene;
+}
+
+void startLevel() {
+	spawnPlayer(playerSpawnTransform);
 }
 
 void buildLevelFromImage(TgaImage* image) {
@@ -62,7 +64,6 @@ void buildLevelFromImage(TgaImage* image) {
 	                      .blocks = malloc(image->header.imageWidth
 	                                       * image->header.imageHeight
 	                                       * sizeof(Block*)) };
-	playerSpawnPos = (Vector3D) DEFAULT_PLAYER_SPAWN_POS;
 	
 	for (size_t row = 0; row < newGrid.depth; ++row) {
 		for (size_t x = 0; x < newGrid.width; ++x) {
@@ -77,7 +78,10 @@ void buildLevelFromImage(TgaImage* image) {
 					break;
 				case 0xFF00FFFF:
 					block = &blockEmpty;
-					playerSpawnPos = (Vector3D) { x * BLOCKGRID_CELL_SIZE, 0.0f, z * BLOCKGRID_CELL_SIZE };
+					playerSpawnTransform = identity();
+					translate(&playerSpawnTransform, (Vector3D) { .x = x * BLOCKGRID_CELL_SIZE,
+					                                              .y = 0.0f,
+					                                              .z = z * BLOCKGRID_CELL_SIZE });
 					break;
 				default:
 					block = &blockEmpty;
@@ -88,5 +92,4 @@ void buildLevelFromImage(TgaImage* image) {
 	}
 	
 	levelGrid = newGrid;
-	spawnPlayer();
 }

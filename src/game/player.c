@@ -1,16 +1,19 @@
-#include "engine/logger.h"
+#include "engine/asset.h"
+#include "engine/render.h"
 
-#include "level.h"
 #include "player.h"
 
-Character playerCharacter = { .solid = NULL };
+Scene* playerCharacter;
 
 
 
 void initPlayer() {
-	playerCharacter.solid = importSolid("assets/playercharacter.3ds");
+	playerCharacter = newScene();
+	cameraAnchor = playerCharacter;
+	playerCharacter->solid = importSolid("assets/playercharacter.3ds");
 }
 
-void spawnPlayer() {
-	playerPos = playerSpawnPos;
+void spawnPlayer(Transform transform) {
+	playerCharacter->transform = transform;
+	reparentScene(playerCharacter, currentScene);
 }

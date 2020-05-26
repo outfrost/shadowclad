@@ -6,10 +6,14 @@
 
 Scene* currentScene = NULL;
 
-static Transform identity = { .a1 = 1.0f, .a2 = 0.0f, .a3 = 0.0f, .a4 = 0.0f,
-                              .b1 = 0.0f, .b2 = 1.0f, .b3 = 0.0f, .b4 = 0.0f,
-                              .c1 = 0.0f, .c2 = 0.0f, .c3 = 1.0f, .c4 = 0.0f,
-                              .d1 = 0.0f, .d2 = 0.0f, .d3 = 0.0f, .d4 = 1.0f };
+
+
+Transform identity() {
+	return (Transform) { .a1 = 1.0f, .a2 = 0.0f, .a3 = 0.0f, .a4 = 0.0f,
+	                     .b1 = 0.0f, .b2 = 1.0f, .b3 = 0.0f, .b4 = 0.0f,
+	                     .c1 = 0.0f, .c2 = 0.0f, .c3 = 1.0f, .c4 = 0.0f,
+	                     .d1 = 0.0f, .d2 = 0.0f, .d3 = 0.0f, .d4 = 1.0f };
+}
 
 void multiply(Transform* transform, Transform by) {
 	GLfloat* a = (GLfloat*) &by;
@@ -33,12 +37,16 @@ void translate(Transform* transform, Vector3D vec) {
                                       .d1 = 0.0f, .d2 = 0.0f, .d3 = 0.0f, .d4 = 1.0f });
 }
 
+Vector3D translationOf(Transform transform) {
+	return (Vector3D) { transform.a4, transform.b4, transform.c4 };
+}
+
 Scene* newScene() {
 	Scene* scene = malloc(sizeof(Scene));
 	*scene = (Scene) { .parent = NULL,
 	                   .numChildren = 0u,
 	                   .children = NULL,
-	                   .transform = identity,
+	                   .transform = identity(),
 	                   .solid = NULL };
 	return scene;
 }
@@ -60,4 +68,35 @@ void insertChildScene(Scene* scene, Scene* newChild) {
 	scene->children[scene->numChildren - 1] = newChild;
 
 	newChild->parent = scene;
+}
+
+void reparentScene(Scene* scene, Scene* newParent) {
+	if (!scene) {
+		return;
+	}
+
+	if (scene->parent) {
+		Scene* parent = scene->parent;
+		size_t indexInParent = parent->numChildren;
+		for (size_t i = 0; i < parent->numChildren; ++i) {
+			if (parent->children[i] == scene) {
+				indexInParent = i;
+				break;
+			}
+		}
+		// This includes the hopefully impossible case where parent->numChildren == 0
+		if (indexInParent == parent->numChildren) {
+			logError("Scene %p not found in children of parent %p", scene, parent);
+		}
+		else {
+			for (size_t i = indexInParent; i < parent->numChildren - 1; ++i) {
+				parent->children[i] = parent->children[i + 1];
+			}
+			parent->children = realloc(parent->children, --(parent->numChildren) * sizeof(Scene*));
+		}
+	}
+
+	scene->parent = NULL;
+
+	insertChildScene(newParent, scene);
 }

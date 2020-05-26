@@ -23,8 +23,12 @@ struct Scene {
 
 Scene* currentScene;
 
+Transform identity();
 void translate(Transform* transform, Vector3D vec);
+Vector3D translationOf(Transform transform);
+
 Scene* newScene();
 void insertChildScene(Scene* scene, Scene* newChild);
+void reparentScene(Scene* scene, Scene* newParent);
 
 #endif // SCENE_H_

@@ -3,16 +3,12 @@
 
 #include <GL/gl.h>
 
-#include "engine/asset.h"
+#include "engine/geometry.h"
+#include "engine/scene.h"
 
-typedef struct {
-	const Solid* solid;
-} Character;
-
-Character playerCharacter;
-Vector3D playerPos;
+Scene* playerCharacter;
 
 void initPlayer();
-void spawnPlayer();
+void spawnPlayer(Transform transform);
 
 #endif
