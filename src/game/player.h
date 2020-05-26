@@ -3,7 +3,6 @@
 
 #include <GL/gl.h>
 
-#include "engine/geometry.h"
 #include "engine/scene.h"
 
 Scene* playerCharacter;

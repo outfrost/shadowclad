@@ -14,6 +14,7 @@ LDLIBS ::= -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 
 sources ::= main.c \
             engine/asset.c \
+            engine/geometry.c \
             engine/logger.c \
             engine/performance.c \
             engine/render.c \
