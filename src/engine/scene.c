@@ -24,7 +24,7 @@ void insertChildScene(Scene* scene, Scene* newChild) {
 	}
 	if (newChild->parent) {
 		logError(
-			"Cannot insert scene 0x%p as child of 0x%p, because it is already child of 0x%p",
+			"Cannot insert Scene 0x%p as child of 0x%p, because it is already child of 0x%p",
 			newChild,
 			scene,
 			newChild->parent);
@@ -67,3 +67,18 @@ void reparentScene(Scene* scene, Scene* newParent) {
 
 	insertChildScene(newParent, scene);
 }
+
+Transform worldTransform(const Scene* scene) {
+	if (!scene) {
+		logError("Cannot compute world space Transform of null Scene");
+		return identity();
+	}
+
+	if (scene->parent) {
+		return multiply(scene->transform, worldTransform(scene->parent));
+	}
+	else {
+		return scene->transform;
+	}
+}
+

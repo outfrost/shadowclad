@@ -96,7 +96,7 @@ static void setupCamera() {
 static void moveCameraTo(const Scene* anchor) {
 	glMatrixMode(GL_PROJECTION);
 	// TODO This needs to account for parent nodes as well
-	Vector3D pos = translationOf(anchor->transform);
+	Vector3D pos = translationOf(worldTransform(anchor));
 	glTranslatef(-pos.x, -pos.y, -pos.z);
 }
 

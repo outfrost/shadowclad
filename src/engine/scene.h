@@ -18,5 +18,6 @@ Scene* currentScene;
 Scene* newScene();
 void insertChildScene(Scene* scene, Scene* newChild);
 void reparentScene(Scene* scene, Scene* newParent);
+Transform worldTransform(const Scene* scene);
 
 #endif // SCENE_H_

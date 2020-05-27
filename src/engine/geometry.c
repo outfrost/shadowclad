@@ -9,9 +9,9 @@ Transform identity() {
 	                     .d1 = 0.0f, .d2 = 0.0f, .d3 = 0.0f, .d4 = 1.0f };
 }
 
-void multiply(Transform* transform, Transform by) {
-	GLfloat* a = (GLfloat*) &by;
-	GLfloat* b = (GLfloat*) transform;
+Transform multiply(Transform t1, Transform t2) {
+	GLfloat* a = (GLfloat*) &t1;
+	GLfloat* b = (GLfloat*) &t2;
 
 	for (size_t row = 0; row < 4; ++row) {
 		for (size_t col = 0; col < 4; ++col) {
@@ -22,13 +22,16 @@ void multiply(Transform* transform, Transform by) {
 				+ a[(row * 4) + 3] * b[(3 * 4) + col];
 		}
 	}
+	return t2;
 }
 
 void translate(Transform* transform, Vector3D vec) {
-	multiply(transform, (Transform) { .a1 = 1.0f, .a2 = 0.0f, .a3 = 0.0f, .a4 = vec.x,
-                                      .b1 = 0.0f, .b2 = 1.0f, .b3 = 0.0f, .b4 = vec.y,
-                                      .c1 = 0.0f, .c2 = 0.0f, .c3 = 1.0f, .c4 = vec.z,
-                                      .d1 = 0.0f, .d2 = 0.0f, .d3 = 0.0f, .d4 = 1.0f });
+	*transform = multiply(
+		(Transform) { .a1 = 1.0f, .a2 = 0.0f, .a3 = 0.0f, .a4 = vec.x,
+		              .b1 = 0.0f, .b2 = 1.0f, .b3 = 0.0f, .b4 = vec.y,
+		              .c1 = 0.0f, .c2 = 0.0f, .c3 = 1.0f, .c4 = vec.z,
+		              .d1 = 0.0f, .d2 = 0.0f, .d3 = 0.0f, .d4 = 1.0f },
+		*transform);
 }
 
 Vector3D translationOf(Transform transform) {

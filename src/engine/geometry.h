@@ -20,6 +20,7 @@ struct Transform {
 };
 
 Transform identity();
+Transform multiply(Transform t1, Transform t2);
 void translate(Transform* transform, Vector3D vec);
 Vector3D translationOf(Transform transform);
 
