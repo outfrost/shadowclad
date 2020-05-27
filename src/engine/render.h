@@ -9,4 +9,4 @@ const Scene* cameraAnchor;
 void initRender();
 void renderFrame();
 
-#endif
+#endif // RENDER_H_

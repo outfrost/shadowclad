@@ -1,9 +1,10 @@
-#include <GL/glut.h>
+#include "render.h"
+
 #include <stdbool.h>
+#include <GL/glut.h>
 
 #include "geometry.h"
 #include "performance.h"
-#include "scene.h"
 
 float viewportAspectRatio = 1.0f;
 const Scene* cameraAnchor;

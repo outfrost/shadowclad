@@ -40,4 +40,4 @@ static inline void setBlockInGrid(BlockGrid grid, size_t x, size_t z, Block* blo
 	grid.blocks[(z * grid.width) + x] = block;
 }
 
-#endif
+#endif // LEVEL_H_

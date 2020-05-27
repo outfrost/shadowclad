@@ -1,9 +1,10 @@
+#include "asset.h"
+
 #include <stdlib.h>
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include "asset.h"
 #include "logger.h"
 #include "tga.h"
 

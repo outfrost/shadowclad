@@ -1,6 +1,6 @@
-#include <stddef.h>
-
 #include "geometry.h"
+
+#include <stddef.h>
 
 Transform identity() {
 	return (Transform) { .a1 = 1.0f, .a2 = 0.0f, .a3 = 0.0f, .a4 = 0.0f,

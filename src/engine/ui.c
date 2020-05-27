@@ -1,4 +1,4 @@
-#include <GL/gl.h>
+#include "ui.h"
 
 #include "render.h"
 

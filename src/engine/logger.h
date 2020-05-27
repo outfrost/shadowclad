@@ -17,4 +17,4 @@ LogLevel logLevel;
 
 void logMessage(LogLevel msgLevel, const char* func, const char* message, ...);
 
-#endif
+#endif // LOGGER_H_

@@ -2,7 +2,6 @@
 #define ASSET_H_
 
 #include <stddef.h>
-
 #include <GL/gl.h>
 
 #include "geometry.h"
@@ -40,4 +39,4 @@ struct Material {
 
 const Solid* importSolid(const char* path);
 
-#endif
+#endif // ASSET_H_

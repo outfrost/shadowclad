@@ -1,7 +1,7 @@
+#include "player.h"
+
 #include "engine/asset.h"
 #include "engine/render.h"
-
-#include "player.h"
 
 Scene* playerCharacter;
 

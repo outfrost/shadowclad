@@ -29,4 +29,4 @@ typedef struct {
 
 TgaImage* readTga(const char* path);
 
-#endif
+#endif // TGA_H_

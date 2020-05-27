@@ -1,7 +1,7 @@
+#include "tga.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "tga.h"
 
 TgaImage* readTga(const char* path) {
 	FILE* tgaFile = fopen(path, "rb");

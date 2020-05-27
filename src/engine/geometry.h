@@ -23,4 +23,4 @@ Transform identity();
 void translate(Transform* transform, Vector3D vec);
 Vector3D translationOf(Transform transform);
 
-#endif
+#endif // GEOMETRY_H_

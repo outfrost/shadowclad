@@ -1,7 +1,7 @@
+#include "logger.h"
+
 #include <stdarg.h>
 #include <stdio.h>
-
-#include "logger.h"
 
 LogLevel logLevel = LOGLEVEL_DEBUG;
 

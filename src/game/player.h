@@ -10,4 +10,4 @@ Scene* playerCharacter;
 void initPlayer();
 void spawnPlayer(Transform transform);
 
-#endif
+#endif // PLAYER_H_

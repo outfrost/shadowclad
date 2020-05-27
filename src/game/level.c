@@ -1,10 +1,11 @@
-#include <GL/gl.h>
+#include "level.h"
+
 #include <stdlib.h>
+#include <GL/gl.h>
 
 #include "engine/logger.h"
 #include "engine/scene.h"
 
-#include "level.h"
 #include "player.h"
 
 BlockGrid levelGrid;

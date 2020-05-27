@@ -4,4 +4,4 @@
 void initPerformanceMetering();
 void frameRendered();
 
-#endif
+#endif // PERFORMANCE_H_

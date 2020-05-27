@@ -1,9 +1,8 @@
+#include "scene.h"
+
 #include <stdlib.h>
 
 #include "engine/logger.h"
-
-#include "geometry.h"
-#include "scene.h"
 
 Scene* currentScene = NULL;
 

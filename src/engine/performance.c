@@ -2,6 +2,8 @@
 #define _POSIX_C_SOURCE 199309L
 #endif
 
+#include "performance.h"
+
 #include <stdbool.h>
 #include <stdio.h> // TODO remove
 #include <time.h>
