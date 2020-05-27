@@ -1,5 +1,5 @@
-#include <GL/glxew.h>
-#include <GL/glut.h>
+//#include <GL/glxew.h>
+#include <GL/freeglut_std.h>
 
 #include "engine/logger.h"
 #include "engine/performance.h"
@@ -19,9 +19,9 @@ int main(int argc, char** argv) {
 	glutCreateWindow("shadowclad");
 	
 	logInfo("OpenGL %s", (const char*) glGetString(GL_VERSION));
-	logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
+	//logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
 	logInfo("%s", (const char*) glGetString(GL_RENDERER));
-	
+	/*
 	GLenum glewInitStatus = glewInit();
 	if (glewInitStatus != GLEW_OK) {
 		logError("GLEW init failed: %s", (const char*) glewGetErrorString(glewInitStatus));
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 	else {
 		logWarning("Could not enable vsync (extensions not supported)");
 	}
-	
+	*/
 	glutDisplayFunc(renderFrame);
 	glutReshapeFunc(resizeStage);
 	//glutKeyboardFunc(key_pressed);

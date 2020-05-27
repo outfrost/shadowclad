@@ -1,4 +1,7 @@
-PLATFORM ?= x86_64-linux-gnu
+#PLATFORM ?= x86_64-linux-gnu
+PLATFORM ?= x86_64-w64-mingw32
+
+CC ::= x86_64-w64-mingw32-cc
 
 BUILDDIR ?= target/$(PLATFORM)
 SRCDIR ?= src
@@ -36,7 +39,8 @@ depfiles ::= $(addprefix $(BUILDDIR)/, $(addsuffix .mk, $(srcfiles)))
 #else
 #	binext ::=
 #endif
-binary ::= $(BUILDDIR)/shadowclad #$(binext)
+binary ::= $(BUILDDIR)/shadowclad.exe
+#binary ::= $(BUILDDIR)/shadowclad #$(binext)
 
 # ######
 # Main build rules

@@ -1,7 +1,7 @@
 #include "render.h"
 
 #include <stdbool.h>
-#include <GL/glut.h>
+#include <GL/freeglut_std.h>
 
 #include "geometry.h"
 #include "performance.h"
