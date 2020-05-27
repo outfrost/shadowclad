@@ -11,7 +11,7 @@ const Scene* cameraAnchor;
 
 static const float AXIS_RADIUS = 5.0f;
 
-static void renderScene(const Scene*);
+static void renderScene(const Scene*, const Transform baseTransform);
 static void setupCamera();
 static void moveCameraTo(const Scene* scene);
 static void drawAxes();
@@ -47,7 +47,7 @@ void renderFrame() {
 	setupCamera();
 	moveCameraTo(cameraAnchor);
 
-	renderScene(currentScene);
+	renderScene(currentScene, identity());
 
 	glFlush();
 	glutSwapBuffers();
@@ -55,13 +55,15 @@ void renderFrame() {
 	glutPostRedisplay();
 }
 
-void renderScene(const Scene* scene) {
+static void renderScene(const Scene* scene, const Transform baseTransform) {
 	if (!scene) {
 		return;
 	}
 
+	Transform transform = multiply(scene->transform, baseTransform);
+
 	glMatrixMode(GL_MODELVIEW);
-	glLoadTransposeMatrixf((const GLfloat*) &scene->transform);
+	glLoadTransposeMatrixf((const GLfloat*) &transform);
 
 	glDisable(GL_LIGHTING);
 	drawAxes();
@@ -76,7 +78,7 @@ void renderScene(const Scene* scene) {
 	}
 
 	for (size_t i = 0; i < scene->numChildren; ++i) {
-		renderScene(scene->children[i]);
+		renderScene(scene->children[i], transform);
 	}
 }
 
