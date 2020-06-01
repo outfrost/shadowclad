@@ -2,6 +2,9 @@
 
 #include <stdbool.h>
 #include <GL/freeglut_std.h>
+#define  GL_GLEXT_PROTOTYPES
+#include <GL/glext.h>
+#undef GL_GLEXT_PROTOTYPES
 
 #include "geometry.h"
 #include "performance.h"
@@ -63,7 +66,7 @@ static void renderScene(const Scene* scene, const Transform baseTransform) {
 	Transform transform = multiply(scene->transform, baseTransform);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadTransposeMatrixf((const GLfloat*) &transform);
+	glLoadMatrixf((const GLfloat*) &transform);
 
 	glDisable(GL_LIGHTING);
 	drawAxes();

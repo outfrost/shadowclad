@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <GL/glext.h>
+
 TgaImage* readTga(const char* path) {
 	FILE* tgaFile = fopen(path, "rb");
 	if (tgaFile == NULL) {

@@ -9,7 +9,7 @@ SRCDIR ?= src
 CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
 CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
-LDLIBS ::= -lGL -lGLEW -lglut -lassimp $(LDLIBS)
+LDLIBS ::= -L/usr/x86_64-w64-mingw32/bin -lopengl32 -lglew32 -lfreeglut -lassimp $(LDLIBS)
 
 # ######
 # Paths
@@ -50,7 +50,7 @@ binary ::= $(BUILDDIR)/shadowclad.exe
 $(binary): $(objects)
 	@mkdir -p $(@D)
 	@echo "Linking executable"
-	@$(CC) $(LDFLAGS) -o $(binary) $^ $(LOADLIBES) $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $(binary) $^ $(LOADLIBES) $(LDLIBS)
 
 # Build C translation units
 $(objects): $(BUILDDIR)/%.c.o: %.c $(BUILDDIR)/%.c.mk
