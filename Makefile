@@ -9,7 +9,7 @@ SRCDIR ?= src
 CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
 CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
-LDLIBS ::= -L/usr/x86_64-w64-mingw32/bin -lopengl32 -lglew32 -lfreeglut -lassimp $(LDLIBS)
+LDLIBS ::= -L/usr/x86_64-w64-mingw32/lib -lopengl32 -lglew32 -lfreeglut -lassimp $(LDLIBS)
 
 # ######
 # Paths
