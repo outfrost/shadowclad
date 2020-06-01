@@ -8,7 +8,7 @@ typedef enum {
 	LOGLEVEL_DEBUG
 } LogLevel;
 
-LogLevel logLevel;
+extern LogLevel logLevel;
 
 #define logError(...) logMessage(LOGLEVEL_ERROR, __func__, __VA_ARGS__)
 #define logWarning(...) logMessage(LOGLEVEL_WARNING, __func__, __VA_ARGS__)

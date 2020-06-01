@@ -3,8 +3,8 @@
 
 #include "scene.h"
 
-float viewportAspectRatio;
-const Scene* cameraAnchor;
+extern float viewportAspectRatio;
+extern const Scene* cameraAnchor;
 
 void initRender();
 void renderFrame();

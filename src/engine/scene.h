@@ -13,7 +13,7 @@ struct Scene {
 	const Solid* solid;
 };
 
-Scene* currentScene;
+extern Scene* currentScene;
 
 Scene* newScene();
 void insertChildScene(Scene* scene, Scene* newChild);

@@ -26,7 +26,7 @@ typedef struct {
 
 #define BLOCKGRID_CELL_SIZE 2.5f
 
-BlockGrid levelGrid;
+extern BlockGrid levelGrid;
 
 void initLevel();
 void startLevel();
