@@ -5,7 +5,7 @@
 
 #include "engine/scene.h"
 
-Scene* playerCharacter;
+extern Scene* playerCharacter;
 
 void initPlayer();
 void spawnPlayer(Transform transform);
