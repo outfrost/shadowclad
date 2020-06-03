@@ -22,6 +22,7 @@ sources ::= main.c \
             engine/scene.c \
             engine/tga.c \
             engine/ui.c \
+            game/input.c \
             game/level.c \
             game/player.c
 

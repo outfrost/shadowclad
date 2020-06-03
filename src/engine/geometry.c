@@ -17,17 +17,19 @@ Transform identity() {
 Transform multiply(Transform t1, Transform t2) {
 	GLfloat* a = (GLfloat*) &t1;
 	GLfloat* b = (GLfloat*) &t2;
+	Transform result;
+	GLfloat* c = (GLfloat*) &result;
 
 	for (size_t row = 0; row < 4; ++row) {
 		for (size_t col = 0; col < 4; ++col) {
-			b[(row * 4) + col] =
+			c[(row * 4) + col] =
 				a[(row * 4) + 0] * b[(0 * 4) + col]
 				+ a[(row * 4) + 1] * b[(1 * 4) + col]
 				+ a[(row * 4) + 2] * b[(2 * 4) + col]
 				+ a[(row * 4) + 3] * b[(3 * 4) + col];
 		}
 	}
-	return t2;
+	return result;
 }
 
 void translate(Transform* transform, Vector3D vec) {
@@ -47,6 +49,7 @@ void rotate(Transform* transform, Vector3D axis, float angle) {
 	float sinA = sinf(angle);
 	float cosA = cosf(angle);
 	float omcA = 1 - cosA;
+
 	*transform = multiply(
 		(Transform) { l*l*omcA + cosA, m*l*omcA - n*sinA, n*l*omcA + m*sinA, 0.0f,
 		              l*m*omcA + n*sinA, m*m*omcA + cosA, n*m*omcA - l*sinA, 0.0f,
@@ -55,7 +58,7 @@ void rotate(Transform* transform, Vector3D axis, float angle) {
 		*transform);
 }
 
-Vector3D applyTransform(Transform* transform, Vector3D vec) {
+Vector3D applyTransform(Transform transform, Vector3D vec) {
 	GLfloat* a = (GLfloat*) &transform;
 	GLfloat b[4] = { vec.x, vec.y, vec.z, 1.0f };
 	GLfloat c[4];

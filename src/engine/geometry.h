@@ -25,7 +25,7 @@ Transform identity();
 Transform multiply(Transform t1, Transform t2);
 void translate(Transform* transform, Vector3D vec);
 void rotate(Transform* transform, Vector3D axis, float angle);
-Vector3D applyTransform(Transform* transform, Vector3D vec);
+Vector3D applyTransform(Transform transform, Vector3D vec);
 Vector3D translationOf(Transform transform);
 Vector3D normalized(Vector3D vec);
 

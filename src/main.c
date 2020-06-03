@@ -6,6 +6,7 @@
 #include "engine/render.h"
 #include "engine/ui.h"
 
+#include "game/input.h"
 #include "game/level.h"
 #include "game/player.h"
 
@@ -50,7 +51,7 @@ int main(int argc, char** argv) {
 	
 	glutDisplayFunc(renderFrame);
 	glutReshapeFunc(resizeStage);
-	//glutKeyboardFunc(key_pressed);
+	glutKeyboardFunc(onKeyPressed);
 	//glutMouseFunc(mouse_button_event);
 	//glutMotionFunc(mouse_motion_event);
 	
