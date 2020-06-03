@@ -4,7 +4,7 @@ BUILDDIR ?= target/$(PLATFORM)
 SRCDIR ?= src
 
 CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
-CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror $(CFLAGS)
+CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror -Wno-error=unused-function $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
 LDLIBS ::= -lGL -lGLEW -lglut -lassimp $(LDLIBS)
 

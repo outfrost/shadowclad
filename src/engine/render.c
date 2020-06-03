@@ -6,6 +6,8 @@
 #include "geometry.h"
 #include "performance.h"
 
+#define RENDER_DEBUG_ 0
+
 float viewportAspectRatio = 1.0f;
 const Scene* cameraAnchor;
 
@@ -66,7 +68,9 @@ static void renderScene(const Scene* scene, const Transform baseTransform) {
 	glLoadTransposeMatrixf((const GLfloat*) &transform);
 
 	glDisable(GL_LIGHTING);
+#if RENDER_DEBUG_
 	drawAxes();
+#endif // RENDER_DEBUG_
 	glEnable(GL_LIGHTING);
 
 	if (scene->solid) {
