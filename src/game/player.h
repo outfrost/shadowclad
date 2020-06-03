@@ -9,5 +9,6 @@ extern Scene* playerCharacter;
 
 void initPlayer();
 void spawnPlayer(Transform transform);
+void playerMovementInput(float x, float y);
 
 #endif // PLAYER_H_
