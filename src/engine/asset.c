@@ -7,6 +7,7 @@
 #include <assimp/scene.h>
 
 #include "logger.h"
+#include "string.h"
 #include "tga.h"
 
 #define IMPORT_DEBUG_ 1
@@ -21,46 +22,39 @@ static const char* replaceFileExtension(const struct aiString path, const char* 
 static void printMetadata(const struct aiMetadata* meta) {
 	if (meta) {
 		for (size_t i = 0; i < meta->mNumProperties; ++i) {
-			char* key = memcpy(malloc((meta->mKeys[i].length + 1) * sizeof(char)),
-			                   meta->mKeys[i].data,
-			                   meta->mKeys[i].length * sizeof(char));
-			key[meta->mKeys[i].length] = '\0';
+			String key = stringFromAiString(meta->mKeys[i]);
 			const struct aiMetadataEntry value = meta->mValues[i];
 			switch (value.mType) {
 				case AI_BOOL:
-					logDebug("\"%s\": (bool) %d", key, *((int*) value.mData));
+					logDebug("\"%s\": (bool) %d", key.cstr, *((int*) value.mData));
 					break;
 				case AI_INT32:
-					logDebug("\"%s\": (int32) %d", key, *((int32_t*) value.mData));
+					logDebug("\"%s\": (int32) %d", key.cstr, *((int32_t*) value.mData));
 					break;
 				case AI_UINT64:
-					logDebug("\"%s\": (uint64) %llu", key, *((uint64_t*) value.mData));
+					logDebug("\"%s\": (uint64) %llu", key.cstr, *((uint64_t*) value.mData));
 					break;
 				case AI_FLOAT:
-					logDebug("\"%s\": (float) %f", key, *((float*) value.mData));
+					logDebug("\"%s\": (float) %f", key.cstr, *((float*) value.mData));
 					break;
 				case AI_DOUBLE:
-					logDebug("\"%s\": (double) %f", key, *((double*) value.mData));
+					logDebug("\"%s\": (double) %f", key.cstr, *((double*) value.mData));
 					break;
 				case AI_AISTRING: {
-					struct aiString aistr = *((struct aiString*) value.mData);
-					char* str = memcpy(malloc((aistr.length + 1) * sizeof(char)),
-					                   aistr.data,
-					                   aistr.length * sizeof(char));
-					str[aistr.length] = '\0';
-					logDebug("\"%s\": (string) %s", key, str);
-					free(str);
+					String str = stringFromAiString(*((struct aiString*) value.mData));
+					logDebug("\"%s\": (string) %s", key.cstr, str.cstr);
+					dropString(str);
 					break; }
 				case AI_AIVECTOR3D: {
 					struct aiVector3D vec = *((struct aiVector3D*) value.mData);
-					logDebug("\"%s\": (vector3d) { %f, %f, %f }", key, vec.x, vec.y, vec.z);
+					logDebug("\"%s\": (vector3d) { %f, %f, %f }", key.cstr, vec.x, vec.y, vec.z);
 					break; }
 				case AI_META_MAX:
 				default:
-					logDebug("\"%s\": (unrecognized type)", key);
+					logDebug("\"%s\": (unrecognized type)", key.cstr);
 					break;
 			}
-			free(key);
+			dropString(key);
 		}
 	}
 }
@@ -70,17 +64,15 @@ void printAiNodeMetadata(const struct aiNode* node) {
 		return;
 	}
 
-	struct aiString aistr = node->mName;
-	char* name = memcpy(malloc((aistr.length + 1) * sizeof(char)),
-	                    aistr.data,
-	                    aistr.length * sizeof(char));
-	name[aistr.length] = '\0';
-	logDebug("Metadata from node \"%s\": %p", name, node->mMetaData);
+	String name = stringFromAiString(node->mName);
+	logDebug("Metadata from node \"%s\": %p", name.cstr, node->mMetaData);
 	printMetadata(node->mMetaData);
 
 	for (size_t i = 0; i < node->mNumChildren; ++i) {
 		printAiNodeMetadata(node->mChildren[i]);
 	}
+
+	dropString(name);
 }
 #endif // IMPORT_DEBUG_
 
@@ -169,17 +161,15 @@ const Solid* importSolid(const char* path) {
 		aiGetMaterialProperty(scene->mMaterials[matIndex],
 		                      AI_MATKEY_SHADING_MODEL,
 		                      &prop);
-		// print mKey
-		struct aiString aistr = prop->mKey;
-		char* key = memcpy(malloc((aistr.length + 1) * sizeof(char)),
-		                   aistr.data,
-		                   aistr.length * sizeof(char));
-		key[aistr.length] = '\0';
+
+		String key = stringFromAiString(prop->mKey);
 
 		logDebug("Material property \"%s\": Shading model: (length %u) %d",
-		         key,
+		         key.cstr,
 		         prop->mDataLength,
 		         *((int32_t*) prop->mData));
+
+		dropString(key);
 #endif // IMPORT_DEBUG_
 		
 		glBindTexture(GL_TEXTURE_2D, material.textureId);

@@ -20,6 +20,7 @@ sources ::= main.c \
             engine/performance.c \
             engine/render.c \
             engine/scene.c \
+            engine/string.c \
             engine/tga.c \
             engine/ui.c \
             game/input.c \
