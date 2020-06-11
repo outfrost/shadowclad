@@ -7,7 +7,7 @@
 #include "performance.h"
 
 #define SCENE_DEBUG_ 0
-#define RENDER_DEBUG_ 1
+#define RENDER_DEBUG_ 0
 
 float viewportAspectRatio = 1.0f;
 const Scene* cameraAnchor;
@@ -185,12 +185,13 @@ static void drawSolid(const Solid* solid) {
 			
 			for (size_t i = 0; i < face.numIndices; ++i) {
 				size_t vertIndex = face.indices[i];
+				size_t normalIndex = face.indices[2];
 				if (hasNormals) {
 					if (hasTextureCoords) {
 						Vector3D coords = mesh.textureCoords[vertIndex];
 						glTexCoord2f(coords.x, coords.y);
 					}
-					Vector3D normal = mesh.normals[vertIndex];
+					Vector3D normal = mesh.normals[normalIndex];
 					glNormal3f(normal.x, normal.y, normal.z);
 				}
 				Vector3D vertex = mesh.vertices[vertIndex];

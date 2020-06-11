@@ -2,11 +2,14 @@
 
 #include <stdlib.h>
 #include <assimp/cimport.h>
+//#include <assimp/metadata.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
 #include "logger.h"
 #include "tga.h"
+
+#define IMPORT_DEBUG_ 1
 
 static const struct aiScene* importScene(const char* path);
 static Vector3D convertAiVector3D(struct aiVector3D vect);
@@ -14,12 +17,86 @@ static const char* replaceFileExtension(const struct aiString path, const char* 
 
 
 
+#if IMPORT_DEBUG_
+static void printMetadata(const struct aiMetadata* meta) {
+	if (meta) {
+		for (size_t i = 0; i < meta->mNumProperties; ++i) {
+			char* key = memcpy(malloc((meta->mKeys[i].length + 1) * sizeof(char)),
+			                   meta->mKeys[i].data,
+			                   meta->mKeys[i].length * sizeof(char));
+			key[meta->mKeys[i].length] = '\0';
+			const struct aiMetadataEntry value = meta->mValues[i];
+			switch (value.mType) {
+				case AI_BOOL:
+					logDebug("\"%s\": (bool) %d", key, *((int*) value.mData));
+					break;
+				case AI_INT32:
+					logDebug("\"%s\": (int32) %d", key, *((int32_t*) value.mData));
+					break;
+				case AI_UINT64:
+					logDebug("\"%s\": (uint64) %llu", key, *((uint64_t*) value.mData));
+					break;
+				case AI_FLOAT:
+					logDebug("\"%s\": (float) %f", key, *((float*) value.mData));
+					break;
+				case AI_DOUBLE:
+					logDebug("\"%s\": (double) %f", key, *((double*) value.mData));
+					break;
+				case AI_AISTRING: {
+					struct aiString aistr = *((struct aiString*) value.mData);
+					char* str = memcpy(malloc((aistr.length + 1) * sizeof(char)),
+					                   aistr.data,
+					                   aistr.length * sizeof(char));
+					str[aistr.length] = '\0';
+					logDebug("\"%s\": (string) %s", key, str);
+					free(str);
+					break; }
+				case AI_AIVECTOR3D: {
+					struct aiVector3D vec = *((struct aiVector3D*) value.mData);
+					logDebug("\"%s\": (vector3d) { %f, %f, %f }", key, vec.x, vec.y, vec.z);
+					break; }
+				case AI_META_MAX:
+				default:
+					logDebug("\"%s\": (unrecognized type)", key);
+					break;
+			}
+			free(key);
+		}
+	}
+}
+
+void printAiNodeMetadata(const struct aiNode* node) {
+	if (!node) {
+		return;
+	}
+
+	struct aiString aistr = node->mName;
+	char* name = memcpy(malloc((aistr.length + 1) * sizeof(char)),
+	                    aistr.data,
+	                    aistr.length * sizeof(char));
+	name[aistr.length] = '\0';
+	logDebug("Metadata from node \"%s\": %p", name, node->mMetaData);
+	printMetadata(node->mMetaData);
+
+	for (size_t i = 0; i < node->mNumChildren; ++i) {
+		printAiNodeMetadata(node->mChildren[i]);
+	}
+}
+#endif // IMPORT_DEBUG_
+
 const Solid* importSolid(const char* path) {
 	const struct aiScene* scene = importScene(path);
 	if (scene == NULL) {
 		logError("Failed to import solid from %s", path);
 		return NULL;
 	}
+	
+#if IMPORT_DEBUG_
+	const struct aiMetadata* meta = scene->mMetaData;
+	logDebug("Metadata from %s: %p", path, meta);
+	printMetadata(meta);
+	printAiNodeMetadata(scene->mRootNode);
+#endif // IMPORT_DEBUG_
 	
 	const unsigned int numMeshes = scene->mNumMeshes;
 	const unsigned int numMaterials = scene->mNumMaterials;
@@ -86,6 +163,24 @@ const Solid* importSolid(const char* path) {
 	
 	for (unsigned int matIndex = 0; matIndex < numMaterials; ++matIndex) {
 		Material material = { .textureId = textureIds[matIndex] };
+
+#if IMPORT_DEBUG_
+		const struct aiMaterialProperty* prop;
+		aiGetMaterialProperty(scene->mMaterials[matIndex],
+		                      AI_MATKEY_SHADING_MODEL,
+		                      &prop);
+		// print mKey
+		struct aiString aistr = prop->mKey;
+		char* key = memcpy(malloc((aistr.length + 1) * sizeof(char)),
+		                   aistr.data,
+		                   aistr.length * sizeof(char));
+		key[aistr.length] = '\0';
+
+		logDebug("Material property \"%s\": Shading model: (length %u) %d",
+		         key,
+		         prop->mDataLength,
+		         *((int32_t*) prop->mData));
+#endif // IMPORT_DEBUG_
 		
 		glBindTexture(GL_TEXTURE_2D, material.textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
