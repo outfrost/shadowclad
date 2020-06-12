@@ -31,6 +31,7 @@ struct Mesh {
 struct Face {
 	size_t numIndices;
 	size_t* indices;
+	Vector3D* normals;
 };
 
 struct Material {

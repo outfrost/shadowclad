@@ -39,7 +39,7 @@ void initRender() {
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.05f);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.005f);
 	
-	glShadeModel(GL_FLAT);
+	//glShadeModel(GL_FLAT);
 }
 
 void renderFrame() {
@@ -148,14 +148,12 @@ static void drawSolid(const Solid* solid) {
 		const Mesh mesh = solid->meshes[meshIndex];
 		glBindTexture(GL_TEXTURE_2D,
 		              solid->materials[mesh.materialIndex].textureId);
-		bool hasNormals = mesh.normals != NULL;
-		bool hasTextureCoords = mesh.textureCoords != NULL;
 		
 		for (size_t faceIndex = 0; faceIndex < mesh.numFaces; ++faceIndex) {
 			const Face face = mesh.faces[faceIndex];
 			
 #if RENDER_DEBUG_
-			if (hasNormals) {
+			if (mesh.normals) {
 				glDisable(GL_LIGHTING);
 				glDisable(GL_TEXTURE_2D);
 				glBegin(GL_LINES);
@@ -185,15 +183,15 @@ static void drawSolid(const Solid* solid) {
 			
 			for (size_t i = 0; i < face.numIndices; ++i) {
 				size_t vertIndex = face.indices[i];
-				size_t normalIndex = face.indices[2];
-				if (hasNormals) {
-					if (hasTextureCoords) {
+				if (face.normals) {
+					if (mesh.textureCoords) {
 						Vector3D coords = mesh.textureCoords[vertIndex];
 						glTexCoord2f(coords.x, coords.y);
 					}
-					Vector3D normal = mesh.normals[normalIndex];
+					Vector3D normal = face.normals[i];
 					glNormal3f(normal.x, normal.y, normal.z);
 				}
+
 				Vector3D vertex = mesh.vertices[vertIndex];
 				glVertex3f(vertex.x, vertex.y, vertex.z);
 			}

@@ -13,6 +13,7 @@
 #define IMPORT_DEBUG_ 1
 
 static const struct aiScene* importScene(const char* path);
+static Vector3D triangleNormal(Vector3D v1, Vector3D v2, Vector3D v3);
 static Vector3D convertAiVector3D(struct aiVector3D vect);
 static const char* replaceFileExtension(const struct aiString path, const char* ext);
 
@@ -138,10 +139,31 @@ const Solid* importSolid(const char* path) {
 			const unsigned int numIndices = aiFace.mNumIndices;
 			
 			Face face = { .numIndices = numIndices,
-			              .indices = malloc(numIndices * sizeof(size_t)) };
+			              .indices = malloc(numIndices * sizeof(size_t)),
+			              .normals = malloc(numIndices * sizeof(Vector3D)) };
 			
 			for (unsigned int i = 0; i < numIndices; ++i) {
 				face.indices[i] = aiFace.mIndices[i];
+			}
+			
+			if (numIndices == 3) {
+				Vector3D normal = triangleNormal(mesh.vertices[face.indices[0]],
+				                                 mesh.vertices[face.indices[1]],
+				                                 mesh.vertices[face.indices[2]]);
+				for (size_t i = 0; i < numIndices; ++i) {
+					face.normals[i] = normal;
+				}
+			}
+			else {
+				if (mesh.normals) {
+					for (size_t i = 0; i < numIndices; ++i) {
+						face.normals[i] = mesh.normals[face.indices[i]];
+					}
+				}
+				else {
+					free(face.normals);
+					face.normals = NULL;
+				}
 			}
 			
 			mesh.faces[faceIndex] = face;
@@ -222,6 +244,10 @@ static const struct aiScene* importScene(const char* path) {
 		scene = NULL;
 	}
 	return scene;
+}
+
+static Vector3D triangleNormal(Vector3D v1, Vector3D v2, Vector3D v3) {
+	return normalized(crossProduct(subtractVectors(v2, v1), subtractVectors(v3, v1)));
 }
 
 static Vector3D convertAiVector3D(struct aiVector3D vect) {
