@@ -19,7 +19,7 @@ struct Transform {
 	GLfloat d1, d2, d3, d4;
 };
 
-extern const float TAU;
+static const float TAU = 6.28318530718f;
 
 Transform identity();
 Transform multiply(Transform t1, Transform t2);
@@ -28,6 +28,7 @@ void rotate(Transform* transform, Vector3D axis, float angle);
 Vector3D addVectors(Vector3D v1, Vector3D v2);
 Vector3D subtractVectors(Vector3D v1, Vector3D v2);
 Vector3D crossProduct(Vector3D v1, Vector3D v2);
+float dotProduct(Vector3D v1, Vector3D v2);
 Vector3D applyTransform(Transform transform, Vector3D vec);
 Vector3D translationOf(Transform transform);
 Vector3D normalized(Vector3D vec);

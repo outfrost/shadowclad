@@ -1,5 +1,6 @@
 #include "asset.h"
 
+#include <math.h>
 #include <stdlib.h>
 #include <assimp/cimport.h>
 //#include <assimp/metadata.h>
@@ -11,6 +12,8 @@
 #include "tga.h"
 
 #define IMPORT_DEBUG_ 1
+
+static const float smoothingThresholdAngle = TAU / 14.0f;
 
 static const struct aiScene* importScene(const char* path);
 static Vector3D triangleNormal(Vector3D v1, Vector3D v2, Vector3D v3);
@@ -168,6 +171,42 @@ const Solid* importSolid(const char* path) {
 			
 			mesh.faces[faceIndex] = face;
 		}
+
+		float smoothingThreshold = cosf(smoothingThresholdAngle);
+		Face* smoothedFaces = malloc(mesh.numFaces * sizeof(Face));
+		for (size_t faceIndex = 0; faceIndex < mesh.numFaces; ++faceIndex) {
+			Face face = mesh.faces[faceIndex];
+
+			if (face.normals) {
+				face.normals = memcpy(malloc(face.numIndices * sizeof(Vector3D)),
+				                      face.normals,
+				                      face.numIndices * sizeof(Vector3D));
+
+				for (size_t indexIndex = 0; indexIndex < face.numIndices; ++indexIndex) {
+					Vector3D smoothedNormal = face.normals[indexIndex];
+
+					for (size_t i = 0; i < mesh.numFaces; ++i) {
+						if (i == faceIndex || !mesh.faces[i].normals) {
+							continue;
+						}
+
+						for (size_t k = 0; k < mesh.faces[i].numIndices; ++k) {
+							if (mesh.faces[i].indices[k] == face.indices[indexIndex]
+							    && dotProduct(face.normals[indexIndex],
+							                  mesh.faces[i].normals[k]) >= smoothingThreshold) {
+								smoothedNormal = addVectors(smoothedNormal, mesh.faces[i].normals[k]);
+							}
+						}
+					}
+
+					face.normals[indexIndex] = normalized(smoothedNormal);
+				}
+			}
+			smoothedFaces[faceIndex] = face;
+		}
+		// TODO Actually clean up the stuff inside
+		free(mesh.faces);
+		mesh.faces = smoothedFaces;
 		
 		solid->meshes[meshIndex] = mesh;
 	}
@@ -237,7 +276,9 @@ const Solid* importSolid(const char* path) {
 }
 
 static const struct aiScene* importScene(const char* path) {
-	const struct aiScene* scene = aiImportFile(path, aiProcess_PreTransformVertices);
+	const struct aiScene* scene = aiImportFile(path, aiProcess_JoinIdenticalVertices
+	                                                 | aiProcess_PreTransformVertices
+	                                                 | aiProcess_ValidateDataStructure);
 	if (scene != NULL && scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {
 		logError("Incomplete scene imported from %s", path);
 		aiReleaseImport(scene);

@@ -3,10 +3,6 @@
 #include <math.h>
 #include <stddef.h>
 
-const float TAU = 6.28318530718f;
-
-
-
 Transform identity() {
 	return (Transform) { .a1 = 1.0f, .a2 = 0.0f, .a3 = 0.0f, .a4 = 0.0f,
 	                     .b1 = 0.0f, .b2 = 1.0f, .b3 = 0.0f, .b4 = 0.0f,
@@ -70,6 +66,10 @@ Vector3D crossProduct(Vector3D v1, Vector3D v2) {
 	return (Vector3D) { .x = (v1.y * v2.z) - (v1.z * v2.y),
 	                    .y = (v1.z * v2.x) - (v1.x * v2.z),
 	                    .z = (v1.x * v2.y) - (v1.y * v2.x) };
+}
+
+float dotProduct(Vector3D v1, Vector3D v2) {
+	return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 }
 
 Vector3D applyTransform(Transform transform, Vector3D vec) {

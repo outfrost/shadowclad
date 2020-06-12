@@ -153,14 +153,14 @@ static void drawSolid(const Solid* solid) {
 			const Face face = mesh.faces[faceIndex];
 			
 #if RENDER_DEBUG_
-			if (mesh.normals) {
+			if (face.normals) {
 				glDisable(GL_LIGHTING);
 				glDisable(GL_TEXTURE_2D);
 				glBegin(GL_LINES);
 				for (size_t i = 0; i < face.numIndices; ++i) {
 					size_t vertIndex = face.indices[i];
 					Vector3D vertex = mesh.vertices[vertIndex];
-					Vector3D normal = mesh.normals[vertIndex];
+					Vector3D normal = face.normals[i];
 					glColor3f(ab(normal.x), ab(normal.y), ab(normal.z));
 					glVertex3f(vertex.x, vertex.y, vertex.z);
 					glVertex3f(vertex.x + normal.x, vertex.y + normal.y, vertex.z + normal.z);
