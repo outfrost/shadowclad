@@ -1,5 +1,5 @@
 #include <GL/glxew.h>
-#include <GL/glut.h>
+#include <GLFW/glfw3.h>
 
 #include "engine/logger.h"
 #include "engine/performance.h"
@@ -10,26 +10,40 @@
 #include "game/level.h"
 #include "game/player.h"
 
-int main(int argc, char** argv) {
-	glutInit(&argc, argv);
+void onGlfwError(int error, const char* description);
+
+int main(/*int argc, char** argv*/) {
+	glfwSetErrorCallback(onGlfwError);
+
+	if (!glfwInit()) {
+		logError("GLFW init failed");
+		return 1;
+	}
 	// glutInitContextVersion(4,5); TODO establish correct context
-	
-	glutInitWindowSize(1280, 720);
-	
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutCreateWindow("shadowclad");
-	
+	// glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	// glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "shadowclad", NULL, NULL);
+	if (!window) {
+		logError("Window or context creation failed");
+		glfwTerminate();
+		return 2;
+	}
+
+	glfwMakeContextCurrent(window);
+	//glutInitDisplayMode(//glut_DOUBLE | //glut_RGBA | //glut_DEPTH);
+
 	logInfo("OpenGL %s", (const char*) glGetString(GL_VERSION));
 	logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
 	logInfo("%s", (const char*) glGetString(GL_RENDERER));
-	
+
 	GLenum glewInitStatus = glewInit();
 	if (glewInitStatus != GLEW_OK) {
 		logError("GLEW init failed: %s", (const char*) glewGetErrorString(glewInitStatus));
 		return 1;
 	}
 	logInfo("GLEW %s", (const char*) glewGetString(GLEW_VERSION));
-	
+/*
 	if (GLXEW_EXT_swap_control) {
 		Display* display = glXGetCurrentDisplay();
 		GLXDrawable drawable = glXGetCurrentDrawable();
@@ -48,19 +62,32 @@ int main(int argc, char** argv) {
 	else {
 		logWarning("Could not enable vsync (extensions not supported)");
 	}
-	
-	glutDisplayFunc(renderFrame);
-	glutReshapeFunc(resizeStage);
-	glutKeyboardFunc(onKeyPressed);
-	//glutMouseFunc(mouse_button_event);
-	//glutMotionFunc(mouse_motion_event);
-	
+*/
+	logInfo("Setting swap interval to 1");
+	glfwSwapInterval(1);
+
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	resizeStage(window, width, height);
+
+	glfwSetFramebufferSizeCallback(window, resizeStage);
+	glfwSetKeyCallback(window, onKeyboardEvent);
+
 	initRender();
 	//initPerformanceMetering();
 	initLevel();
 	initPlayer();
 	startLevel();
-	
-	glutMainLoop();
+
+	while (!glfwWindowShouldClose(window)) {
+		renderFrame(window);
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
 	return 0;
+}
+
+void onGlfwError(int error, const char* description) {
+	logError("GLFW error: %s", description);
 }

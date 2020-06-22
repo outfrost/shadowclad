@@ -7,7 +7,7 @@ CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
 CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror \
            -Wno-error=unused-function -Wno-error=unused-parameter $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
-LDLIBS ::= -lm -lGL -lGLEW -lglut -lassimp $(LDLIBS)
+LDLIBS ::= -lm -lGL -lGLEW -lglfw -lassimp $(LDLIBS)
 
 # ######
 # Paths

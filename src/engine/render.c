@@ -1,7 +1,6 @@
 #include "render.h"
 
 #include <stdbool.h>
-#include <GL/glut.h>
 
 #include "geometry.h"
 #include "performance.h"
@@ -42,7 +41,7 @@ void initRender() {
 	//glShadeModel(GL_FLAT);
 }
 
-void renderFrame() {
+void renderFrame(GLFWwindow* window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_NORMALIZE);
@@ -55,9 +54,8 @@ void renderFrame() {
 	renderScene(currentScene, identity());
 
 	glFlush();
-	glutSwapBuffers();
+	glfwSwapBuffers(window);
 	frameRendered();
-	glutPostRedisplay();
 }
 
 static void renderScene(const Scene* scene, const Transform baseTransform) {

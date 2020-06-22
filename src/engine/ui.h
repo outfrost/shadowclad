@@ -3,6 +3,8 @@
 
 #include <GL/gl.h>
 
-void resizeStage(GLsizei width, GLsizei height);
+typedef struct GLFWwindow GLFWwindow;
+
+void resizeStage(GLFWwindow* window, int width, int height);
 
 #endif // UI_H_
