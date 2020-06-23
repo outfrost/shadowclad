@@ -36,7 +36,6 @@ int main(/*int argc, char** argv*/) {
 	}
 
 	glfwMakeContextCurrent(window);
-	//glutInitDisplayMode(//glut_DOUBLE | //glut_RGBA | //glut_DEPTH);
 
 	logInfo("OpenGL %s", (const char*) glGetString(GL_VERSION));
 	logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -47,26 +46,7 @@ int main(/*int argc, char** argv*/) {
 		logError("GLEW init failed: %s", (const char*) glewGetErrorString(glewInitStatus));
 		return 1;
 	}
-/*
-	if (GLXEW_EXT_swap_control) {
-		Display* display = glXGetCurrentDisplay();
-		GLXDrawable drawable = glXGetCurrentDrawable();
-		if (drawable) {
-			glXSwapIntervalEXT(display, drawable, 1);
-		}
-		else {
-			logWarning("Drawable is not here ¯\\_(ツ)_/¯");
-			logWarning("Could not enable vsync (GLX_EXT_swap_control)");
-		}
-	}
-	else if (GLXEW_MESA_swap_control) {
-		glXSwapIntervalMESA(1);
-		logDebug("Vsync enabled with GLX_MESA_swap_control, swap interval %d", glXGetSwapIntervalMESA());
-	}
-	else {
-		logWarning("Could not enable vsync (extensions not supported)");
-	}
-*/
+
 	logInfo("Setting swap interval to 1");
 	glfwSwapInterval(1);
 
@@ -83,7 +63,15 @@ int main(/*int argc, char** argv*/) {
 	initPlayer();
 	startLevel();
 
+	float lastTime = glfwGetTime();
+	float delta = 0.0f;
+
 	while (!glfwWindowShouldClose(window)) {
+		float time = glfwGetTime();
+		delta = time - lastTime;
+		lastTime = time;
+
+		updatePlayer(delta);
 		renderFrame(window);
 		glfwPollEvents();
 	}

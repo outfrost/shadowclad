@@ -5,10 +5,21 @@
 
 #include "engine/scene.h"
 
+enum Direction {
+	DIRECTION_UP = 1 << 0,
+	DIRECTION_DOWN = 1 << 1,
+	DIRECTION_LEFT = 1 << 2,
+	DIRECTION_RIGHT = 1 << 3,
+};
+
+typedef enum Direction Direction;
+
 extern Scene* playerCharacter;
 
 void initPlayer();
 void spawnPlayer(Transform transform);
-void playerMovementInput(float x, float y);
+void updatePlayer(float delta);
+void startMovement(Direction direction);
+void stopMovement(Direction direction);
 
 #endif // PLAYER_H_

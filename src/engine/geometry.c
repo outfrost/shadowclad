@@ -72,6 +72,24 @@ float dotProduct(Vector3D v1, Vector3D v2) {
 	return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 }
 
+Vector3D scaleVector(Vector3D vec, float scale) {
+	return (Vector3D) { vec.x * scale,
+	                    vec.y * scale,
+	                    vec.z * scale };
+}
+
+Vector3D clampMagnitude(Vector3D vec, float maxMagnitude) {
+	float m = magnitude(vec);
+	if (m > maxMagnitude) {
+		vec = scaleVector(vec, maxMagnitude / m);
+	}
+	return vec;
+}
+
+float magnitude(Vector3D vec) {
+	return sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+}
+
 Vector3D applyTransform(Transform transform, Vector3D vec) {
 	GLfloat* a = (GLfloat*) &transform;
 	GLfloat b[4] = { vec.x, vec.y, vec.z, 1.0f };
@@ -92,6 +110,6 @@ Vector3D translationOf(Transform transform) {
 }
 
 Vector3D normalized(Vector3D vec) {
-	float magnitude = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-	return (Vector3D) {vec.x / magnitude, vec.y / magnitude, vec.z / magnitude};
+	float m = magnitude(vec);
+	return (Vector3D) { vec.x / m, vec.y / m, vec.z / m };
 }
