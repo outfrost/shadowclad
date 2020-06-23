@@ -11,7 +11,7 @@
 #include "string.h"
 #include "tga.h"
 
-#define IMPORT_DEBUG_ 1
+#define IMPORT_DEBUG_ 0
 
 static const float smoothingThresholdAngle = TAU / 14.0f;
 

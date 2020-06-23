@@ -1,3 +1,4 @@
+#include <assimp/version.h>
 #include <GL/glxew.h>
 #include <GLFW/glfw3.h>
 
@@ -13,6 +14,10 @@
 void onGlfwError(int error, const char* description);
 
 int main(/*int argc, char** argv*/) {
+	logInfo("Assimp %u.%u", aiGetVersionMajor(), aiGetVersionMinor());
+	logInfo("GLEW %s", (const char*) glewGetString(GLEW_VERSION));
+	logInfo("GLFW %s", glfwGetVersionString());
+
 	glfwSetErrorCallback(onGlfwError);
 
 	if (!glfwInit()) {
@@ -42,7 +47,6 @@ int main(/*int argc, char** argv*/) {
 		logError("GLEW init failed: %s", (const char*) glewGetErrorString(glewInitStatus));
 		return 1;
 	}
-	logInfo("GLEW %s", (const char*) glewGetString(GLEW_VERSION));
 /*
 	if (GLXEW_EXT_swap_control) {
 		Display* display = glXGetCurrentDisplay();
