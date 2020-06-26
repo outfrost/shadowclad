@@ -74,6 +74,13 @@ int main(/*int argc, char** argv*/) {
 		updatePlayer(delta);
 		renderFrame(window);
 		glfwPollEvents();
+
+		int wState = glfwGetKey(window, GLFW_KEY_W);
+		int sState = glfwGetKey(window, GLFW_KEY_S);
+		int aState = glfwGetKey(window, GLFW_KEY_A);
+		int dState = glfwGetKey(window, GLFW_KEY_D);
+
+		logDebug("%d %d %d %d", wState, sState, aState, dState);
 	}
 
 	glfwTerminate();

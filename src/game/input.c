@@ -1,8 +1,26 @@
 #include "input.h"
 
+#include "engine/logger.h"
+
 #include "player.h"
 
 void onKeyboardEvent(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	const char* actionName;
+	switch (action) {
+		case GLFW_PRESS:
+			actionName = "GLFW_PRESS";
+			break;
+		case GLFW_REPEAT:
+			actionName = "GLFW_REPEAT";
+			break;
+		case GLFW_RELEASE:
+			actionName = "GLFW_RELEASE";
+			break;
+		default:
+			actionName = "(unrecognised action)";
+			break;
+	}
+	//logDebug("window %p, key %d, action %s", window, key, actionName);
 	switch (key) {
 		case GLFW_KEY_W:
 			if (action == GLFW_PRESS) {
