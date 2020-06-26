@@ -15,6 +15,7 @@ LDLIBS ::= -lm -lGL -lGLEW -lglfw -lassimp $(LDLIBS)
 
 sources ::= main.c \
             engine/asset.c \
+            engine/engine.c \
             engine/geometry.c \
             engine/logger.c \
             engine/performance.c \
@@ -23,6 +24,7 @@ sources ::= main.c \
             engine/string.c \
             engine/tga.c \
             engine/ui.c \
+            game/game.c \
             game/input.c \
             game/level.c \
             game/player.c
