@@ -1,5 +1,5 @@
-#ifndef ASSET_H_
-#define ASSET_H_
+#ifndef ENGINE_ASSET_H_
+#define ENGINE_ASSET_H_
 
 #include <stddef.h>
 #include <GL/gl.h>
@@ -40,4 +40,4 @@ struct Material {
 
 const Solid* importSolid(const char* path);
 
-#endif // ASSET_H_
+#endif // ENGINE_ASSET_H_

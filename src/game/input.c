@@ -1,8 +1,10 @@
 #include "input.h"
 
+#include <GLFW/glfw3.h>
+
 #include "player.h"
 
-void onKeyboardEvent(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void keyboardInput(int key, int scancode, int action, int mods) {
 	switch (key) {
 		case GLFW_KEY_W:
 			if (action == GLFW_PRESS) {

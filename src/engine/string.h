@@ -1,5 +1,5 @@
-#ifndef STRING_H_
-#define STRING_H_
+#ifndef ENGINE_STRING_H_
+#define ENGINE_STRING_H_
 
 #include <assimp/types.h>
 
@@ -13,4 +13,4 @@ struct String {
 String stringFromAiString(const struct aiString aistr);
 void dropString(String str);
 
-#endif // STRING_H_
+#endif // ENGINE_STRING_H_

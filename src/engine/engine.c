@@ -5,6 +5,7 @@
 #include <GL/glxew.h>
 #include <GLFW/glfw3.h>
 
+#include "input.h"
 #include "logger.h"
 #include "performance.h"
 #include "render.h"
@@ -67,6 +68,7 @@ void init() {
 	resizeStage(window, width, height);
 
 	glfwSetFramebufferSizeCallback(window, resizeStage);
+	glfwSetKeyCallback(window, onKeyboardEvent);
 
 	initRender();
 	//initPerformanceMetering();
@@ -95,10 +97,6 @@ void run(void (*updateFn) (float)) {
 
 void terminate() {
 	glfwTerminate();
-}
-
-void setKeyboardEventCallback(void (*keyboardEventCallback) (GLFWwindow*, int, int, int, int)) {
-	glfwSetKeyCallback(window, keyboardEventCallback);
 }
 
 static void onGlfwError(int error, const char* description) {

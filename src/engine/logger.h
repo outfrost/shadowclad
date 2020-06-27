@@ -1,5 +1,5 @@
-#ifndef LOGGER_H_
-#define LOGGER_H_
+#ifndef ENGINE_LOGGER_H_
+#define ENGINE_LOGGER_H_
 
 typedef enum {
 	LOGLEVEL_ERROR,
@@ -17,4 +17,4 @@ extern LogLevel logLevel;
 
 void logMessage(LogLevel msgLevel, const char* func, const char* message, ...);
 
-#endif // LOGGER_H_
+#endif // ENGINE_LOGGER_H_

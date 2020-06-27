@@ -1,6 +1,6 @@
 #include "game.h"
 
-#include "engine/engine.h"
+#include "engine/input.h"
 
 #include "input.h"
 #include "level.h"
@@ -11,7 +11,7 @@ void initGame() {
 	initPlayer();
 	startLevel();
 
-	setKeyboardEventCallback(onKeyboardEvent);
+	setKeyboardInputCallback(keyboardInput);
 }
 
 void update(float delta) {

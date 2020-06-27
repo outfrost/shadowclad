@@ -1,11 +1,8 @@
-#ifndef ENGINE_H_
-#define ENGINE_H_
-
-typedef struct GLFWwindow GLFWwindow;
+#ifndef ENGINE_ENGINE_H_
+#define ENGINE_ENGINE_H_
 
 void init();
 void run(void (*updateFn) (float));
 void terminate();
-void setKeyboardEventCallback(void (*) (GLFWwindow*, int, int, int, int));
 
-#endif // ENGINE_H_
+#endif // ENGINE_ENGINE_H_

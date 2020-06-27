@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_H_
-#define GEOMETRY_H_
+#ifndef ENGINE_GEOMETRY_H_
+#define ENGINE_GEOMETRY_H_
 
 #include <GL/gl.h>
 
@@ -36,4 +36,4 @@ Vector3D applyTransform(Transform transform, Vector3D vec);
 Vector3D translationOf(Transform transform);
 Vector3D normalized(Vector3D vec);
 
-#endif // GEOMETRY_H_
+#endif // ENGINE_GEOMETRY_H_

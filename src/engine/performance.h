@@ -1,7 +1,7 @@
-#ifndef PERFORMANCE_H_
-#define PERFORMANCE_H_
+#ifndef ENGINE_PERFORMANCE_H_
+#define ENGINE_PERFORMANCE_H_
 
 void initPerformanceMetering();
 void frameRendered();
 
-#endif // PERFORMANCE_H_
+#endif // ENGINE_PERFORMANCE_H_

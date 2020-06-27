@@ -17,6 +17,7 @@ sources ::= main.c \
             engine/asset.c \
             engine/engine.c \
             engine/geometry.c \
+            engine/input.c \
             engine/logger.c \
             engine/performance.c \
             engine/render.c \

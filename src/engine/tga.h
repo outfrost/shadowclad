@@ -1,5 +1,5 @@
-#ifndef TGA_H_
-#define TGA_H_
+#ifndef ENGINE_TGA_H_
+#define ENGINE_TGA_H_
 
 #include <GL/gl.h>
 
@@ -29,4 +29,4 @@ typedef struct {
 
 TgaImage* readTga(const char* path);
 
-#endif // TGA_H_
+#endif // ENGINE_TGA_H_
