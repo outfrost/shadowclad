@@ -21,7 +21,7 @@ static void onGlfwError(int error, const char* description);
 
 
 
-void init() {
+void init(EngineConfig config) {
 	if (window) {
 		logError("init called more than once");
 		return;
@@ -41,7 +41,12 @@ void init() {
 	// glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	// glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 
-	window = glfwCreateWindow(1280, 720, "shadowclad", NULL, NULL);
+	window = glfwCreateWindow(config.windowWidth,
+	                          config.windowHeight,
+	                          config.windowTitle.cstr,
+	                          NULL,
+	                          NULL);
+
 	if (!window) {
 		logError("Window or context creation failed");
 		glfwTerminate();
@@ -60,8 +65,8 @@ void init() {
 		exit(EXIT_LIB_FAIL);
 	}
 
-	logInfo("Setting swap interval to 1");
-	glfwSwapInterval(1);
+	logInfo("Setting swap interval to %d", config.swapInterval);
+	glfwSwapInterval(config.swapInterval);
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -97,6 +102,13 @@ void run(void (*updateFn) (float)) {
 
 void terminate() {
 	glfwTerminate();
+}
+
+EngineConfig defaultConfig() {
+	return (EngineConfig) { .windowWidth = 800,
+	                        .windowHeight = 600,
+	                        .windowTitle = newString(NULL),
+	                        .swapInterval = 1 };
 }
 
 static void onGlfwError(int error, const char* description) {

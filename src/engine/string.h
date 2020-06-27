@@ -10,6 +10,7 @@ struct String {
 	char* cstr;
 };
 
+String newString(const char* s);
 String stringFromAiString(const struct aiString aistr);
 void dropString(String str);
 
