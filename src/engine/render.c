@@ -1,15 +1,12 @@
 #include "render.h"
 
-#include <stdbool.h>
-
 #include "geometry.h"
 #include "performance.h"
 
-#define SCENE_DEBUG_ 0
-#define RENDER_DEBUG_ 0
-
 float viewportAspectRatio = 1.0f;
 const Scene* cameraAnchor;
+bool debugScene = false;
+bool debugRender = false;
 
 static const float AXIS_RADIUS = 5.0f;
 
@@ -69,9 +66,11 @@ static void renderScene(const Scene* scene, const Transform baseTransform) {
 	glLoadTransposeMatrixf((const GLfloat*) &transform);
 
 	glDisable(GL_LIGHTING);
-#if SCENE_DEBUG_
-	drawAxes();
-#endif // SCENE_DEBUG_
+
+	if (debugScene) {
+		drawAxes();
+	}
+
 	glEnable(GL_LIGHTING);
 
 	if (scene->solid) {
@@ -128,11 +127,9 @@ static void drawAxes() {
 	glEnd();
 }
 
-#if RENDER_DEBUG_
-static GLfloat ab(GLfloat a) {
+static GLfloat absolute(GLfloat a) {
 	return a < 0 ? -a : a;
 }
-#endif // RENDER_DEBUG_
 
 static void drawSolid(const Solid* solid) {
 	if (solid == NULL) {
@@ -150,8 +147,7 @@ static void drawSolid(const Solid* solid) {
 		for (size_t faceIndex = 0; faceIndex < mesh.numFaces; ++faceIndex) {
 			const Face face = mesh.faces[faceIndex];
 			
-#if RENDER_DEBUG_
-			if (face.normals) {
+			if (debugRender && face.normals) {
 				glDisable(GL_LIGHTING);
 				glDisable(GL_TEXTURE_2D);
 				glBegin(GL_LINES);
@@ -159,7 +155,7 @@ static void drawSolid(const Solid* solid) {
 					size_t vertIndex = face.indices[i];
 					Vector3D vertex = mesh.vertices[vertIndex];
 					Vector3D normal = face.normals[i];
-					glColor3f(ab(normal.x), ab(normal.y), ab(normal.z));
+					glColor3f(absolute(normal.x), absolute(normal.y), absolute(normal.z));
 					glVertex3f(vertex.x, vertex.y, vertex.z);
 					glVertex3f(vertex.x + normal.x, vertex.y + normal.y, vertex.z + normal.z);
 				}
@@ -167,7 +163,6 @@ static void drawSolid(const Solid* solid) {
 				glEnable(GL_TEXTURE_2D);
 				glEnable(GL_LIGHTING);
 			}
-#endif // RENDER_DEBUG_
 			
 			GLenum faceMode;
 			switch (face.numIndices) {

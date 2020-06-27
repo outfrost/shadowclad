@@ -2,15 +2,33 @@
 
 #include <stdbool.h>
 
+#include "render.h"
+
 static void (*keyboardInputCallback) (int, int, int, int);
 
 
 
 void onKeyboardEvent(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	bool handled = false;
+	if (!(mods & GLFW_MOD_CONTROL)) {
+		if (keyboardInputCallback) {
+			keyboardInputCallback(key, scancode, action, mods);
+		}
+		return;
+	}
 
-	if (!handled && keyboardInputCallback) {
-		keyboardInputCallback(key, scancode, action, mods);
+	switch (key) {
+		case GLFW_KEY_1:
+			if (action == GLFW_PRESS) {
+				debugScene = !debugScene;
+			}
+			break;
+		case GLFW_KEY_2:
+			if (action == GLFW_PRESS) {
+				debugRender = !debugRender;
+			}
+			break;
+		default:
+			break;
 	}
 }
 
