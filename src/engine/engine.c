@@ -57,7 +57,7 @@ void init(EngineConfig config) {
 
 	logInfo("OpenGL %s", (const char*) glGetString(GL_VERSION));
 	logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
-	logInfo("%s", (const char*) glGetString(GL_RENDERER));
+	logInfo("Renderer: %s", (const char*) glGetString(GL_RENDERER));
 
 	GLenum glewInitStatus = glewInit();
 	if (glewInitStatus != GLEW_OK) {
@@ -65,7 +65,7 @@ void init(EngineConfig config) {
 		exit(EXIT_LIB_FAIL);
 	}
 
-	logInfo("Setting swap interval to %d", config.swapInterval);
+	logInfo("Setting swap interval: %d", config.swapInterval);
 	glfwSwapInterval(config.swapInterval);
 
 	int width, height;
