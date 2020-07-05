@@ -1,8 +1,9 @@
 #include "ui.h"
 
+#include "_prelude.h"
 #include "render.h"
 
-void resizeStage(GLFWwindow* window, int width, int height) {
+void resizeStage(GLFWwindow* window UNUSED, int width, int height) {
 	if (height == 0)
 		height = 1;
 

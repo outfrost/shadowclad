@@ -2,9 +2,11 @@
 
 #include <GLFW/glfw3.h>
 
+#include "engine/_prelude.h"
+
 #include "player.h"
 
-void keyboardInput(int key, int scancode, int action, int mods) {
+void keyboardInput(int key, int scancode UNUSED, int action, int mods UNUSED) {
 	switch (key) {
 		case GLFW_KEY_W:
 			if (action == GLFW_PRESS) {

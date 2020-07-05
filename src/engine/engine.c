@@ -5,6 +5,7 @@
 #include <GL/glxew.h>
 #include <GLFW/glfw3.h>
 
+#include "_prelude.h"
 #include "input.h"
 #include "logger.h"
 #include "performance.h"
@@ -111,6 +112,6 @@ EngineConfig defaultConfig() {
 	                        .swapInterval = 1 };
 }
 
-static void onGlfwError(int error, const char* description) {
+static void onGlfwError(int error UNUSED, const char* description) {
 	logError("GLFW error: %s", description);
 }
