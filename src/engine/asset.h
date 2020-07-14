@@ -20,9 +20,9 @@ struct Solid {
 
 struct Mesh {
 	size_t numVertices;
-	Vector3D* vertices;
-	Vector3D* normals;
-	Vector3D* textureCoords;
+	Vector* vertices;
+	Vector* normals;
+	Vector* textureCoords;
 	size_t numFaces;
 	Face* faces;
 	size_t materialIndex;
@@ -31,7 +31,7 @@ struct Mesh {
 struct Face {
 	size_t numIndices;
 	size_t* indices;
-	Vector3D* normals;
+	Vector* normals;
 };
 
 struct Material {

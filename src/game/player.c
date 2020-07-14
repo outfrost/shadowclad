@@ -7,20 +7,20 @@ static const float movementSpeed = 2.5f;
 
 Scene* playerCharacter;
 static Transform screenToWorldMovementTransform;
-static Vector3D worldMovementUp;
-static Vector3D worldMovementDown;
-static Vector3D worldMovementLeft;
-static Vector3D worldMovementRight;
+static Vector worldMovementUp;
+static Vector worldMovementDown;
+static Vector worldMovementLeft;
+static Vector worldMovementRight;
 static Direction movementDirection;
 
-static void movePlayer(Vector3D direction, float delta);
-static Vector3D worldMovementDirection(float x, float y);
+static void movePlayer(Vector direction, float delta);
+static Vector worldMovementDirection(float x, float y);
 
 
 
 void initPlayer() {
 	screenToWorldMovementTransform = identity();
-	rotate(&screenToWorldMovementTransform, (Vector3D) { 0.0f, 1.0f, 0.0f }, - TAU / 8.0f);
+	rotate(&screenToWorldMovementTransform, (Vector) { 0.0f, 1.0f, 0.0f }, - TAU / 8.0f);
 
 	worldMovementUp = worldMovementDirection(0.0f, 1.0f);
 	worldMovementDown = worldMovementDirection(0.0f, -1.0f);
@@ -38,7 +38,7 @@ void spawnPlayer(Transform transform) {
 }
 
 void updatePlayer(float delta) {
-	Vector3D direction = { 0.0f, 0.0f, 0.0f };
+	Vector direction = { 0.0f, 0.0f, 0.0f };
 	if (movementDirection & DIRECTION_UP) {
 		direction = addVectors(direction, worldMovementUp);
 	}
@@ -62,14 +62,14 @@ void stopMovement(Direction direction) {
 	movementDirection &= ~direction;
 }
 
-static void movePlayer(Vector3D direction, float delta) {
+static void movePlayer(Vector direction, float delta) {
 	direction = clampMagnitude(direction, 1.0f);
-	Vector3D displacement = scaleVector(direction, delta * movementSpeed);
+	Vector displacement = scaleVector(direction, delta * movementSpeed);
 	translate(&playerCharacter->transform, displacement);
 }
 
-static Vector3D worldMovementDirection(float x, float y) {
-	Vector3D direction = (Vector3D) { x, 0.0f, -y };
+static Vector worldMovementDirection(float x, float y) {
+	Vector direction = (Vector) { x, 0.0f, -y };
 	direction = normalized(
 		applyTransform(screenToWorldMovementTransform, direction));
 	return direction;

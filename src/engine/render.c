@@ -101,7 +101,7 @@ static void setupCamera() {
 
 static void moveCameraTo(const Scene* anchor) {
 	glMatrixMode(GL_PROJECTION);
-	Vector3D pos = translationOf(worldTransform(anchor));
+	Vector pos = translationOf(worldTransform(anchor));
 	glTranslatef(-pos.x, -pos.y, -pos.z);
 }
 
@@ -153,8 +153,8 @@ static void drawSolid(const Solid* solid) {
 				glBegin(GL_LINES);
 				for (size_t i = 0; i < face.numIndices; ++i) {
 					size_t vertIndex = face.indices[i];
-					Vector3D vertex = mesh.vertices[vertIndex];
-					Vector3D normal = face.normals[i];
+					Vector vertex = mesh.vertices[vertIndex];
+					Vector normal = face.normals[i];
 					glColor3f(absolute(normal.x), absolute(normal.y), absolute(normal.z));
 					glVertex3f(vertex.x, vertex.y, vertex.z);
 					glVertex3f(vertex.x + normal.x, vertex.y + normal.y, vertex.z + normal.z);
@@ -178,14 +178,14 @@ static void drawSolid(const Solid* solid) {
 				size_t vertIndex = face.indices[i];
 				if (face.normals) {
 					if (mesh.textureCoords) {
-						Vector3D coords = mesh.textureCoords[vertIndex];
+						Vector coords = mesh.textureCoords[vertIndex];
 						glTexCoord2f(coords.x, coords.y);
 					}
-					Vector3D normal = face.normals[i];
+					Vector normal = face.normals[i];
 					glNormal3f(normal.x, normal.y, normal.z);
 				}
 
-				Vector3D vertex = mesh.vertices[vertIndex];
+				Vector vertex = mesh.vertices[vertIndex];
 				glVertex3f(vertex.x, vertex.y, vertex.z);
 			}
 			

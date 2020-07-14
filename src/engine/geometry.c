@@ -28,7 +28,7 @@ Transform multiply(Transform t1, Transform t2) {
 	return result;
 }
 
-void translate(Transform* transform, Vector3D vec) {
+void translate(Transform* transform, Vector vec) {
 	*transform = multiply(
 		(Transform) { .a1 = 1.0f, .a2 = 0.0f, .a3 = 0.0f, .a4 = vec.x,
 		              .b1 = 0.0f, .b2 = 1.0f, .b3 = 0.0f, .b4 = vec.y,
@@ -37,7 +37,7 @@ void translate(Transform* transform, Vector3D vec) {
 		*transform);
 }
 
-void rotate(Transform* transform, Vector3D axis, float angle) {
+void rotate(Transform* transform, Vector axis, float angle) {
 	axis = normalized(axis);
 	float l = axis.x;
 	float m = axis.y;
@@ -54,31 +54,31 @@ void rotate(Transform* transform, Vector3D axis, float angle) {
 		*transform);
 }
 
-Vector3D addVectors(Vector3D v1, Vector3D v2){
-	return (Vector3D) { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
+Vector addVectors(Vector v1, Vector v2){
+	return (Vector) { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
 }
 
-Vector3D subtractVectors(Vector3D v1, Vector3D v2) {
-	return (Vector3D) { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
+Vector subtractVectors(Vector v1, Vector v2) {
+	return (Vector) { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
 }
 
-Vector3D crossProduct(Vector3D v1, Vector3D v2) {
-	return (Vector3D) { .x = (v1.y * v2.z) - (v1.z * v2.y),
-	                    .y = (v1.z * v2.x) - (v1.x * v2.z),
-	                    .z = (v1.x * v2.y) - (v1.y * v2.x) };
+Vector crossProduct(Vector v1, Vector v2) {
+	return (Vector) { .x = (v1.y * v2.z) - (v1.z * v2.y),
+	                  .y = (v1.z * v2.x) - (v1.x * v2.z),
+	                  .z = (v1.x * v2.y) - (v1.y * v2.x) };
 }
 
-float dotProduct(Vector3D v1, Vector3D v2) {
+float dotProduct(Vector v1, Vector v2) {
 	return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 }
 
-Vector3D scaleVector(Vector3D vec, float scale) {
-	return (Vector3D) { vec.x * scale,
-	                    vec.y * scale,
-	                    vec.z * scale };
+Vector scaleVector(Vector vec, float scale) {
+	return (Vector) { vec.x * scale,
+	                  vec.y * scale,
+	                  vec.z * scale };
 }
 
-Vector3D clampMagnitude(Vector3D vec, float maxMagnitude) {
+Vector clampMagnitude(Vector vec, float maxMagnitude) {
 	float m = magnitude(vec);
 	if (m > maxMagnitude) {
 		vec = scaleVector(vec, maxMagnitude / m);
@@ -86,11 +86,11 @@ Vector3D clampMagnitude(Vector3D vec, float maxMagnitude) {
 	return vec;
 }
 
-float magnitude(Vector3D vec) {
+float magnitude(Vector vec) {
 	return sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
-Vector3D applyTransform(Transform transform, Vector3D vec) {
+Vector applyTransform(Transform transform, Vector vec) {
 	GLfloat* a = (GLfloat*) &transform;
 	GLfloat b[4] = { vec.x, vec.y, vec.z, 1.0f };
 	GLfloat c[4];
@@ -102,14 +102,14 @@ Vector3D applyTransform(Transform transform, Vector3D vec) {
 			+ a[(row * 4) + 2] * b[2]
 			+ a[(row * 4) + 3] * b[3];
 	}
-	return (Vector3D) { c[0], c[1], c[2] };
+	return (Vector) { c[0], c[1], c[2] };
 }
 
-Vector3D translationOf(Transform transform) {
-	return (Vector3D) { transform.a4, transform.b4, transform.c4 };
+Vector translationOf(Transform transform) {
+	return (Vector) { transform.a4, transform.b4, transform.c4 };
 }
 
-Vector3D normalized(Vector3D vec) {
+Vector normalized(Vector vec) {
 	float m = magnitude(vec);
-	return (Vector3D) { vec.x / m, vec.y / m, vec.z / m };
+	return (Vector) { vec.x / m, vec.y / m, vec.z / m };
 }

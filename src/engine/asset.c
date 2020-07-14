@@ -16,8 +16,8 @@
 static const float smoothingThresholdAngle = TAU / 14.0f;
 
 static const struct aiScene* importScene(const char* path);
-static Vector3D triangleNormal(Vector3D v1, Vector3D v2, Vector3D v3);
-static Vector3D convertAiVector3D(struct aiVector3D vect);
+static Vector triangleNormal(Vector v1, Vector v2, Vector v3);
+static Vector convertAiVector3D(struct aiVector3D vect);
 static const char* replaceFileExtension(const struct aiString path, const char* ext);
 
 
@@ -111,7 +111,7 @@ const Solid* importSolid(const char* path) {
 		const unsigned int numFaces = aiMesh->mNumFaces;
 		
 		Mesh mesh = { .numVertices = numVertices,
-		              .vertices = malloc(numVertices * sizeof(Vector3D)),
+		              .vertices = malloc(numVertices * sizeof(Vector)),
 		              .normals = NULL,
 		              .textureCoords = NULL,
 		              .numFaces = numFaces,
@@ -124,14 +124,14 @@ const Solid* importSolid(const char* path) {
 		}
 		
 		if (aiMesh->mNormals != NULL) {
-			mesh.normals = malloc(numVertices * sizeof(Vector3D));
+			mesh.normals = malloc(numVertices * sizeof(Vector));
 			for (unsigned int normIndex = 0; normIndex < numVertices; ++normIndex) {
 				mesh.normals[normIndex] = convertAiVector3D(
 						aiMesh->mNormals[normIndex]);
 			}
 		}
 		
-		mesh.textureCoords = malloc(numVertices * sizeof(Vector3D));
+		mesh.textureCoords = malloc(numVertices * sizeof(Vector));
 		for (unsigned int texcIndex = 0; texcIndex < numVertices; ++texcIndex) {
 			mesh.textureCoords[texcIndex] = convertAiVector3D(
 					aiMesh->mTextureCoords[0][texcIndex]);
@@ -143,16 +143,16 @@ const Solid* importSolid(const char* path) {
 			
 			Face face = { .numIndices = numIndices,
 			              .indices = malloc(numIndices * sizeof(size_t)),
-			              .normals = malloc(numIndices * sizeof(Vector3D)) };
+			              .normals = malloc(numIndices * sizeof(Vector)) };
 			
 			for (unsigned int i = 0; i < numIndices; ++i) {
 				face.indices[i] = aiFace.mIndices[i];
 			}
 			
 			if (numIndices == 3) {
-				Vector3D normal = triangleNormal(mesh.vertices[face.indices[0]],
-				                                 mesh.vertices[face.indices[1]],
-				                                 mesh.vertices[face.indices[2]]);
+				Vector normal = triangleNormal(mesh.vertices[face.indices[0]],
+				                               mesh.vertices[face.indices[1]],
+				                               mesh.vertices[face.indices[2]]);
 				for (size_t i = 0; i < numIndices; ++i) {
 					face.normals[i] = normal;
 				}
@@ -178,12 +178,12 @@ const Solid* importSolid(const char* path) {
 			Face face = mesh.faces[faceIndex];
 
 			if (face.normals) {
-				face.normals = memcpy(malloc(face.numIndices * sizeof(Vector3D)),
+				face.normals = memcpy(malloc(face.numIndices * sizeof(Vector)),
 				                      face.normals,
-				                      face.numIndices * sizeof(Vector3D));
+				                      face.numIndices * sizeof(Vector));
 
 				for (size_t indexIndex = 0; indexIndex < face.numIndices; ++indexIndex) {
-					Vector3D smoothedNormal = face.normals[indexIndex];
+					Vector smoothedNormal = face.normals[indexIndex];
 
 					for (size_t i = 0; i < mesh.numFaces; ++i) {
 						if (i == faceIndex || !mesh.faces[i].normals) {
@@ -287,14 +287,14 @@ static const struct aiScene* importScene(const char* path) {
 	return scene;
 }
 
-static Vector3D triangleNormal(Vector3D v1, Vector3D v2, Vector3D v3) {
+static Vector triangleNormal(Vector v1, Vector v2, Vector v3) {
 	return normalized(crossProduct(subtractVectors(v2, v1), subtractVectors(v3, v1)));
 }
 
-static Vector3D convertAiVector3D(struct aiVector3D vect) {
-	return (Vector3D) { .x = vect.x,
-	                    .y = vect.y,
-	                    .z = vect.z };
+static Vector convertAiVector3D(struct aiVector3D vect) {
+	return (Vector) { .x = vect.x,
+	                  .y = vect.y,
+	                  .z = vect.z };
 }
 
 /**

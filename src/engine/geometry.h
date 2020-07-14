@@ -3,10 +3,10 @@
 
 #include <GL/gl.h>
 
-typedef struct Vector3D Vector3D;
+typedef struct Vector Vector;
 typedef struct Transform Transform;
 
-struct Vector3D {
+struct Vector {
 	float x;
 	float y;
 	float z;
@@ -23,17 +23,17 @@ static const float TAU = 6.28318530718f;
 
 Transform identity();
 Transform multiply(Transform t1, Transform t2);
-void translate(Transform* transform, Vector3D vec);
-void rotate(Transform* transform, Vector3D axis, float angle);
-Vector3D addVectors(Vector3D v1, Vector3D v2);
-Vector3D subtractVectors(Vector3D v1, Vector3D v2);
-Vector3D crossProduct(Vector3D v1, Vector3D v2);
-float dotProduct(Vector3D v1, Vector3D v2);
-Vector3D scaleVector(Vector3D vec, float scale);
-Vector3D clampMagnitude(Vector3D vec, float maxMagnitude);
-float magnitude(Vector3D vec);
-Vector3D applyTransform(Transform transform, Vector3D vec);
-Vector3D translationOf(Transform transform);
-Vector3D normalized(Vector3D vec);
+void translate(Transform* transform, Vector vec);
+void rotate(Transform* transform, Vector axis, float angle);
+Vector addVectors(Vector v1, Vector v2);
+Vector subtractVectors(Vector v1, Vector v2);
+Vector crossProduct(Vector v1, Vector v2);
+float dotProduct(Vector v1, Vector v2);
+Vector scaleVector(Vector vec, float scale);
+Vector clampMagnitude(Vector vec, float maxMagnitude);
+float magnitude(Vector vec);
+Vector applyTransform(Transform transform, Vector vec);
+Vector translationOf(Transform transform);
+Vector normalized(Vector vec);
 
 #endif // ENGINE_GEOMETRY_H_
