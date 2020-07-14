@@ -3,8 +3,11 @@
 
 #include <GL/gl.h>
 
+typedef struct TgaHeader TgaHeader;
+typedef struct TgaImage TgaImage;
+
 #pragma pack(push, 1)
-typedef struct {
+struct TgaHeader {
 	GLubyte idLength;
 	GLbyte colorMapType;
 	GLbyte imageType;
@@ -17,15 +20,15 @@ typedef struct {
 	GLushort imageHeight;
 	GLubyte imageBpp;
 	GLbyte imageDescriptor;
-} TgaHeader;
+};
 #pragma pack(pop)
 
-typedef struct {
+struct TgaImage {
 	TgaHeader header;
 	GLenum imageFormat;
 	GLint imageComponents;
 	GLbyte* bytes;
-} TgaImage;
+};
 
 TgaImage* readTga(const char* path);
 

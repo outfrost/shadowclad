@@ -5,10 +5,13 @@
 
 #include "engine/logger.h"
 #include "engine/scene.h"
+#include "engine/tga.h"
 
 #include "player.h"
 
 BlockGrid levelGrid;
+
+static const float BLOCKGRID_CELL_SIZE = 2.5f;
 
 static Block blockEmpty = { .type = BLOCKTYPE_SPACE,
                             .solid = NULL };
@@ -16,6 +19,10 @@ static Block blockWall01 = { .type = BLOCKTYPE_OBSTACLE,
                              .solid = NULL };
 
 static Transform playerSpawnTransform;
+
+static void buildLevelFromImage(const TgaImage* image);
+static inline Block* getBlockFromGrid(BlockGrid grid, size_t x, size_t z);
+static inline void setBlockInGrid(BlockGrid grid, size_t x, size_t z, Block* block);
 
 
 
@@ -49,7 +56,7 @@ void startLevel() {
 	spawnPlayer(playerSpawnTransform);
 }
 
-void buildLevelFromImage(TgaImage* image) {
+static void buildLevelFromImage(const TgaImage* image) {
 	if (image == NULL) {
 		logError("Null image received, cannot build level");
 		return;
@@ -93,4 +100,12 @@ void buildLevelFromImage(TgaImage* image) {
 	}
 	
 	levelGrid = newGrid;
+}
+
+static inline Block* getBlockFromGrid(BlockGrid grid, size_t x, size_t z) {
+	return grid.blocks[(z * grid.width) + x];
+}
+
+static inline void setBlockInGrid(BlockGrid grid, size_t x, size_t z, Block* block) {
+	grid.blocks[(z * grid.width) + x] = block;
 }

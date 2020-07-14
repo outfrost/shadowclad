@@ -1,12 +1,14 @@
 #ifndef ENGINE_LOGGER_H_
 #define ENGINE_LOGGER_H_
 
-typedef enum {
+enum LogLevel {
 	LOGLEVEL_ERROR,
 	LOGLEVEL_WARNING,
 	LOGLEVEL_INFO,
 	LOGLEVEL_DEBUG
-} LogLevel;
+};
+
+typedef enum LogLevel LogLevel;
 
 extern LogLevel logLevel;
 
