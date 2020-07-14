@@ -86,30 +86,30 @@ const Solid* importSolid(const char* path) {
 		logError("Failed to import solid from %s", path);
 		return NULL;
 	}
-	
+
 #if IMPORT_DEBUG_
 	const struct aiMetadata* meta = scene->mMetaData;
 	logDebug("Metadata from %s: %p", path, meta);
 	printMetadata(meta);
 	printAiNodeMetadata(scene->mRootNode);
 #endif // IMPORT_DEBUG_
-	
+
 	const unsigned int numMeshes = scene->mNumMeshes;
 	const unsigned int numMaterials = scene->mNumMaterials;
 
 	// TODO Consider assets with some arrays empty, and prevent zero mallocs
-	
+
 	Solid* solid = malloc(sizeof(Solid));
 	solid->numMeshes = numMeshes;
 	solid->meshes = malloc(numMeshes * sizeof(Mesh));
 	solid->numMaterials = numMaterials;
 	solid->materials = malloc(numMaterials * sizeof(Material));
-	
+
 	for (unsigned int meshIndex = 0; meshIndex < numMeshes; ++meshIndex) {
 		const struct aiMesh* aiMesh = scene->mMeshes[meshIndex];
 		const unsigned int numVertices = aiMesh->mNumVertices;
 		const unsigned int numFaces = aiMesh->mNumFaces;
-		
+
 		Mesh mesh = { .numVertices = numVertices,
 		              .vertices = malloc(numVertices * sizeof(Vector)),
 		              .normals = NULL,
@@ -117,12 +117,12 @@ const Solid* importSolid(const char* path) {
 		              .numFaces = numFaces,
 		              .faces = malloc(numFaces * sizeof(Face)),
 		              .materialIndex = aiMesh->mMaterialIndex };
-		
+
 		for (unsigned int vertIndex = 0; vertIndex < numVertices; ++vertIndex) {
 			mesh.vertices[vertIndex] = convertAiVector3D(
 					aiMesh->mVertices[vertIndex]);
 		}
-		
+
 		if (aiMesh->mNormals != NULL) {
 			mesh.normals = malloc(numVertices * sizeof(Vector));
 			for (unsigned int normIndex = 0; normIndex < numVertices; ++normIndex) {
@@ -130,25 +130,25 @@ const Solid* importSolid(const char* path) {
 						aiMesh->mNormals[normIndex]);
 			}
 		}
-		
+
 		mesh.textureCoords = malloc(numVertices * sizeof(Vector));
 		for (unsigned int texcIndex = 0; texcIndex < numVertices; ++texcIndex) {
 			mesh.textureCoords[texcIndex] = convertAiVector3D(
 					aiMesh->mTextureCoords[0][texcIndex]);
 		}
-		
+
 		for (unsigned int faceIndex = 0; faceIndex < numFaces; ++faceIndex) {
 			const struct aiFace aiFace = aiMesh->mFaces[faceIndex];
 			const unsigned int numIndices = aiFace.mNumIndices;
-			
+
 			Face face = { .numIndices = numIndices,
 			              .indices = malloc(numIndices * sizeof(size_t)),
 			              .normals = malloc(numIndices * sizeof(Vector)) };
-			
+
 			for (unsigned int i = 0; i < numIndices; ++i) {
 				face.indices[i] = aiFace.mIndices[i];
 			}
-			
+
 			if (numIndices == 3) {
 				Vector normal = triangleNormal(mesh.vertices[face.indices[0]],
 				                               mesh.vertices[face.indices[1]],
@@ -168,7 +168,7 @@ const Solid* importSolid(const char* path) {
 					face.normals = NULL;
 				}
 			}
-			
+
 			mesh.faces[faceIndex] = face;
 		}
 
@@ -207,13 +207,13 @@ const Solid* importSolid(const char* path) {
 		// TODO Actually clean up the stuff inside
 		free(mesh.faces);
 		mesh.faces = smoothedFaces;
-		
+
 		solid->meshes[meshIndex] = mesh;
 	}
-	
+
 	GLuint* textureIds = malloc(numMaterials * sizeof(GLuint));
 	glGenTextures(numMaterials, textureIds);
-	
+
 	for (unsigned int matIndex = 0; matIndex < numMaterials; ++matIndex) {
 		Material material = { .textureId = textureIds[matIndex] };
 
@@ -232,10 +232,10 @@ const Solid* importSolid(const char* path) {
 
 		dropString(key);
 #endif // IMPORT_DEBUG_
-		
+
 		glBindTexture(GL_TEXTURE_2D, material.textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		
+
 		struct aiString originalTexturePath;
 		if (aiGetMaterialTexture(scene->mMaterials[matIndex],
 		                         aiTextureType_DIFFUSE,
@@ -247,7 +247,7 @@ const Solid* importSolid(const char* path) {
 			char* texturePath = malloc(strlen("assets/") + textureFilenameLength + 1);
 			strcpy(texturePath, "assets/");
 			strncat(texturePath, textureFilename, textureFilenameLength);
-			
+
 			TgaImage* textureImage = readTga(texturePath);
 			if (textureImage == NULL) {
 				logError("Importing solid from %s: Cannot read texture file %s", path, texturePath);
@@ -266,11 +266,11 @@ const Solid* importSolid(const char* path) {
 				free(textureImage);
 			}
 		}
-		
+
 		solid->materials[matIndex] = material;
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+
 	aiReleaseImport(scene);
 	return solid;
 }
@@ -304,18 +304,18 @@ static Vector convertAiVector3D(struct aiVector3D vect) {
  */
 static const char* replaceFileExtension(const struct aiString path, const char* ext) {
 		size_t lengthToCopy = path.length;
-		
+
 		char* lastDotSubstr = strrchr(path.data, '.');
 		if (lastDotSubstr != NULL) {
 			if (strpbrk(lastDotSubstr, "\\/") == NULL) {
 				lengthToCopy = lastDotSubstr - path.data;
 			}
 		}
-		
+
 		size_t extLength = strlen(ext) + 1;
 		char* newPath = malloc(lengthToCopy + extLength);
 		strncpy(newPath, path.data, lengthToCopy);
 		strncpy(newPath + lengthToCopy, ext, extLength);
-		
+
 		return newPath;
 }

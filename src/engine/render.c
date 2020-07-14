@@ -20,21 +20,21 @@ static void drawSolid(const Solid* solid);
 
 void initRender() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	
+
 	GLfloat light0_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	GLfloat light0_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	GLfloat light0_specular[] = {0.96f, 0.98f, 1.0f, 1.0f};
 	GLfloat light0_position[] = {5.0f, 10.0f, 5.0f, 0.0f}; // (w == 0.0f) == directional
-	
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
 	glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
-	
+
 	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.05f);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.005f);
-	
+
 	//glShadeModel(GL_FLAT);
 }
 
@@ -135,18 +135,18 @@ static void drawSolid(const Solid* solid) {
 	if (solid == NULL) {
 		return;
 	}
-	
+
 	glMatrixMode(GL_MODELVIEW);
 	glColor3f(0.5f, 1.0f, 0.0f);
-	
+
 	for (size_t meshIndex = 0; meshIndex < solid->numMeshes; ++meshIndex) {
 		const Mesh mesh = solid->meshes[meshIndex];
 		glBindTexture(GL_TEXTURE_2D,
 		              solid->materials[mesh.materialIndex].textureId);
-		
+
 		for (size_t faceIndex = 0; faceIndex < mesh.numFaces; ++faceIndex) {
 			const Face face = mesh.faces[faceIndex];
-			
+
 			if (debugRender && face.normals) {
 				glDisable(GL_LIGHTING);
 				glDisable(GL_TEXTURE_2D);
@@ -163,7 +163,7 @@ static void drawSolid(const Solid* solid) {
 				glEnable(GL_TEXTURE_2D);
 				glEnable(GL_LIGHTING);
 			}
-			
+
 			GLenum faceMode;
 			switch (face.numIndices) {
 				case 1: faceMode = GL_POINTS; break;
@@ -171,9 +171,9 @@ static void drawSolid(const Solid* solid) {
 				case 3: faceMode = GL_TRIANGLES; break;
 				default: faceMode = GL_POLYGON; break;
 			}
-			
+
 			glBegin(faceMode);
-			
+
 			for (size_t i = 0; i < face.numIndices; ++i) {
 				size_t vertIndex = face.indices[i];
 				if (face.normals) {
@@ -188,7 +188,7 @@ static void drawSolid(const Solid* solid) {
 				Vector vertex = mesh.vertices[vertIndex];
 				glVertex3f(vertex.x, vertex.y, vertex.z);
 			}
-			
+
 			glEnd();
 		}
 	}

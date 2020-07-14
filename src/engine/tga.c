@@ -8,17 +8,17 @@ TgaImage* readTga(const char* path) {
 	if (tgaFile == NULL) {
 		return NULL;
 	}
-	
+
 	TgaHeader header;
-	
+
 	if (fread(&header, sizeof(TgaHeader), 1, tgaFile) != 1) {
 		fclose(tgaFile);
 		return NULL;
 	}
-	
+
 	GLenum imageFormat;
 	GLint imageComponents;
-	
+
 	switch (header.imageBpp) {
 		case 32:
 			imageFormat = GL_BGRA;
@@ -36,32 +36,32 @@ TgaImage* readTga(const char* path) {
 			fclose(tgaFile);
 			return NULL;
 	}
-	
+
 	unsigned long imageSize = header.imageWidth * header.imageHeight * (header.imageBpp >> 3);
-	
+
 	GLbyte* bytes = malloc(imageSize * sizeof(GLbyte));
 	if (bytes == NULL) {
 		fclose(tgaFile);
 		return NULL;
 	}
-	
+
 	if (fread(bytes, imageSize, 1, tgaFile) != 1) {
 		free(bytes);
 		fclose(tgaFile);
 		return NULL;
 	}
-	
+
 	fclose(tgaFile);
-	
+
 	TgaImage* image = malloc(sizeof(TgaImage));
 	if (image == NULL) {
 		return NULL;
 	}
-	
+
 	(*image).header = header;
 	(*image).imageFormat = imageFormat;
 	(*image).imageComponents = imageComponents;
 	(*image).bytes = bytes;
-	
+
 	return image;
 }

@@ -11,7 +11,7 @@ void logMessage(LogLevel msgLevel, const char* func, const char* message, ...) {
 	if (msgLevel > logLevel) {
 		return;
 	}
-	
+
 	const char* msgLevelString;
 	switch (msgLevel) {
 		case LOGLEVEL_ERROR:
@@ -30,13 +30,13 @@ void logMessage(LogLevel msgLevel, const char* func, const char* message, ...) {
 			msgLevelString = "(invalid message level) ";
 			break;
 	}
-	
+
 	va_list args;
 	va_start(args, message);
-	
+
 	fprintf(stderr, "%s %s:: ", func, msgLevelString);
 	vfprintf(stderr, message, args);
 	fputc('\n', stderr);
-	
+
 	va_end(args);
 }

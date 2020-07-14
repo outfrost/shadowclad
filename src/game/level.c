@@ -61,23 +61,23 @@ static void buildLevelFromImage(const TgaImage* image) {
 		logError("Null image received, cannot build level");
 		return;
 	}
-	
+
 	if (image->header.imageBpp != 32) {
 		logError("Invalid level image format (%d bpp)", image->header.imageBpp);
 		return;
 	}
-	
+
 	BlockGrid newGrid = { .width = image->header.imageWidth,
 	                      .depth = image->header.imageHeight,
 	                      .blocks = malloc(image->header.imageWidth
 	                                       * image->header.imageHeight
 	                                       * sizeof(Block*)) };
-	
+
 	for (size_t row = 0; row < newGrid.depth; ++row) {
 		for (size_t x = 0; x < newGrid.width; ++x) {
 			// Flip the image vertically due to (0, 0) being bottom left
 			size_t z = newGrid.depth - row - 1;
-			
+
 			uint32_t pixelColorARGB = ((uint32_t*) image->bytes)[(row * newGrid.width) + x];
 			Block* block;
 			switch (pixelColorARGB) {
@@ -98,7 +98,7 @@ static void buildLevelFromImage(const TgaImage* image) {
 			setBlockInGrid(newGrid, x, z, block);
 		}
 	}
-	
+
 	levelGrid = newGrid;
 }
 
