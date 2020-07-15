@@ -21,16 +21,14 @@ static Block blockWall01 = { .type = BLOCKTYPE_OBSTACLE,
 static Transform playerSpawnTransform;
 
 static void buildLevelFromImage(const TgaImage* image);
-static inline Block* getBlockFromGrid(BlockGrid grid, size_t x, size_t z);
-static inline void setBlockInGrid(BlockGrid grid, size_t x, size_t z, Block* block);
 
 
 
 void initLevel() {
 	playerSpawnTransform = identity();
-	translate(&playerSpawnTransform, (Vector) { .x = -BLOCKGRID_CELL_SIZE,
-	                                            .y = 0.0f,
-	                                            .z = -BLOCKGRID_CELL_SIZE });
+	translate(&playerSpawnTransform, (Vector) { -BLOCKGRID_CELL_SIZE,
+	                                            0.0f,
+	                                            -BLOCKGRID_CELL_SIZE });
 
 	blockWall01.solid = importSolid("assets/wall01.3ds");
 
@@ -41,9 +39,10 @@ void initLevel() {
 	for (size_t z = 0; z < levelGrid.depth; ++z) {
 		for (size_t x = 0; x < levelGrid.width; ++x) {
 			Scene* blockScene = newScene();
-			translate(&blockScene->transform, (Vector) { .x = x * BLOCKGRID_CELL_SIZE,
-			                                             .y = 0.0f,
-			                                             .z = z * BLOCKGRID_CELL_SIZE });
+			translate(&blockScene->transform, (Vector) {
+				(x * BLOCKGRID_CELL_SIZE) + (BLOCKGRID_CELL_SIZE * 0.5f),
+				0.0f,
+				(z * BLOCKGRID_CELL_SIZE) + (BLOCKGRID_CELL_SIZE * 0.5f) });
 			blockScene->solid = getBlockFromGrid(levelGrid, x, z)->solid;
 			insertChildScene(levelScene, blockScene);
 		}
@@ -87,9 +86,10 @@ static void buildLevelFromImage(const TgaImage* image) {
 				case 0xFF00FFFF:
 					block = &blockEmpty;
 					playerSpawnTransform = identity();
-					translate(&playerSpawnTransform, (Vector) { .x = x * BLOCKGRID_CELL_SIZE,
-					                                            .y = 0.0f,
-					                                            .z = z * BLOCKGRID_CELL_SIZE });
+					translate(&playerSpawnTransform, (Vector) {
+						(x * BLOCKGRID_CELL_SIZE) + (BLOCKGRID_CELL_SIZE * 0.5f),
+						0.0f,
+						(z * BLOCKGRID_CELL_SIZE) + (BLOCKGRID_CELL_SIZE * 0.5f) });
 					break;
 				default:
 					block = &blockEmpty;
@@ -102,10 +102,12 @@ static void buildLevelFromImage(const TgaImage* image) {
 	levelGrid = newGrid;
 }
 
-static inline Block* getBlockFromGrid(BlockGrid grid, size_t x, size_t z) {
-	return grid.blocks[(z * grid.width) + x];
+static inline size_t nonNegative(long n) {
+	return n < 0 ? 0u : n;
 }
 
-static inline void setBlockInGrid(BlockGrid grid, size_t x, size_t z, Block* block) {
-	grid.blocks[(z * grid.width) + x] = block;
+GridLocation gridLocationFromTransform(Transform transform) {
+	Vector scaledPos = scaleVector(translationOf(transform), 1.0f / BLOCKGRID_CELL_SIZE);
+	return (GridLocation) { .x = nonNegative(scaledPos.x),
+	                        .z = nonNegative(scaledPos.z) };
 }

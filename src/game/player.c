@@ -3,6 +3,8 @@
 #include "engine/asset.h"
 #include "engine/render.h"
 
+#include "level.h"
+
 static const float movementSpeed = 2.5f;
 
 Scene* playerCharacter;
@@ -65,6 +67,24 @@ void stopMovement(Direction direction) {
 static void movePlayer(Vector direction, float delta) {
 	direction = clampMagnitude(direction, 1.0f);
 	Vector displacement = scaleVector(direction, delta * movementSpeed);
+
+
+	//GridLocation location = gridLocationFromTransform(playerCharacter->transform);
+
+	if (displacement.x >= 0) {
+		// need to test +X edge
+	}
+	if (displacement.x <= 0) {
+		// need to test -X edge
+	}
+	if (displacement.z >= 0) {
+		// need to test +Z edge
+	}
+	if (displacement.z <= 0) {
+		// need to test -Z edge
+	}
+
+
 	translate(&playerCharacter->transform, displacement);
 }
 
