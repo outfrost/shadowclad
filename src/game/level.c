@@ -11,11 +11,9 @@
 
 BlockGrid levelGrid;
 
-static const float BLOCKGRID_CELL_SIZE = 2.5f;
-
 static Block blockEmpty = { .type = BLOCKTYPE_SPACE,
                             .solid = NULL };
-static Block blockWall01 = { .type = BLOCKTYPE_OBSTACLE,
+static Block blockWall01 = { .type = BLOCKTYPE_OBSTACLE_X | BLOCKTYPE_OBSTACLE_Z,
                              .solid = NULL };
 
 static Transform playerSpawnTransform;
@@ -106,8 +104,61 @@ static inline size_t nonNegative(long n) {
 	return n < 0 ? 0u : n;
 }
 
-GridLocation gridLocationFromTransform(Transform transform) {
-	Vector scaledPos = scaleVector(translationOf(transform), 1.0f / BLOCKGRID_CELL_SIZE);
+GridLocation gridLocationFromPosition(Vector pos) {
+	Vector scaledPos = scaleVector(pos, 1.0f / BLOCKGRID_CELL_SIZE);
 	return (GridLocation) { .x = nonNegative(scaledPos.x),
 	                        .z = nonNegative(scaledPos.z) };
+}
+
+Obstacle getObstacles(GridLocation loc) {
+	Obstacle result = OBSTACLE_NONE;
+	if (loc.x == 0) {
+		result |= OBSTACLE_XN | OBSTACLE_XN_ZP | OBSTACLE_XN_ZN;
+	}
+	if (loc.x >= levelGrid.width - 1) {
+		result |= OBSTACLE_XP | OBSTACLE_XP_ZP | OBSTACLE_XP_ZN;
+	}
+	if (loc.z == 0) {
+		result |= OBSTACLE_ZN | OBSTACLE_XP_ZN | OBSTACLE_XN_ZN;
+	}
+	if (loc.z >= levelGrid.depth - 1) {
+		result |= OBSTACLE_ZP | OBSTACLE_XP_ZP | OBSTACLE_XN_ZP;
+	}
+	if (!(result & OBSTACLE_XP)
+	    && getBlockFromGrid(levelGrid, loc.x + 1, loc.z)->type & BLOCKTYPE_OBSTACLE_X) {
+		result |= OBSTACLE_XP;
+	}
+	if (!(result & OBSTACLE_XN)
+	    && getBlockFromGrid(levelGrid, loc.x - 1, loc.z)->type & BLOCKTYPE_OBSTACLE_X) {
+		result |= OBSTACLE_XN;
+	}
+	if (!(result & OBSTACLE_ZP)
+	    && getBlockFromGrid(levelGrid, loc.x, loc.z + 1)->type & BLOCKTYPE_OBSTACLE_Z) {
+		result |= OBSTACLE_ZP;
+	}
+	if (!(result & OBSTACLE_ZN)
+	    && getBlockFromGrid(levelGrid, loc.x, loc.z - 1)->type & BLOCKTYPE_OBSTACLE_Z) {
+		result |= OBSTACLE_ZN;
+	}
+	if (!(result & OBSTACLE_XP_ZP)
+	    && getBlockFromGrid(levelGrid, loc.x + 1, loc.z + 1)->type
+	       & (BLOCKTYPE_OBSTACLE_X | BLOCKTYPE_OBSTACLE_Z)) {
+		result |= OBSTACLE_XP_ZP;
+	}
+	if (!(result & OBSTACLE_XP_ZN)
+	    && getBlockFromGrid(levelGrid, loc.x + 1, loc.z - 1)->type
+	       & (BLOCKTYPE_OBSTACLE_X | BLOCKTYPE_OBSTACLE_Z)) {
+		result |= OBSTACLE_XP_ZN;
+	}
+	if (!(result & OBSTACLE_XN_ZP)
+	    && getBlockFromGrid(levelGrid, loc.x - 1, loc.z + 1)->type
+	       & (BLOCKTYPE_OBSTACLE_X | BLOCKTYPE_OBSTACLE_Z)) {
+		result |= OBSTACLE_XN_ZP;
+	}
+	if (!(result & OBSTACLE_XN_ZN)
+	    && getBlockFromGrid(levelGrid, loc.x - 1, loc.z - 1)->type
+	       & (BLOCKTYPE_OBSTACLE_X | BLOCKTYPE_OBSTACLE_Z)) {
+		result |= OBSTACLE_XN_ZN;
+	}
+	return result;
 }

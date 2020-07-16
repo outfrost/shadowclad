@@ -78,6 +78,15 @@ Vector scaleVector(Vector vec, float scale) {
 	                  vec.z * scale };
 }
 
+Vector growVectorNoFlip(Vector vec, float amount) {
+	float mag = magnitude(vec);
+	float factor = (mag + amount) / mag;
+	if (factor < 0.0f) {
+		factor = 0.0f;
+	}
+	return scaleVector(vec, factor);
+}
+
 Vector clampMagnitude(Vector vec, float maxMagnitude) {
 	float m = magnitude(vec);
 	if (m > maxMagnitude) {

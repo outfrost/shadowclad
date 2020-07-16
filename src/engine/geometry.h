@@ -30,6 +30,7 @@ Vector subtractVectors(Vector v1, Vector v2);
 Vector crossProduct(Vector v1, Vector v2);
 float dotProduct(Vector v1, Vector v2);
 Vector scaleVector(Vector vec, float scale);
+Vector growVectorNoFlip(Vector vec, float amount);
 Vector clampMagnitude(Vector vec, float maxMagnitude);
 float magnitude(Vector vec);
 Vector applyTransform(Transform transform, Vector vec);

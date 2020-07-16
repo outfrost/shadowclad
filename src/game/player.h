@@ -15,6 +15,7 @@ enum Direction {
 typedef enum Direction Direction;
 
 extern Scene* playerCharacter;
+extern Scene* playerProjectedMovement;
 
 void initPlayer();
 void spawnPlayer(Transform transform);

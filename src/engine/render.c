@@ -3,6 +3,8 @@
 #include "geometry.h"
 #include "performance.h"
 
+#include "game/player.h"
+
 float viewportAspectRatio = 1.0f;
 const Scene* cameraAnchor;
 bool debugScene = false;
@@ -67,7 +69,7 @@ static void renderScene(const Scene* scene, const Transform baseTransform) {
 
 	glDisable(GL_LIGHTING);
 
-	if (debugScene) {
+	if (debugScene || scene == playerProjectedMovement) {
 		drawAxes();
 	}
 
