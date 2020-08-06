@@ -1,12 +1,12 @@
-#ifndef GEOMETRY_H_
-#define GEOMETRY_H_
+#ifndef ENGINE_GEOMETRY_H_
+#define ENGINE_GEOMETRY_H_
 
 #include <GL/gl.h>
 
-typedef struct Vector3D Vector3D;
+typedef struct Vector Vector;
 typedef struct Transform Transform;
 
-struct Vector3D {
+struct Vector {
 	float x;
 	float y;
 	float z;
@@ -19,9 +19,22 @@ struct Transform {
 	GLfloat d1, d2, d3, d4;
 };
 
+static const float TAU = 6.28318530718f;
+
 Transform identity();
 Transform multiply(Transform t1, Transform t2);
-void translate(Transform* transform, Vector3D vec);
-Vector3D translationOf(Transform transform);
+void translate(Transform* transform, Vector vec);
+void rotate(Transform* transform, Vector axis, float angle);
+Vector addVectors(Vector v1, Vector v2);
+Vector subtractVectors(Vector v1, Vector v2);
+Vector crossProduct(Vector v1, Vector v2);
+float dotProduct(Vector v1, Vector v2);
+Vector scaleVector(Vector vec, float scale);
+Vector growVectorNoFlip(Vector vec, float amount);
+Vector clampMagnitude(Vector vec, float maxMagnitude);
+float magnitude(Vector vec);
+Vector applyTransform(Transform transform, Vector vec);
+Vector translationOf(Transform transform);
+Vector normalized(Vector vec);
 
-#endif // GEOMETRY_H_
+#endif // ENGINE_GEOMETRY_H_

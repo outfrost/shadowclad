@@ -7,9 +7,11 @@ BUILDDIR ?= target/$(PLATFORM)
 SRCDIR ?= src
 
 CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
-CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror $(CFLAGS)
+CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror \
+           -Wno-error=unused-function -Wno-error=unused-parameter $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
-LDLIBS ::= -L/usr/x86_64-w64-mingw32/lib -lopengl32 -lglew32 -lfreeglut -lassimp $(LDLIBS)
+#LDLIBS ::= -L/usr/x86_64-w64-mingw32/lib -lopengl32 -lglew32 -lfreeglut -lassimp $(LDLIBS)
+LDLIBS ::= -lm -lopengl32 -lglew32 -lglfw -lassimp $(LDLIBS)
 
 # ######
 # Paths
@@ -17,13 +19,18 @@ LDLIBS ::= -L/usr/x86_64-w64-mingw32/lib -lopengl32 -lglew32 -lfreeglut -lassimp
 
 sources ::= main.c \
             engine/asset.c \
+            engine/engine.c \
             engine/geometry.c \
+            engine/input.c \
             engine/logger.c \
             engine/performance.c \
             engine/render.c \
             engine/scene.c \
+            engine/string.c \
             engine/tga.c \
             engine/ui.c \
+            game/game.c \
+            game/input.c \
             game/level.c \
             game/player.c
 

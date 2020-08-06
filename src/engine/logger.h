@@ -1,12 +1,14 @@
-#ifndef LOGGER_H_
-#define LOGGER_H_
+#ifndef ENGINE_LOGGER_H_
+#define ENGINE_LOGGER_H_
 
-typedef enum {
+enum LogLevel {
 	LOGLEVEL_ERROR,
 	LOGLEVEL_WARNING,
 	LOGLEVEL_INFO,
 	LOGLEVEL_DEBUG
-} LogLevel;
+};
+
+typedef enum LogLevel LogLevel;
 
 extern LogLevel logLevel;
 
@@ -17,4 +19,4 @@ extern LogLevel logLevel;
 
 void logMessage(LogLevel msgLevel, const char* func, const char* message, ...);
 
-#endif // LOGGER_H_
+#endif // ENGINE_LOGGER_H_

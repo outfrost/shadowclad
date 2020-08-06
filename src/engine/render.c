@@ -1,16 +1,14 @@
 #include "render.h"
 
-#include <stdbool.h>
-#include <GL/freeglut_std.h>
-#define  GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#undef GL_GLEXT_PROTOTYPES
-
 #include "geometry.h"
 #include "performance.h"
 
+#include "game/player.h"
+
 float viewportAspectRatio = 1.0f;
 const Scene* cameraAnchor;
+bool debugScene = false;
+bool debugRender = false;
 
 static const float AXIS_RADIUS = 5.0f;
 
@@ -24,23 +22,25 @@ static void drawSolid(const Solid* solid);
 
 void initRender() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	
+
 	GLfloat light0_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
 	GLfloat light0_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	GLfloat light0_specular[] = {0.96f, 0.98f, 1.0f, 1.0f};
 	GLfloat light0_position[] = {5.0f, 10.0f, 5.0f, 0.0f}; // (w == 0.0f) == directional
-	
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
 	glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
-	
+
 	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
 	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.05f);
 	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.005f);
+
+	//glShadeModel(GL_FLAT);
 }
 
-void renderFrame() {
+void renderFrame(GLFWwindow* window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_NORMALIZE);
@@ -53,9 +53,8 @@ void renderFrame() {
 	renderScene(currentScene, identity());
 
 	glFlush();
-	glutSwapBuffers();
+	glfwSwapBuffers(window);
 	frameRendered();
-	glutPostRedisplay();
 }
 
 static void renderScene(const Scene* scene, const Transform baseTransform) {
@@ -69,7 +68,11 @@ static void renderScene(const Scene* scene, const Transform baseTransform) {
 	glLoadMatrixf((const GLfloat*) &transform);
 
 	glDisable(GL_LIGHTING);
-	drawAxes();
+
+	if (debugScene || scene == playerProjectedMovement) {
+		drawAxes();
+	}
+
 	glEnable(GL_LIGHTING);
 
 	if (scene->solid) {
@@ -100,7 +103,7 @@ static void setupCamera() {
 
 static void moveCameraTo(const Scene* anchor) {
 	glMatrixMode(GL_PROJECTION);
-	Vector3D pos = translationOf(worldTransform(anchor));
+	Vector pos = translationOf(worldTransform(anchor));
 	glTranslatef(-pos.x, -pos.y, -pos.z);
 }
 
@@ -126,24 +129,43 @@ static void drawAxes() {
 	glEnd();
 }
 
+static GLfloat absolute(GLfloat a) {
+	return a < 0 ? -a : a;
+}
+
 static void drawSolid(const Solid* solid) {
 	if (solid == NULL) {
 		return;
 	}
-	
+
 	glMatrixMode(GL_MODELVIEW);
 	glColor3f(0.5f, 1.0f, 0.0f);
-	
+
 	for (size_t meshIndex = 0; meshIndex < solid->numMeshes; ++meshIndex) {
 		const Mesh mesh = solid->meshes[meshIndex];
 		glBindTexture(GL_TEXTURE_2D,
 		              solid->materials[mesh.materialIndex].textureId);
-		bool hasNormals = mesh.normals != NULL;
-		bool hasTextureCoords = mesh.textureCoords != NULL;
-		
+
 		for (size_t faceIndex = 0; faceIndex < mesh.numFaces; ++faceIndex) {
 			const Face face = mesh.faces[faceIndex];
-			
+
+			if (debugRender && face.normals) {
+				glDisable(GL_LIGHTING);
+				glDisable(GL_TEXTURE_2D);
+				glBegin(GL_LINES);
+				for (size_t i = 0; i < face.numIndices; ++i) {
+					size_t vertIndex = face.indices[i];
+					Vector vertex = mesh.vertices[vertIndex];
+					Vector normal = face.normals[i];
+					glColor3f(absolute(normal.x), absolute(normal.y), absolute(normal.z));
+					glVertex3f(vertex.x, vertex.y, vertex.z);
+					glVertex3f(vertex.x + normal.x, vertex.y + normal.y, vertex.z + normal.z);
+				}
+				glEnd();
+				glEnable(GL_TEXTURE_2D);
+				glEnable(GL_LIGHTING);
+			}
+
 			GLenum faceMode;
 			switch (face.numIndices) {
 				case 1: faceMode = GL_POINTS; break;
@@ -151,23 +173,24 @@ static void drawSolid(const Solid* solid) {
 				case 3: faceMode = GL_TRIANGLES; break;
 				default: faceMode = GL_POLYGON; break;
 			}
-			
+
 			glBegin(faceMode);
-			
+
 			for (size_t i = 0; i < face.numIndices; ++i) {
 				size_t vertIndex = face.indices[i];
-				if (hasNormals) {
-					if (hasTextureCoords) {
-						Vector3D coords = mesh.textureCoords[vertIndex];
+				if (face.normals) {
+					if (mesh.textureCoords) {
+						Vector coords = mesh.textureCoords[vertIndex];
 						glTexCoord2f(coords.x, coords.y);
 					}
-					Vector3D normal = mesh.normals[vertIndex];
+					Vector normal = face.normals[i];
 					glNormal3f(normal.x, normal.y, normal.z);
 				}
-				Vector3D vertex = mesh.vertices[vertIndex];
+
+				Vector vertex = mesh.vertices[vertIndex];
 				glVertex3f(vertex.x, vertex.y, vertex.z);
 			}
-			
+
 			glEnd();
 		}
 	}

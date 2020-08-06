@@ -1,10 +1,13 @@
-#ifndef TGA_H_
-#define TGA_H_
+#ifndef ENGINE_TGA_H_
+#define ENGINE_TGA_H_
 
 #include <GL/gl.h>
 
+typedef struct TgaHeader TgaHeader;
+typedef struct TgaImage TgaImage;
+
 #pragma pack(push, 1)
-typedef struct {
+struct TgaHeader {
 	GLubyte idLength;
 	GLbyte colorMapType;
 	GLbyte imageType;
@@ -17,16 +20,16 @@ typedef struct {
 	GLushort imageHeight;
 	GLubyte imageBpp;
 	GLbyte imageDescriptor;
-} TgaHeader;
+};
 #pragma pack(pop)
 
-typedef struct {
+struct TgaImage {
 	TgaHeader header;
 	GLenum imageFormat;
 	GLint imageComponents;
 	GLbyte* bytes;
-} TgaImage;
+};
 
 TgaImage* readTga(const char* path);
 
-#endif // TGA_H_
+#endif // ENGINE_TGA_H_

@@ -31,16 +31,16 @@ void frameRendered() {
 	if (meteringEnabled) {
 		++frames;
 		Timepoint now;
-		
+
 		if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) {
 			logWarning("Clock read failed, stopping performance metering");
 			meteringEnabled = false;
 			return;
 		}
-		
+
 		time_t fullSeconds = now.tv_sec - lastDisplayTime.tv_sec;
 		if (now.tv_nsec < lastDisplayTime.tv_nsec) --fullSeconds;
-		
+
 		if (fullSeconds > 0) {
 			float seconds = (now.tv_nsec - lastDisplayTime.tv_nsec) / 1000000000.0f;
 			seconds += (float) (now.tv_sec - lastDisplayTime.tv_sec);

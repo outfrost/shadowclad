@@ -1,5 +1,5 @@
-#ifndef ASSET_H_
-#define ASSET_H_
+#ifndef ENGINE_ASSET_H_
+#define ENGINE_ASSET_H_
 
 #include <stddef.h>
 #include <GL/gl.h>
@@ -20,9 +20,9 @@ struct Solid {
 
 struct Mesh {
 	size_t numVertices;
-	Vector3D* vertices;
-	Vector3D* normals;
-	Vector3D* textureCoords;
+	Vector* vertices;
+	Vector* normals;
+	Vector* textureCoords;
 	size_t numFaces;
 	Face* faces;
 	size_t materialIndex;
@@ -31,6 +31,7 @@ struct Mesh {
 struct Face {
 	size_t numIndices;
 	size_t* indices;
+	Vector* normals;
 };
 
 struct Material {
@@ -39,4 +40,4 @@ struct Material {
 
 const Solid* importSolid(const char* path);
 
-#endif // ASSET_H_
+#endif // ENGINE_ASSET_H_

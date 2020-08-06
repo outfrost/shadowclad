@@ -1,8 +1,10 @@
-#ifndef UI_H_
-#define UI_H_
+#ifndef ENGINE_UI_H_
+#define ENGINE_UI_H_
 
 #include <GL/gl.h>
 
-void resizeStage(GLsizei width, GLsizei height);
+typedef struct GLFWwindow GLFWwindow;
 
-#endif // UI_H_
+void resizeStage(GLFWwindow* window, int width, int height);
+
+#endif // ENGINE_UI_H_

@@ -1,5 +1,5 @@
-#ifndef SCENE_H_
-#define SCENE_H_
+#ifndef ENGINE_SCENE_H_
+#define ENGINE_SCENE_H_
 
 #include "asset.h"
 
@@ -20,4 +20,4 @@ void insertChildScene(Scene* scene, Scene* newChild);
 void reparentScene(Scene* scene, Scene* newParent);
 Transform worldTransform(const Scene* scene);
 
-#endif // SCENE_H_
+#endif // ENGINE_SCENE_H_
