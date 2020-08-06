@@ -65,6 +65,7 @@ static void renderScene(const Scene* scene, const Transform baseTransform) {
 	Transform transform = multiply(scene->transform, baseTransform);
 
 	glMatrixMode(GL_MODELVIEW);
+	// TODO glLoadTransposeMatrixf? (missing in mingw)
 	glLoadMatrixf((const GLfloat*) &transform);
 
 	glDisable(GL_LIGHTING);

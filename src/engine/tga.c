@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// TODO Ask for extensions through GLEW
 #include <GL/glext.h>
 
 TgaImage* readTga(const char* path) {

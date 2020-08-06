@@ -57,7 +57,7 @@ void init(EngineConfig config) {
 	glfwMakeContextCurrent(window);
 
 	logInfo("OpenGL %s", (const char*) glGetString(GL_VERSION));
-	logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
+//	logInfo("GLSL %s", (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION));
 	logInfo("Renderer: %s", (const char*) glGetString(GL_RENDERER));
 /*
 	GLenum glewInitStatus = glewInit();

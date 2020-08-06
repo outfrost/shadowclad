@@ -3,9 +3,6 @@
 
 #include <stdbool.h>
 #include <GLFW/glfw3.h>
-#define  GL_GLEXT_PROTOTYPES
-#include <GL/glext.h>
-#undef GL_GLEXT_PROTOTYPES
 
 #include "scene.h"
 
