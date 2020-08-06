@@ -10,8 +10,7 @@ CPPFLAGS ::= -iquotesrc/ $(CPPFLAGS)
 CFLAGS ::= -g -std=c99 -Wall -Wextra -Wpedantic -Werror \
            -Wno-error=unused-function -Wno-error=unused-parameter $(CFLAGS)
 LDFLAGS ::= $(LDFLAGS)
-#LDLIBS ::= -L/usr/x86_64-w64-mingw32/lib -lopengl32 -lglew32 -lfreeglut -lassimp $(LDLIBS)
-LDLIBS ::= -lm -lopengl32 -lglew32 -lglfw -lassimp $(LDLIBS)
+LDLIBS ::= -L/usr/x86_64-w64-mingw32/bin -lm -lopengl32 -lglew32 -lglfw3 -lassimp $(LDLIBS)
 
 # ######
 # Paths

@@ -101,7 +101,7 @@ static void buildLevelFromImage(const TgaImage* image) {
 }
 
 static inline size_t nonNegative(long n) {
-	return n < 0 ? 0u : n;
+	return n < 0 ? 0u : (size_t) n;
 }
 
 GridLocation gridLocationFromPosition(Vector pos) {

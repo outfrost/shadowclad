@@ -29,7 +29,7 @@ void init(EngineConfig config) {
 	}
 
 	logInfo("Assimp %u.%u", aiGetVersionMajor(), aiGetVersionMinor());
-	logInfo("GLEW %s", (const char*) glewGetString(GLEW_VERSION));
+//	logInfo("GLEW %s", (const char*) glewGetString(GLEW_VERSION));
 	logInfo("GLFW %s", glfwGetVersionString());
 
 	glfwSetErrorCallback(onGlfwError);
