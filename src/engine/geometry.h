@@ -33,6 +33,7 @@ Transform identity();
 Transform multiply(Transform t1, Transform t2);
 void translate(Transform* transform, Vector vec);
 void rotate(Transform* transform, Vector axis, float angle);
+Vector zeroVector();
 Vector addVectors(Vector v1, Vector v2);
 Vector subtractVectors(Vector v1, Vector v2);
 Vector crossProduct(Vector v1, Vector v2);
@@ -44,5 +45,6 @@ float magnitude(Vector vec);
 Vector applyTransform(Transform transform, Vector vec);
 Vector translationOf(Transform transform);
 Vector normalized(Vector vec);
+float clamp(float x, float lower, float upper);
 
 #endif // ENGINE_GEOMETRY_H_

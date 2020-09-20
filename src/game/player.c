@@ -9,6 +9,7 @@
 #include "player.h"
 
 #include "engine/asset.h"
+#include "engine/logger.h"
 #include "engine/render.h"
 
 #include "level.h"
@@ -53,7 +54,7 @@ void spawnPlayer(Transform transform) {
 }
 
 void updatePlayer(float delta) {
-	Vector direction = { 0.0f, 0.0f, 0.0f };
+	Vector direction = zeroVector();
 	if (movementDirection & DIRECTION_UP) {
 		direction = addVectors(direction, worldMovementUp);
 	}
@@ -90,83 +91,152 @@ Vector displacement = scaleVector(direction, 0.006944f * movementSpeed * 1000.0f
 	Vector position = initialPosition;
 
 	GridLocation location = gridLocationFromPosition(position);
-	Obstacle obstacle = getObstacles(location);
+	bool enteredNewCell = true;
 
-	// Eliminate redundant corner checks
-	if (obstacle & OBSTACLE_XP) {
-		obstacle &= ~(OBSTACLE_XP_ZP | OBSTACLE_XP_ZN);
-	}
-	if (obstacle & OBSTACLE_XN) {
-		obstacle &= ~(OBSTACLE_XN_ZP | OBSTACLE_XN_ZN);
-	}
-	if (obstacle & OBSTACLE_ZP) {
-		obstacle &= ~(OBSTACLE_XP_ZP | OBSTACLE_XN_ZP);
-	}
-	if (obstacle & OBSTACLE_ZN) {
-		obstacle &= ~(OBSTACLE_XP_ZN | OBSTACLE_XN_ZN);
-	}
+	while (enteredNewCell) {
+		enteredNewCell = false;
+		Obstacle obstacle = getObstacles(location);
 
-	float edgeXp = cellBoundaryCoord(location.x + 1);
-	float edgeXn = cellBoundaryCoord(location.x);
-	float edgeZp = cellBoundaryCoord(location.z + 1);
-	float edgeZn = cellBoundaryCoord(location.z);
-	float distanceXp = edgeXp - position.x;
-	if (obstacle & OBSTACLE_XP) distanceXp -= collisionRadius;
-	float distanceXn = edgeXn - position.x;
-	if (obstacle & OBSTACLE_XN) distanceXn += collisionRadius;
-	float distanceZp = edgeZp - position.z;
-	if (obstacle & OBSTACLE_ZP) distanceZp -= collisionRadius;
-	float distanceZn = edgeZn - position.z;
-	if (obstacle & OBSTACLE_ZN) distanceZn += collisionRadius;
+		// Eliminate redundant corner checks
+		if (obstacle & OBSTACLE_XP) {
+			obstacle &= ~(OBSTACLE_XP_ZP | OBSTACLE_XP_ZN);
+		}
+		if (obstacle & OBSTACLE_XN) {
+			obstacle &= ~(OBSTACLE_XN_ZP | OBSTACLE_XN_ZN);
+		}
+		if (obstacle & OBSTACLE_ZP) {
+			obstacle &= ~(OBSTACLE_XP_ZP | OBSTACLE_XN_ZP);
+		}
+		if (obstacle & OBSTACLE_ZN) {
+			obstacle &= ~(OBSTACLE_XP_ZN | OBSTACLE_XN_ZN);
+		}
 
-	// Check all edges for intersecting already
-	if (distanceXp < 0.0f) {
-		position.x += distanceXp;
-		displacement = growVectorNoFlip(displacement, distanceXp);
-		distanceXp = 0.0f;
-	}
-	if (distanceXn > 0.0f) {
-		position.x += distanceXn;
-		displacement = growVectorNoFlip(displacement, - distanceXn);
-		distanceXn = 0.0f;
-	}
-	if (distanceZp < 0.0f) {
-		position.z += distanceZp;
-		displacement = growVectorNoFlip(displacement, distanceZp);
-		distanceZp = 0.0f;
-	}
-	if (distanceZn > 0.0f) {
-		position.z += distanceZn;
-		displacement = growVectorNoFlip(displacement, - distanceZn);
-		distanceZn = 0.0f;
-	}
+		float edgeXp = cellBoundaryCoord(location.x + 1);
+		float edgeXn = cellBoundaryCoord(location.x);
+		float edgeZp = cellBoundaryCoord(location.z + 1);
+		float edgeZn = cellBoundaryCoord(location.z);
+		float distanceXp = edgeXp - position.x;
+		if (obstacle & OBSTACLE_XP) distanceXp -= collisionRadius;
+		float distanceXn = edgeXn - position.x;
+		if (obstacle & OBSTACLE_XN) distanceXn += collisionRadius;
+		float distanceZp = edgeZp - position.z;
+		if (obstacle & OBSTACLE_ZP) distanceZp -= collisionRadius;
+		float distanceZn = edgeZn - position.z;
+		if (obstacle & OBSTACLE_ZN) distanceZn += collisionRadius;
 
-	// Calculate direct movement limits
-	float dx = displacement.x;
-	float dz = displacement.z;
-	if (dx > distanceXp) {
-		dz *= distanceXp / dx;
-		dx = distanceXp;
-		// Might need a flag that we've reached a limit in X+?
+		// Check all edges for intersecting already
+		if (distanceXp < 0.0f) {
+			position.x += distanceXp;
+			displacement = growVectorNoFlip(displacement, distanceXp);
+			distanceXp = 0.0f;
+		}
+		if (distanceXn > 0.0f) {
+			position.x += distanceXn;
+			displacement = growVectorNoFlip(displacement, - distanceXn);
+			distanceXn = 0.0f;
+		}
+		if (distanceZp < 0.0f) {
+			position.z += distanceZp;
+			displacement = growVectorNoFlip(displacement, distanceZp);
+			distanceZp = 0.0f;
+		}
+		if (distanceZn > 0.0f) {
+			position.z += distanceZn;
+			displacement = growVectorNoFlip(displacement, - distanceZn);
+			distanceZn = 0.0f;
+		}
+
+		// Calculate direct movement limits
+		Vector displacementToLimit = displacement;
+		bool reachedXp = false;
+		bool reachedXn = false;
+		bool reachedZp = false;
+		bool reachedZn = false;
+		if (displacementToLimit.x > distanceXp) {
+			displacementToLimit = scaleVector(
+				displacementToLimit, distanceXp / displacementToLimit.x);
+			reachedXp = true;
+		}
+		if (displacementToLimit.x < distanceXn) {
+			displacementToLimit = scaleVector(
+				displacementToLimit, distanceXn / displacementToLimit.x);
+			reachedXn = true;
+		}
+		if (displacementToLimit.z > distanceZp) {
+			displacementToLimit = scaleVector(
+				displacementToLimit, distanceZp / displacementToLimit.z);
+			reachedZp = true;
+		}
+		if (displacementToLimit.z < distanceZn) {
+			displacementToLimit = scaleVector(
+				displacementToLimit, distanceZn / displacementToLimit.z);
+			reachedZn = true;
+		}
+		// This is how far we can move until we collide or leave the grid cell
+		position = addVectors(position, displacementToLimit);
+		displacement = subtractVectors(displacement, displacementToLimit);
+		// Update distances
+		distanceXp -= displacementToLimit.x;
+		distanceXn -= displacementToLimit.x;
+		distanceZp -= displacementToLimit.z;
+		distanceZn -= displacementToLimit.z;
+
+		// Resolve slides and crossing cell boundaries
+		// in reverse order to direct movement limits, because
+		// we only want to cross the closest cell boundary.
+		if (reachedZn) {
+			if (obstacle & OBSTACLE_ZN) {
+				float dx = clamp(displacement.x, distanceXn, distanceXp);
+				position.x += dx;
+				displacement = scaleVector(displacement, 1.0f - (dx / displacement.x));
+			}
+			else {
+				location.z -= 1;
+				enteredNewCell = true;
+			}
+		}
+
+		if (reachedZp) {
+			if (obstacle & OBSTACLE_ZP) {
+				float dx = clamp(displacement.x, distanceXn, distanceXp);
+				position.x += dx;
+				displacement = scaleVector(displacement, 1.0f - (dx / displacement.x));
+			}
+			else if (!enteredNewCell) {
+				location.z += 1;
+				enteredNewCell = true;
+			}
+		}
+
+		if (reachedXn) {
+			if (obstacle & OBSTACLE_XN) {
+				float dz = clamp(displacement.z, distanceZn, distanceZp);
+				position.z += dz;
+				displacement = scaleVector(displacement, 1.0f - (dz / displacement.z));
+			}
+			else if (!enteredNewCell) {
+				location.x -= 1;
+				enteredNewCell = true;
+			}
+		}
+
+		if (reachedXp) {
+			if (obstacle & OBSTACLE_XP) {
+				// Slide
+				float dz = clamp(displacement.z, distanceZn, distanceZp);
+				position.z += dz;
+				displacement = scaleVector(displacement, 1.0f - (dz / displacement.z));
+			}
+			else if (!enteredNewCell) {
+				// Enter new grid cell
+				location.x += 1;
+				enteredNewCell = true;
+			}
+		}
 	}
-	if (dx < distanceXn) {
-		dz *= distanceXn / dx;
-		dx = distanceXn;
-		// ?
-	}
-	if (dz > distanceZp) {
-		dx *= distanceZp / dz;
-		dz = distanceZp;
-		// ?
-	}
-	if (dz < distanceZn) {
-		dx *= distanceZn / dz;
-		dz = distanceZn;
-		// ?
-	}
-	// This is how far we can move until we collide or leave the grid cell
-	position = addVectors(position, (Vector) { dx, 0.0f, dz });
 	translate(&playerProjectedMovement->transform, subtractVectors(position, initialPosition));
+
+	//translate(&playerCharacter->transform, subtractVectors(position, initialPosition));
 }
 
 

@@ -62,7 +62,11 @@ void rotate(Transform* transform, Vector axis, float angle) {
 		*transform);
 }
 
-Vector addVectors(Vector v1, Vector v2){
+Vector zeroVector() {
+	return (Vector) { 0.0f, 0.0f, 0.0f };
+}
+
+Vector addVectors(Vector v1, Vector v2) {
 	return (Vector) { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
 }
 
@@ -129,4 +133,8 @@ Vector translationOf(Transform transform) {
 Vector normalized(Vector vec) {
 	float m = magnitude(vec);
 	return (Vector) { vec.x / m, vec.y / m, vec.z / m };
+}
+
+float clamp(float x, float lower, float upper) {
+	return fmax(lower, fmin(upper, x));
 }
