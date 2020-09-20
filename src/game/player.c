@@ -82,9 +82,6 @@ static void movePlayer(Vector direction, float delta) {
 	direction = clampMagnitude(direction, 1.0f);
 	Vector displacement = scaleVector(direction, delta * movementSpeed);
 
-//{
-//Vector displacement = scaleVector(direction, 0.006944f * movementSpeed * 1000.0f);
-
 	playerProjectedMovement->transform = playerCharacter->transform;
 
 	Vector initialPosition = translationOf(playerCharacter->transform);
@@ -181,66 +178,65 @@ static void movePlayer(Vector direction, float delta) {
 		distanceZp -= displacementToLimit.z;
 		distanceZn -= displacementToLimit.z;
 
-		// Resolve slides and crossing cell boundaries
+		// Slide along obstacles
+		if ((reachedXp && obstacle & OBSTACLE_XP)
+			|| (reachedXn && obstacle & OBSTACLE_XN))
+		{
+			float dz = displacement.z;
+			if (dz > distanceZp) {
+				dz = distanceZp;
+				reachedZp = true;
+			}
+			if (dz < distanceZn) {
+				dz = distanceZn;
+				reachedZn = true;
+			}
+			position.z += dz;
+			displacement = scaleVector(displacement, 1.0f - (dz / displacement.z));
+		}
+
+		if ((reachedZp && obstacle & OBSTACLE_ZP)
+			|| (reachedZn && obstacle & OBSTACLE_ZN))
+		{
+			float dx = displacement.x;
+			if (dx > distanceXp) {
+				dx = distanceXp;
+				reachedXp = true;
+			}
+			if (dx < distanceXn) {
+				dx = distanceXn;
+				reachedXn = true;
+			}
+			position.x += dx;
+			displacement = scaleVector(displacement, 1.0f - (dx / displacement.x));
+		}
+
+		// Resolve crossing cell boundaries
 		// in reverse order to direct movement limits, because
 		// we only want to cross the closest cell boundary.
-		if (reachedZn) {
-			if (obstacle & OBSTACLE_ZN) {
-				float dx = clamp(displacement.x, distanceXn, distanceXp);
-				position.x += dx;
-				displacement = scaleVector(displacement, 1.0f - (dx / displacement.x));
-			}
-			else {
-				location.z -= 1;
-				enteredNewCell = true;
-			}
+		if (reachedZn && !(obstacle & OBSTACLE_ZN)) {
+			// Enter new grid cell
+			location.z -= 1;
+			enteredNewCell = true;
 		}
 
-		if (reachedZp) {
-			if (obstacle & OBSTACLE_ZP) {
-				float dx = clamp(displacement.x, distanceXn, distanceXp);
-				position.x += dx;
-				displacement = scaleVector(displacement, 1.0f - (dx / displacement.x));
-			}
-			else if (!enteredNewCell) {
-				location.z += 1;
-				enteredNewCell = true;
-			}
+		if (!enteredNewCell && reachedZp && !(obstacle & OBSTACLE_ZP)) {
+			location.z += 1;
+			enteredNewCell = true;
 		}
 
-		if (reachedXn) {
-			if (obstacle & OBSTACLE_XN) {
-				float dz = clamp(displacement.z, distanceZn, distanceZp);
-				position.z += dz;
-				displacement = scaleVector(displacement, 1.0f - (dz / displacement.z));
-			}
-			else if (!enteredNewCell) {
-				location.x -= 1;
-				enteredNewCell = true;
-			}
+		if (!enteredNewCell && reachedXn && !(obstacle & OBSTACLE_XN)) {
+			location.x -= 1;
+			enteredNewCell = true;
 		}
 
-		if (reachedXp) {
-			if (obstacle & OBSTACLE_XP) {
-				// Slide
-				float dz = clamp(displacement.z, distanceZn, distanceZp);
-				position.z += dz;
-				displacement = scaleVector(displacement, 1.0f - (dz / displacement.z));
-			}
-			else if (!enteredNewCell) {
-				// Enter new grid cell
-				location.x += 1;
-				enteredNewCell = true;
-			}
+		if (!enteredNewCell && reachedXp && !(obstacle & OBSTACLE_XP)) {
+			location.x += 1;
+			enteredNewCell = true;
 		}
 	}
-	//translate(&playerProjectedMovement->transform, subtractVectors(position, initialPosition));
 
 	translate(&playerCharacter->transform, subtractVectors(position, initialPosition));
-//}
-
-
-	//translate(&playerCharacter->transform, displacement);
 }
 
 static Vector worldMovementDirection(float x, float y) {
