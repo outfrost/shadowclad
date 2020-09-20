@@ -14,7 +14,7 @@
 
 #include "level.h"
 
-static const float movementSpeed = 0.5f;
+static const float movementSpeed = 1.5f;
 static const float collisionRadius = 0.5f;
 
 Scene* playerCharacter;
@@ -82,8 +82,8 @@ static void movePlayer(Vector direction, float delta) {
 	direction = clampMagnitude(direction, 1.0f);
 	Vector displacement = scaleVector(direction, delta * movementSpeed);
 
-{
-Vector displacement = scaleVector(direction, 0.006944f * movementSpeed * 1000.0f);
+//{
+//Vector displacement = scaleVector(direction, 0.006944f * movementSpeed * 1000.0f);
 
 	playerProjectedMovement->transform = playerCharacter->transform;
 
@@ -234,13 +234,13 @@ Vector displacement = scaleVector(direction, 0.006944f * movementSpeed * 1000.0f
 			}
 		}
 	}
-	translate(&playerProjectedMovement->transform, subtractVectors(position, initialPosition));
+	//translate(&playerProjectedMovement->transform, subtractVectors(position, initialPosition));
 
-	//translate(&playerCharacter->transform, subtractVectors(position, initialPosition));
-}
+	translate(&playerCharacter->transform, subtractVectors(position, initialPosition));
+//}
 
 
-	translate(&playerCharacter->transform, displacement);
+	//translate(&playerCharacter->transform, displacement);
 }
 
 static Vector worldMovementDirection(float x, float y) {
