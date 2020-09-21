@@ -132,6 +132,9 @@ Vector translationOf(Transform transform) {
 
 Vector normalized(Vector vec) {
 	float m = magnitude(vec);
+	if (m == 0.0f) {
+		return zeroVector();
+	}
 	return (Vector) { vec.x / m, vec.y / m, vec.z / m };
 }
 
