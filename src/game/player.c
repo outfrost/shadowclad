@@ -18,7 +18,6 @@ static const float movementSpeed = 1.5f;
 static const float collisionRadius = 0.5f;
 
 Scene* playerCharacter;
-Scene* playerProjectedMovement;
 static Transform screenToWorldMovementTransform;
 static Vector worldMovementUp;
 static Vector worldMovementDown;
@@ -43,14 +42,11 @@ void initPlayer() {
 	playerCharacter = newScene();
 	cameraAnchor = playerCharacter;
 	playerCharacter->solid = importSolid("assets/playercharacter.3ds");
-
-	playerProjectedMovement = newScene();
 }
 
 void spawnPlayer(Transform transform) {
 	playerCharacter->transform = transform;
 	reparentScene(playerCharacter, currentScene);
-	reparentScene(playerProjectedMovement, currentScene);
 }
 
 void updatePlayer(float delta) {
@@ -81,8 +77,6 @@ void stopMovement(Direction direction) {
 static void movePlayer(Vector direction, float delta) {
 	direction = clampMagnitude(direction, 1.0f);
 	Vector displacement = scaleVector(direction, delta * movementSpeed);
-
-	playerProjectedMovement->transform = playerCharacter->transform;
 
 	Vector initialPosition = translationOf(playerCharacter->transform);
 	Vector position = initialPosition;

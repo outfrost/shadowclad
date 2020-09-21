@@ -77,7 +77,7 @@ static void renderScene(const Scene* scene, const Transform baseTransform) {
 
 	glDisable(GL_LIGHTING);
 
-	if (debugScene || scene == playerProjectedMovement) {
+	if (debugScene) {
 		drawAxes();
 	}
 
