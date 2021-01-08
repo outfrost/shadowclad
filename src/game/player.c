@@ -102,6 +102,7 @@ static void movePlayer(Vector direction, float delta) {
 			obstacle &= ~(OBSTACLE_XP_ZN | OBSTACLE_XN_ZN);
 		}
 
+		// Calculate distances
 		float edgeXp = cellBoundaryCoord(location.x + 1);
 		float edgeXn = cellBoundaryCoord(location.x);
 		float edgeZp = cellBoundaryCoord(location.z + 1);
@@ -137,6 +138,56 @@ static void movePlayer(Vector direction, float delta) {
 			distanceZn = 0.0f;
 		}
 
+		// Check all corners for intersecting already
+		if (obstacle & OBSTACLE_XP_ZP && distanceXp < collisionRadius && distanceZp < collisionRadius) {
+			if (distanceXp > distanceZp) {
+				position.x += distanceXp - collisionRadius;
+				displacement = growVectorNoFlip(displacement, distanceXp - collisionRadius);
+				distanceXp = collisionRadius;
+			}
+			else {
+				position.z += distanceZp - collisionRadius;
+				displacement = growVectorNoFlip(displacement, distanceZp - collisionRadius);
+				distanceZp = collisionRadius;
+			}
+		}
+		if (obstacle & OBSTACLE_XP_ZN && distanceXp < collisionRadius && distanceZn > - collisionRadius) {
+			if (distanceXp > - distanceZn) {
+				position.x += distanceXp - collisionRadius;
+				displacement = growVectorNoFlip(displacement, distanceXp - collisionRadius);
+				distanceXp = collisionRadius;
+			}
+			else {
+				position.z += distanceZn + collisionRadius;
+				displacement = growVectorNoFlip(displacement, - (distanceZn + collisionRadius));
+				distanceZn = - collisionRadius;
+			}
+		}
+		if (obstacle & OBSTACLE_XN_ZP && distanceXn > - collisionRadius && distanceZp < collisionRadius) {
+			if (- distanceXn > distanceZp) {
+				position.x += distanceXn + collisionRadius;
+				displacement = growVectorNoFlip(displacement, - (distanceXn + collisionRadius));
+				distanceXn = - collisionRadius;
+			}
+			else {
+				position.z += distanceZp - collisionRadius;
+				displacement = growVectorNoFlip(displacement, distanceZp - collisionRadius);
+				distanceZp = collisionRadius;
+			}
+		}
+		if (obstacle & OBSTACLE_XN_ZN && distanceXn > - collisionRadius && distanceZn > - collisionRadius) {
+			if (- distanceXn > - distanceZn) {
+				position.x += distanceXn + collisionRadius;
+				displacement = growVectorNoFlip(displacement, - (distanceXn + collisionRadius));
+				distanceXn = - collisionRadius;
+			}
+			else {
+				position.z += distanceZn + collisionRadius;
+				displacement = growVectorNoFlip(displacement, - (distanceZn + collisionRadius));
+				distanceZn = - collisionRadius;
+			}
+		}
+
 		// Calculate direct movement limits
 		Vector displacementToLimit = displacement;
 		bool reachedXp = false;
@@ -162,6 +213,58 @@ static void movePlayer(Vector direction, float delta) {
 			displacementToLimit = scaleVector(
 				displacementToLimit, distanceZn / displacementToLimit.z);
 			reachedZn = true;
+		}
+		float cornerIntersectionXp = displacementToLimit.x - (distanceXp - collisionRadius);
+		float cornerIntersectionXn = displacementToLimit.x - (distanceXn + collisionRadius);
+		float cornerIntersectionZp = displacementToLimit.z - (distanceZp - collisionRadius);
+		float cornerIntersectionZn = displacementToLimit.z - (distanceZn + collisionRadius);
+		if (obstacle & OBSTACLE_XP_ZP && cornerIntersectionXp > 0.0f && cornerIntersectionZp > 0.0f) {
+			if (cornerIntersectionXp < cornerIntersectionZp) {
+				displacementToLimit = scaleVector(
+					displacementToLimit, 1.0f - (cornerIntersectionXp / displacementToLimit.x));
+				reachedXp = true;
+			}
+			else {
+				displacementToLimit = scaleVector(
+					displacementToLimit, 1.0f - (cornerIntersectionZp / displacementToLimit.z));
+				reachedZp = true;
+			}
+		}
+		if (obstacle & OBSTACLE_XP_ZN && cornerIntersectionXp > 0.0f && cornerIntersectionZn < 0.0f) {
+			if (cornerIntersectionXp < - cornerIntersectionZp) {
+				displacementToLimit = scaleVector(
+					displacementToLimit, 1.0f - (cornerIntersectionXp / displacementToLimit.x));
+				reachedXp = true;
+			}
+			else {
+				displacementToLimit = scaleVector(
+					displacementToLimit, 1.0f - (cornerIntersectionZn / displacementToLimit.z));
+				reachedZn = true;
+			}
+		}
+		if (obstacle & OBSTACLE_XN_ZP && cornerIntersectionXn < 0.0f && cornerIntersectionZp > 0.0f) {
+			if (- cornerIntersectionXn < cornerIntersectionZp) {
+				displacementToLimit = scaleVector(
+					displacementToLimit, 1.0f - (cornerIntersectionXn / displacementToLimit.x));
+				reachedXn = true;
+			}
+			else {
+				displacementToLimit = scaleVector(
+					displacementToLimit, 1.0f - (cornerIntersectionZp / displacementToLimit.z));
+				reachedZp = true;
+			}
+		}
+		if (obstacle & OBSTACLE_XN_ZN && cornerIntersectionXn < 0.0f && cornerIntersectionZn < 0.0f) {
+			if (- cornerIntersectionXn < - cornerIntersectionZn) {
+				displacementToLimit = scaleVector(
+					displacementToLimit, 1.0f - (cornerIntersectionXn / displacementToLimit.x));
+				reachedXn = true;
+			}
+			else {
+				displacementToLimit = scaleVector(
+					displacementToLimit, 1.0f - (cornerIntersectionZn / displacementToLimit.z));
+				reachedZn = true;
+			}
 		}
 		// This is how far we can move until we collide or leave the grid cell
 		position = addVectors(position, displacementToLimit);
