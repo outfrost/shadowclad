@@ -1,6 +1,8 @@
 # Shadowclad
 
-3D orthographic stealth game, and a purpose-built game engine
+Foundations of a 3D orthographic stealth game, and a purpose-built game engine
+
+Development stopped in 2020
 
 ![Screenshot](screenshot.jpg)
 
@@ -20,14 +22,10 @@ Target platforms include Linux and Microsoft Windows on x86-64, although Windows
 
 The render pipeline currently uses the legacy immediate mode OpenGL API, which will be replaced with a more modern (and performant) implementation at some point.
 
-## Roadmap
-
-[This project board](https://github.com/outfrost/shadowclad/projects/1) serves as the roadmap, and tracks all tasks and issues.
-
 ## Dependencies
 
 To run and to compile, Shadowclad requires an x86-64 (amd64) system with:
-* a C library released in the last 8 years
+* a C library released around 2012 or later
 * OpenGL implementation supporting version 1.3 or later
 * GLFW 3.x
 * GLEW 2.x
@@ -60,10 +58,6 @@ At runtime, Shadowclad loads assets from `assets/`, relative to the current work
 target/x86_64-linux-gnu/shadowclad
 ```
 then it will load assets from `assets/` in the same parent directory as `target/`.
-
-## Contributing
-
-Issues and PRs are welcome, for all kinds of contributions. Changes accepted in PRs will be released under the license terms listed further below. When working on a time-consuming contribution, it's best to discuss it in issues first, to make sure it won't collide with something else.
 
 ## License
 
