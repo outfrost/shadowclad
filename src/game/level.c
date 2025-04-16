@@ -118,6 +118,11 @@ GridLocation gridLocationFromPosition(Vector pos) {
 	                        .z = nonNegative(scaledPos.z) };
 }
 
+ColliderEdges getColliderEdges(GridLocation loc, float margin) {
+	ColliderEdges result = { .numEdges = 0 };
+	if (
+}
+
 Obstacle getObstacles(GridLocation loc) {
 	Obstacle result = OBSTACLE_NONE;
 	if (loc.x == 0) {

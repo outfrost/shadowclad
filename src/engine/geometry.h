@@ -13,6 +13,7 @@
 
 typedef struct Vector Vector;
 typedef struct Transform Transform;
+typedef struct Segment Segment;
 
 struct Vector {
 	float x;
@@ -25,6 +26,11 @@ struct Transform {
 	GLfloat b1, b2, b3, b4;
 	GLfloat c1, c2, c3, c4;
 	GLfloat d1, d2, d3, d4;
+};
+
+struct Segment {
+	Vector a;
+	Vector b;
 };
 
 static const float TAU = 6.28318530718f;

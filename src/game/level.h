@@ -36,6 +36,7 @@ typedef enum Obstacle Obstacle;
 typedef struct Block Block;
 typedef struct BlockGrid BlockGrid;
 typedef struct GridLocation GridLocation;
+typedef struct ColliderEdges ColliderEdges;
 
 struct Block {
 	BlockType type;
@@ -51,6 +52,11 @@ struct BlockGrid {
 struct GridLocation {
 	size_t x;
 	size_t z;
+};
+
+struct ColliderEdges {
+	size_t numEdges;
+	Segment edge[12];
 };
 
 static const float BLOCKGRID_CELL_SIZE = 2.5f;

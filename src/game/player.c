@@ -76,10 +76,17 @@ void stopMovement(Direction direction) {
 
 static void movePlayer(Vector direction, float delta) {
 	direction = clampMagnitude(direction, 1.0f);
-	Vector displacement = scaleVector(direction, delta * movementSpeed);
+	float distance = clamp(delta * movementSpeed, - BLOCKGRID_CELL_SIZE, BLOCKGRID_CELL_SIZE);
+	Vector displacement = scaleVector(direction, distance);
 
 	Vector initialPosition = translationOf(playerCharacter->transform);
 	Vector position = initialPosition;
+
+
+
+	Obstacle o = getObstacles(gridLocationFromPosition(position));
+
+
 
 	GridLocation location = gridLocationFromPosition(position);
 	bool enteredNewCell = true;
